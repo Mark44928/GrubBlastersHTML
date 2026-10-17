@@ -3,9 +3,9 @@
 Project guide for AI agents and developers. Read this before touching anything.
 
 Grub Blasters is a turn-based artillery game (Worms-style) shipped as **one
-dependency-free HTML file**. Two teams of worms blast each other across
-procedurally generated, fully destructible terrain on a fixed 1400×800 logical
-canvas.
+dependency-free HTML file**. Two to four teams of worms blast each other across
+procedurally generated, fully destructible terrain on a zoomable 1400–2800 × 800
+logical canvas, with a fuel-limited jetpack for mobility.
 
 **Live:** https://mark44928.github.io/GrubBlastersHTML/
 **Repo:** https://github.com/Mark44928/GrubBlastersHTML
@@ -73,9 +73,19 @@ canvas.
 
 ### Coordinate model
 
-- Fixed logical world `W=1400 × H=800`; it never changes.
-- `resize()` letterboxes: `sc=min(innerWidth/W, innerHeight/H)`, `ox`/`oy`
-  center offsets, `dpr` capped at 2. Pointer→world: `(clientX-ox)/sc`.
+- Logical world `W×H` default 1400×800; `W` is dynamic per map (`MAPS`:
+  Standard 1400 / Wide 2000 / Epic 2800; `H` stays 800), set in `newGame()`
+  before `resize()` + terrain/bg/scenery regeneration. Boot uses the default.
+- Camera: `cam{x,y,z}` with `fit=min(innerWidth/W,innerHeight/H)` and
+  `S()=fit*cam.z` (CSS px per world px). World→screen: `innerWidth/2+(X-cam.x)*S`.
+  Pointer→world: `cam.x+(clientX-innerWidth/2)/S` (used in `aimTo` and the
+  pinch handler). `camClamp()` locks the view inside the world when the
+  viewport is smaller than the map (centers an axis otherwise), `cam.z ∈ [1,ZMAX=6]`.
+- `camFollow(dt)` (end of `update`) smoothly targets the active worm, the
+  midpoint of worm+`target` for targeted weapons, or the first live
+  non-mine projectile during settle.
+- `resize()` recomputes `dpr` (cap 2), canvas bitmap, `fit`, the vignette
+  canvas and re-clamps the camera.
 - All gameplay code speaks logical pixels only.
 
 ### Terrain & collision
@@ -96,26 +106,40 @@ canvas.
 - `state`: `'menu' | 'aim' | 'settle' | 'over'`. `aim` = current worm may
   move/aim/fire; `settle` = projectiles resolving + retreat window; `over` =
   match finished.
-- Turn: `turnTeam`, `turnNo`, `cur` (active worm), `cursor[team]` (rotation
+- Turn: `turnTeam` (0–3), `turnNo`, `cur` (active worm), `cursor[team]` (rotation
   index), `retreat` (post-shot move window, 3 s), `quiet`/`settleT` (settle
   timeout: end turn after 1 s quiet or 25 s hard cap).
+- Teams: `teamCount` (2–4). `TC[4]`/`TN[4]` are the team colors/names (TN index
+  0–3, editable). `aiOn[4]`, `wins[4]`, `kdmg[4]`, `kills[4]`, `ammo[4]`,
+  `lastWpn[4]` are all 4-wide regardless of `teamCount`.
 - Settings: `perTeam, diff, hpIdx, ttIdx, guide, muted, skyIdx, terIdx, wxIdx, low`
-  (persisted, see below). `TN` holds the (editable) team names.
-- `inp` = walk/aim booleans. `aimDrag` = map-drag aiming. `paused` (`helpWasPaused`
+  plus `teamCount, schIdx (scheme), wndIdx (wind), cratesOn` (persisted, see
+  below). `SCH` = Normal / Greedy / Pro Mode / Bazooka Only; `WND` scales wind
+  (light .5 / normal 1 / storm 1.75).
+- `inp` = walk/aim booleans (+`jet`). `aimDrag` = map-drag aiming. `paused` (`helpWasPaused`
   remembers it while the Help overlay is open). `jumpT` = timestamp of the last
-  jump, used for the double-tap backflip.
+  jump, used for the double-tap backflip. `jetSndT` throttles the thruster SFX.
 - `lastWpn[team]` = per-team weapon memory; `wepPage` = shelf page; `target` =
-  chosen spot for targeted weapons.
+  chosen spot for targeted weapons; `wepList()` = active shelf (filtered to
+  `bazooka` only in Bazooka Only scheme).
+- Jetpack: per-worm `fuel` (0–`FUEL=150`), thrust `JET_T=1000` vs `G=620` while
+  held, drain `JET_DRAIN=55`/s; human turns use `inp.jet`, AI turns use
+  `w.aiJet`/`w.aiJetDir` bursts set in the walk phase, only during
+  aim/retreat; refilled for the whole team in `startTurn()`. Draws an exhaust
+  flame (`w.jet`) and a fuel bar above the active worm.
 
 ### Turn flow
 
 `startTurn()` → sudden-death check (turn ≥ `SD_TURN=16`: sea rises 20 px/turn,
 all worms take 5 wither damage/turn from turn 17, 60 % meteor chance from turn
-19), wind reroll (±10), crate spawn (every 3rd turn, max 3 live), restore
-`lastWpn`, banner. Player acts: walk (58 px/s), aim (clamp −1.2…1.45 rad),
-charge (power ramps at 0.75/s), fire. After firing, `state='settle'`: 3 s
-retreat window (skip with FIRE), then the turn ends when everything is quiet
-(`quiet>1`). `endTurn()` flips team or calls `gameOver()`.
+19), wind reroll (±10 × `WND[wndIdx].k`), crate spawn (every 3rd turn if
+`cratesOn`, max 3 live), restore `lastWpn`, refill jetpack fuel for the whole
+team, banner. Player acts: walk (58 px/s), aim (clamp −1.2…1.45 rad),
+charge (power ramps at 0.75/s), jet (hold, fuel-limited), fire. After firing,
+`state='settle'`: 3 s retreat window (skip with FIRE, jet allowed), then the turn ends when
+everything is quiet (`quiet>1`). `endTurn()` advances to the next *living* team
+and calls `gameOver()` when ≤1 team remains; if the whole team is dead it keeps
+scanning (never loops forever, even with 4 teams).
 
 ### Gravity & damage
 
@@ -130,10 +154,14 @@ retreat window (skip with FIRE), then the turn ends when everything is quiet
 
 ### Weapons
 
-`WEP` array drives shelf order; array index → id. 13 weapons, 7 per page. The
-shelf shows page-local slots; keyboard `1–7` maps via `wepPage*7+(key-1)`.
+`WEP` array drives shelf order; array index → id. 13 weapons, 7 per page, but
+all rendering/selection goes through `wepList()` (Bazooka Only returns just the
+bazooka). The shelf shows page-local slots; keyboard `1–7` maps via
+`wepPage*7+(key-1)` into `wepList()`, and weapon buttons are rebuilt by
+`buildWeps()` (a `⇄` page button is hidden when there is only one page).
 `TARGETED=['airstrike','teleport']` use the two-step "tap map, then FIRE"
-flow. `fire()` dispatches; behavior lives in `updateProj()` / `drawProj()`.
+flow. `fire()` refuses anything not in `wepList()` or with `ammoOf(...)===0`.
+`fire()` dispatches; behavior lives in `updateProj()` / `drawProj()`.
 
 | id | Special handling |
 |---|---|
@@ -152,7 +180,12 @@ flow. `fire()` dispatches; behavior lives in `updateProj()` / `drawProj()`.
 | `torch` | `torchCut()` carves a ~110 px tunnel, 10 dmg per worm, insta-fire |
 
 Ammo: `ammo[team]` object; missing keys = unlimited (`ammoOf()` returns
-`Infinity`). Crates (`pickCrate`) only grant HP/ammo when actually useful.
+`Infinity`). Always spend ammo via `useAmmo(id)` — it only decrements keys that
+exist, so Greedy/Bazooka schemes stay unlimited instead of becoming `NaN`.
+`SCH[schIdx].ammo()` produces the starting loadout (Normal, Greedy `{}`, Pro
+Mode one-of-each minus airstrike, Bazooka Only `{}`). Crates (`pickCrate`) only
+grant HP/ammo when actually useful, and ammo crates turn into HP when the loadout
+has no grantable keys (Greedy).
 
 ### AI
 
@@ -160,16 +193,31 @@ Ammo: `ammo[team]` object; missing keys = unlimited (`ammoOf()` returns
 walk | aim → charge) → done`. `DIFF[diff]` tunes aim error `an`, power error
 `pn`, and walk threshold `thr`. Hard+ AI targets the lowest-HP enemy with
 damage weighting (`pickTarget`). `aiOn[team]` marks CPU teams; `humanTurn()`
-gates player input. AI never gets a retreat window.
+gates player input. In cpu mode the first `ceil(teamCount/2)` teams are the
+player's (hot-seat) and the rest are CPU — 4 teams is always 2 vs 2, never
+1 vs 3. AI never gets a retreat window. AI weapon choice is gated
+by `has(id)` (= id present in `wepList()`) plus an `ammoOf(...)>0` check, so
+schemes never strand the AI on an unavailable weapon. When a `walk`-phase
+worm is blocked it fires a 0.6 s jet burst (`w.aiJet`/`w.aiJetDir`) from the
+same fuel budget as the player, so the jetpack is fair vs CPU; human `inp`
+never steers an AI worm.
 
 ### Rendering
 
-Single `draw()` per frame, painter's order: shake → background → clouds →
-terrain → graves → crates → worms → aim aids (barrel, reticle/target, guide
-arc, charge dots, arrow) → projectiles → tracers/rings → particles → leaves →
-weather → animated water → floating texts. `hud()` updates DOM bars, clock,
-wind meter, and tips. **Low graphics** (`low`) is cosmetic-only: it thins
-scenery/particle counts at spawn, skips clouds/leaves/fireflies, and lowers the
+Single `draw()` per frame, painter's order: shake → background → parallax
+clouds (`(cam.x-W/2)*.45` offset) → terrain → graves → crates → worms (with jet
+flame) → aim aids (barrel, reticle/target, guide arc, charge dots, arrow, fuel
+gauge) → projectiles → tracers/rings → particles → leaves →
+weather → animated water → floating texts → screen-space vignette (`vig`, rebuilt
+on resize). `hud()` updates DOM bars, clock,
+wind meter (clamped to 50 % width so Storm reads correctly), and tips. Team
+chips are built once per game by `buildTeams()` (per-team name, HP bar, and
+`.act` highlight on the current team); `#teams` uses a `t2`/`t3`/`t4` class.
+Canvas text uses the `FONT` stack; the title/banner/clock use a condensed
+display stack via CSS. **Low graphics** (`low`) is cosmetic-only: `resize()`
+caps `dpr` at 1 (4× fewer pixels on most phones), and it draws no clouds,
+leaves, fireflies or vignette, spawns minimal rain/snow without terrain
+speckle, coarsens the water mesh, thins scenery/particle counts and lowers the
 particle cap. It must never change gameplay, damage, or terrain.
 
 ### Loop
@@ -180,15 +228,17 @@ rendering.
 
 ### Input
 
-- Buttons: `[data-k]` elements (walk/aim pad) use pointer capture; `#fire` is
-  press-and-hold; `#jump`; weapon buttons generated from `WEP`; `⇄` flips
-  shelf pages.
+- Buttons: `[data-k]` elements (walk/aim pad + `#jet`) use pointer capture;
+  `#fire` is press-and-hold; `#jump`; weapon buttons rebuilt from `wepList()`
+  by `buildWeps()`; `⇄` flips shelf pages.
 - Canvas: tap selects one of your own worms (<22 px) or aims; drag aims
-  continuously; targeted weapons set `target`. `pointercancel` and `blur` must
+  continuously; targeted weapons set `target`. Two pointers = pinch zoom
+  (`cvPts` map, baseline recorded on second pointerdown); wheel zooms on
+  desktop; `+`/`-`/`=` keys zoom. `pointercancel` and `blur` must
   clear interactive state.
 - Keyboard: `KM` maps arrows/WASD; `keyOf()` lowercases single chars
-  (CapsLock-proof); Space charge, Enter/Shift jump, 1–7 weapon, Q page,
-  P/Esc pause, H help.
+  (CapsLock-proof); Space charge, Enter/Shift jump, J jetpack, `+`/`-` zoom,
+  1–7 weapon, Q page, P/Esc pause, H help.
 - Backflip: `jump()` checks `now-jumpT<350` while airborne and flips
   (`w.flip=1`, backwards `vx`); `stepWorm` decays `w.flip`, `drawWorm` rotates
   by it. Keep the flip cosmetic-only (it must not alter damage/terrain).
@@ -208,11 +258,16 @@ rendering.
 | `gb_tt` | turn timer index 0–3 (20/30/45/60) | 1 (30 s) |
 | `gb_guide` | aim guide `'1'`/`'0'` | off |
 | `gb_mute` | mute `'1'`/`'0'` | off |
-| `gb_tn0`/`gb_tn1` | team names (≤12 chars) | RED / BLUE |
+| `gb_tn0`–`gb_tn3` | team names (≤12 chars) | RED / BLUE / GREEN / GOLD |
 | `gb_sky` | sky theme index, −1 = random | −1 |
 | `gb_ter` | terrain theme index, −1 = random | −1 |
 | `gb_wx` | weather 0 clear / 1 rain / 2 snow, −1 = random | −1 |
 | `gb_low` | low graphics `'1'`/`'0'` | off |
+| `gb_teams` | team count 2–4 | 2 |
+| `gb_sch` | scheme index 0–3 (Normal/Greedy/Pro/Bazooka Only) | 0 |
+| `gb_wnd` | wind index 0–2 (light .5 / normal 1 / storm 1.75) | 1 |
+| `gb_crate` | supply crates `'1'`/`'0'` | on |
+| `gb_map` | map size index 0–2 (1400/2000/2800 wide) | 0 |
 
 All reads are wrapped in try/catch (private-mode safe).
 
@@ -222,9 +277,9 @@ All reads are wrapped in try/catch (private-mode safe).
   `/* ---------- x ---------- */`. Match surrounding style; do not reformat.
 - Logical pixels everywhere; the canvas handles scaling, not CSS.
 - New weapons: append to `WEP`, add a `fire()` branch, handling in
-  `updateProj()` and a visual in `drawProj()`, starting ammo in `newGame()`,
-  the crate pool in `pickCrate()`, and README tables. Shelf pages update
-  automatically.
+  `updateProj()` and a visual in `drawProj()`, starting ammo in `SCH[0]`'s
+  loadout in `newGame()`, the crate pool in `pickCrate()`, and README tables.
+  Shelf pages and `buildWeps()` update automatically via `wepList()`.
 - New settings: button in `#menu` (or HUD), load inside the localStorage
   `try{}` block, persist in the click handler, document in README.
 - No comments beyond the section dividers unless genuinely needed.
@@ -243,9 +298,14 @@ All reads are wrapped in try/catch (private-mode safe).
 
 There are no automated tests; the game must be checked by hand:
 
-- Start both modes (2 Players, vs Computer) and each difficulty once.
+- Start both modes (2 Players, vs Computer) and each difficulty once; with
+  4 teams vs Computer check the 2v2 split (two human teams, two CPU).
 - Fire a weapon from each shelf page; verify ammo decrements and unlimited
-  weapons stay unlimited.
+  weapons stay unlimited. Try each scheme once (Greedy: everything unlimited;
+  Pro Mode: no airstrike; Bazooka Only: single-slot shelf, ⇄ hidden).
+- Set teams to 4 and play a few turns; verify the HUD chips, team names, banner
+  colors, and that the turn arrows cycle through living teams.
+- Wind on Storm: meter stays within the HUD and rockets bend hard.
 - Targeted flow: airstrike / teleport — tap map, reticle appears, FIRE works.
 - Sheep: release, detonate via FIRE; confirm enemy-touch detonation.
 - Mine: drop, walk away, arming delay, proximity trigger, chain reaction.
@@ -257,7 +317,14 @@ There are no automated tests; the game must be checked by hand:
 - Backflip: double-tap jump within ~0.35 s — worm hops backwards and spins
   (cosmetic only).
 - Customization: rename teams, cycle sky/terrain/weather, toggle low
-  graphics and sound; all persist across reloads.
+  graphics and sound; all persist across reloads. Low graphics visibly drops
+  resolution and removes weather/decor while gameplay stays identical.
+- Jetpack: hold 🚀 (or J) to climb; the fuel bar above the worm drains, stops
+  at 0, and every team member refills on their next turn.
+- Camera: pinch / scroll to zoom; it follows the active worm, the shell in
+  flight, and the airstrike reticle; edges stay clamped inside the map.
+- Map size: play a turn on Wide and Epic — terrain, water, sky and scenery
+  span the full width and worms spawn spread out.
 - Help: open from the menu and with H; it pauses the game, Esc/H/P closes it,
   and the previous paused state is restored.
 - Sudden death: turn 16 sea rise + wither; meteors arrive shortly after.
@@ -280,7 +347,27 @@ There are no automated tests; the game must be checked by hand:
 - Clear `inp` on `window blur` and `aimDrag` on `pointercancel`, or inputs
   stick after interruptions.
 - Weapon index math: buttons exist for all 13, visibility is paged; keyboard
-  selects `wepPage*7+i`. Never assume raw 1–13 indexes.
+  selects `wepPage*7+i` into `wepList()`. Never assume raw 1–13 indexes, and
+  re-derive buttons after scheme changes with `buildWeps()`.
+- Never decrement ammo directly (`ammo[team][id]--`): in Greedy/Bazooka schemes
+  the key is absent and `undefined--` turns the weapon into `NaN` (never
+  unlimited, never zero). Always use `useAmmo(id)`.
+- `endTurn()` must skip teams with no living worms (`do…while` with a bounded
+  counter); the naive `(turnTeam+1)%teamCount` can land on a dead team and
+  `startTurn()` would spin forever with 3–4 teams.
+- The camera removed `sc`/`ox`/`oy`: pointer→world is always
+  `cam.x+(clientX-innerWidth/2)/S()`, and `camClamp()` must follow any direct
+  `cam` change. Leaving the old letterbox math anywhere silently breaks
+  aiming/zoom.
+- `W`/`H` are dynamic: `newGame()` sets `W` from `MAPS[mapIdx]` and calls
+  `resize()` before `genTerrain()`/`mkBg()`/`initScenery()`. Anything cached at
+  boot (terrain, `mask`, `bg`, `surf` points, scenery) must be rebuilt there —
+  never assume 1400.
+- Jetpack is gated inside `stepWorm()` (`w===cur`, aim/retreat, `!paused`):
+  human turns need `inp.jet && !aiOn[turnTeam]`, AI turns use `w.aiJet>0` and
+  steer with `w.aiJetDir` only. Fuel is refilled per team in `startTurn()`.
+- `startTurn()` re-clamps `wpn` from `lastWpn` — schemes can remove weapons
+  from `wepList()`, so the stored weapon may be invalid.
 - `lastTick` must be reset to 99 in `startTurn()` or the countdown ticker
   misbehaves.
 - Rockets skip their own shooter only for 0.25 s (`p.age>.25`); sheep/mines
@@ -288,9 +375,9 @@ There are no automated tests; the game must be checked by hand:
 - `retreat=(wpn==='sheep'||aiOn[turnTeam])?0:3` — AI and sheep get no retreat
   window.
 - Don't rename DOM ids — `$()` lookups and the `el` HUD map depend on them:
-  `c, banner, tip, fire, weps, time, wf, wtxt, sd, h0, h1, t0, t1, pause,
-  snd, fs, quit, menu, msg, cnt, lvl, hp, tt, ag, b2, b1`, plus the
-  customization ids `tn0, tn1, sky, ter, wx, gfx, rnd, smute, bhelp, hclose`
+  `c, banner, tip, fire, jump, jet, weps, teams, time, wf, wtxt, sd, pause,
+  snd, fs, quit, menu, msg, cnt, lvl, hp, tt, ag, tms, sch, wnd, crt, map, b2, b1`,
+  plus the customization ids `tn0, tn1, tn2, tn3, sky, ter, wx, gfx, rnd, smute, bhelp, hclose`
   and `help`.
 - Team names feed `#msg` via `innerHTML` on the game-over screen — always pass
   them through `esc()`. Everywhere else they go through `textContent`.
