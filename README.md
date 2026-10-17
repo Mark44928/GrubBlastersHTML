@@ -11,7 +11,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - 2–4 worms per team with configurable starting HP (100 / 150 / 200)
 - Fully destructible terrain — craters stay, worms fall
 - Shifting wind that bends rockets mid-flight
-- Nine weapons: bazooka, grenade, dynamite, shotgun, airstrike, teleport, sheep, hammer, mine
+- Thirteen weapons on two shelf pages (flip with ⇄): bazooka, grenade, dynamite, shotgun, hammer, mine, sheep, airstrike, teleport, holy grenade, cluster bomb, uzi, blowtorch
 - Proximity mines that arm after 2 s, persist across turns, and chain-react when shot
 - Parachuted supply crates: +HP or bonus ammo
 - Weather: rain, snow, and drifting fireflies on clear nights
@@ -37,6 +37,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Release the sheep and it wanders on its own, blowing up on the first worm it touches (or after 8 s); press FIRE again to detonate it on command.
 - The hammer smacks a nearby enemy hard and sends them flying — knockback can drown a worm.
 - Drop a mine and walk away: it arms after 2 seconds, waits for any worm to come close, and survives between turns. Shoot one to set off a chain reaction.
+- The ⇄ button flips the weapon shelf between pages; the page follows your selection when you pick a weapon.
 - Watch the wind meter in the HUD: it pushes rockets and slanting rain.
 
 ### Keyboard
@@ -46,7 +47,8 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 | Arrow keys / WASD | Walk and adjust aim |
 | Space (hold) | Charge and release fire (also detonates the sheep / skips retreat) |
 | Enter / Shift | Jump |
-| 1–9 | Select weapon |
+| 1–7 | Select weapon on the current shelf page |
+| Q | Flip the weapon shelf page |
 | P / Esc | Pause |
 
 ## Weapons
@@ -62,8 +64,12 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 | Sheep | 1 per team | Walks by itself until it finds a worm or is detonated |
 | Hammer | Unlimited | Melee whack with heavy knockback |
 | Mine | 1 per team | Arms after 2 s; proximity trigger; chain-reacts |
+| Holy Grenade | 1 per team | 3 s fuse; colossal blast with a white flash and choir tone |
+| Cluster Bomb | 1 per team | Splits mid-air into four scattering bomblets |
+| Uzi | 2 per team | Six-shot burst with spread; instant hitscan |
+| Blowtorch | 1 per team | Instantly cuts a short tunnel through terrain (and anyone in it) |
 
-Crates can refill dynamite, airstrike, teleport, or grant an extra sheep or mine.
+Crates can refill dynamite, airstrike, teleport, or grant an extra sheep, mine, holy grenade, cluster bomb, uzi, or blowtorch.
 
 ## Running locally
 
@@ -75,4 +81,4 @@ python -m http.server
 
 ## Tech
 
-Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural. About 54 KB in total.
+Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural. About 57 KB in total.
