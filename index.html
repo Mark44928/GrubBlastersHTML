@@ -183,7 +183,7 @@ let state='menu',cur=null,turnTeam=0,turnTime=30,wind=0,power=0,charging=false,w
 let retreat=0,quiet=0,settleT=0,shots=0,shotT=0,shotD=null,shake=0,aiOn=[false,false],ai=null,perTeam=3,diff=1,cursor=[-1,-1],lastTick=0,wins=[0,0],kdmg=[0,0],kills=[0,0],wepPage=0,shotCfg={r:16,dmg:26,spread:0,delay:.5};
 let target=null,tipMsg='',tipT=0,ammo=[{},{}],curSheep=null,chainFx=[];
 const inp={left:false,right:false,up:false,down:false};
-let ttIdx=1,guide=false,hpIdx=0;
+let ttIdx=1,guide=false,hpIdx=0,lastWpn=['bazooka','bazooka'];
 try{const a=localStorage.getItem('gb_diff'),b=localStorage.getItem('gb_per'),c=localStorage.getItem('gb_tt'),g=localStorage.getItem('gb_guide'),m=localStorage.getItem('gb_mute'),h=localStorage.getItem('gb_hp');if(a!==null)diff=Math.max(0,Math.min(3,+a||0));if(b!==null)perTeam=Math.max(2,Math.min(4,+b||3));if(c!==null)ttIdx=Math.max(0,Math.min(3,+c||1));if(g!==null)guide=g==='1';if(m!==null)muted=m==='1';if(h!==null)hpIdx=Math.max(0,Math.min(2,+h||0))}catch(e){}
 
 const PTS=[[-5,8],[5,8],[-7,2],[7,2],[-6,-6],[6,-6],[0,-9]];
@@ -201,7 +201,7 @@ function initScenery(){
 function newGame(mode){
   aiOn=[false,mode==='cpu'];
   pickTheme();weather=Math.random()<.3?1:Math.random()<.44?2:0;genTerrain();mkBg();initScenery();
-  worms=[];proj=[];parts=[];texts=[];tracers=[];crates=[];graves=[];rings=[];pend=[];shots=0;target=null;turnNo=0;curSheep=null;chainFx=[];
+  worms=[];proj=[];parts=[];texts=[];tracers=[];crates=[];graves=[];rings=[];pend=[];shots=0;target=null;turnNo=0;curSheep=null;chainFx=[];lastWpn=['bazooka','bazooka'];
   WATER=WATER0;waterTarget=WATER0;paused=false;$('#pause').textContent='⏸';
   ammo=[{dynamite:2,airstrike:1,teleport:2,sheep:1,mine:1,holy:1,cluster:1,uzi:2,torch:1},{dynamite:2,airstrike:1,teleport:2,sheep:1,mine:1,holy:1,cluster:1,uzi:2,torch:1}];
   const n=perTeam*2,slots=[];
@@ -226,7 +226,8 @@ function startTurn(){
   if(turnNo>SD_TURN)for(const w of worms){if(!w.alive)continue;w.hp-=5;w.flash=.3;texts.push({x:w.x,y:w.y-34,t:1.3,txt:'-5',c:'#ffb3c1'});if(w.hp<=0){w.hp=0;killWorm(w,false)}}
   if(turnNo>SD_TURN+2&&Math.random()<.6){pend.push({t:1,x:220+Math.random()*(W-440),meteor:true});tip('☄️ Meteor incoming!',2)}
   if(turnNo>2&&turnNo%3===0&&crates.length<3)spawnCrate();
-  wind=Math.round(Math.random()*20-10);turnTime=TT[ttIdx];power=0;charging=false;retreat=0;quiet=0;settleT=0;target=null;curSheep=null;
+  wind=Math.round(Math.random()*20-10);turnTime=TT[ttIdx];power=0;charging=false;retreat=0;quiet=0;settleT=0;target=null;curSheep=null;lastTick=99;
+  wpn=lastWpn[turnTeam];
   if(ammoOf(wpn)===0)wpn='bazooka';
   wepPage=WEP.findIndex(x=>x.id===wpn)>=7?1:0;applyPage();
   state='aim';ai={phase:'wait',t:0,walkLeft:3};
@@ -257,9 +258,13 @@ function spawnCrate(){
   }
 }
 function pickCrate(c){
-  const w=cur;SFX.pick();
-  if(c.type==='health'){const g=Math.min(HP[hpIdx],w.hp+35)-w.hp;w.hp+=g;texts.push({x:w.x,y:w.y-44,t:1.6,txt:'+'+g+' HP',c:'#7dff7d'})}
-  else{const k=['dynamite','airstrike','teleport','sheep','mine','holy','cluster','uzi','torch'][Math.random()*9|0];ammo[w.team][k]++;texts.push({x:w.x,y:w.y-44,t:1.8,txt:'+1 '+k,c:'#ffe14a'});updateWeps()}
+  const w=cur;
+  if(c.type==='health'){
+    const g=Math.min(HP[hpIdx],w.hp+35)-w.hp;
+    if(g<=0){tip(w.name+' is at full HP',1.5);return false}
+    w.hp+=g;texts.push({x:w.x,y:w.y-44,t:1.6,txt:'+'+g+' HP',c:'#7dff7d'});
+  }else{const k=['dynamite','airstrike','teleport','sheep','mine','holy','cluster','uzi','torch'][Math.random()*9|0];ammo[w.team][k]++;texts.push({x:w.x,y:w.y-44,t:1.8,txt:'+1 '+k,c:'#ffe14a'});updateWeps()}
+  SFX.pick();return true;
 }
 function updateWorld(dt){
   for(let i=crates.length-1;i>=0;i--){
@@ -269,7 +274,7 @@ function updateWorld(dt){
       if(c.y>=0&&solid(c.x,c.y+10)){c.chute=false;c.vy=0}
     }else{c.chute=false;c.vy=0}
     if(c.y>WATER){splash(c.x,WATER);crates.splice(i,1);continue}
-    if(cur&&cur.alive&&(state==='aim'||(state==='settle'&&retreat>0))&&Math.hypot(cur.x-c.x,cur.y-c.y)<20){pickCrate(c);crates.splice(i,1)}
+    if(cur&&cur.alive&&(state==='aim'||(state==='settle'&&retreat>0))&&Math.hypot(cur.x-c.x,cur.y-c.y)<20){if(pickCrate(c))crates.splice(i,1)}
   }
   for(let i=graves.length-1;i>=0;i--){
     const g=graves[i];
@@ -325,7 +330,7 @@ function killWorm(w,drown){
   texts.push({x:w.x,y:w.y-40,t:1.8,txt:w.name+(drown?' swims with the fishes':' is toast'),c:'#fff'});
 }
 function jump(){
-  const w=cur;if(!w||!w.alive||w.air)return;
+  if(paused)return;const w=cur;if(!w||!w.alive||w.air)return;
   if(!(state==='aim'||(state==='settle'&&retreat>0)))return;
   if(aiOn[turnTeam])return;
   w.air=true;w.vy=-290;w.vx=w.dir*95;SFX.jump();
@@ -333,7 +338,7 @@ function jump(){
 
 /* ---------- weapons ---------- */
 function fire(){
-  const w=cur;if(!w||!w.alive||state!=='aim')return;
+  if(paused)return;const w=cur;if(!w||!w.alive||state!=='aim')return;
   if(ammoOf(wpn)===0)return;
   const dx=w.dir*Math.cos(w.aim),dy=-Math.sin(w.aim),sx=w.x+dx*14,sy=w.y-2+dy*14;
   if(wpn==='teleport'){
@@ -359,7 +364,7 @@ function fire(){
   else if(wpn==='uzi'){ammo[w.team].uzi--;shots=6;shotT=0;shotD={dx,dy};shotCfg={r:10,dmg:12,spread:.07,delay:.12};SFX.shot()}
   else if(wpn==='torch'){ammo[w.team].torch--;torchCut(w,dx,dy)}
   else{shots=2;shotT=0;shotD={dx,dy};shotCfg={r:16,dmg:26,spread:0,delay:.5}}
-  charging=false;power=0;state='settle';retreat=wpn==='sheep'?0:3;quiet=0;settleT=0;target=null;updateWeps();
+  charging=false;power=0;state='settle';retreat=(wpn==='sheep'||aiOn[w.team])?0:3;quiet=0;settleT=0;target=null;lastWpn[w.team]=wpn;updateWeps();
 }
 function doAirstrike(){
   ammo[cur.team].airstrike--;
@@ -369,7 +374,7 @@ function doAirstrike(){
 function doTeleport(){
   const w=cur,tx=target.x;let found=null;
   for(let k=0;k<=40;k+=2){if(!hit(tx,target.y-k)){found=target.y-k;break}}
-  if(found===null||tx<20||tx>W-20||found>WATER-24){tip("Can't teleport there",2);return false}
+  if(found===null||found<24||tx<20||tx>W-20||found>WATER-24){tip("Can't teleport there",2);return false}
   ammo[w.team].teleport--;
   for(let i=0;i<24;i++){const a=Math.random()*6.283,s=40+Math.random()*120;parts.push({x:w.x,y:w.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:.6,max:.6,c:'#7ee8ff',s:2+Math.random()*3,g:0,d:2})}
   w.x=tx;w.y=found;w.vx=w.vy=0;w.air=true;
@@ -422,7 +427,7 @@ function updateProj(dt){
       if(!hit(p.x,sny))p.y=sny;else{p.vy=0;for(let k=0;k<8&&!hit(p.x,p.y+1);k++)p.y+=1}
       if(p.x<15||p.x>W-15)p.dir*=-1;
       const by=p.shooter?p.shooter.team:null;
-      let near=false;for(const e of worms)if(e.alive&&Math.hypot(e.x-p.x,e.y-p.y)<18){near=true;break}
+      let near=false;for(const e of worms)if(e.alive&&e!==p.shooter&&Math.hypot(e.x-p.x,e.y-p.y)<18){near=true;break}
       p.fuse-=dt;
       if(near||p.fuse<=0){explode(p.x,p.y,p.r,p.dmg,by);dead=true}
       else if(p.y>WATER){splash(p.x,WATER);SFX.splash();dead=true}
@@ -489,11 +494,12 @@ function control(dt){
   }
 }
 function startCharge(){
+  if(paused)return;
   if(curSheep&&humanTurn()){detonateSheep();return}
   if(state==='settle'&&retreat>0&&humanTurn()){retreat=0;return}
   if(!humanTurn()||state!=='aim'||charging||!cur.alive)return;
   initAudio();
-  if(wpn==='shotgun'||TARGETED.includes(wpn)){fire();return}
+  if(wpn==='shotgun'||wpn==='torch'||TARGETED.includes(wpn)){fire();return}
   charging=true;power=0;
 }
 function releaseFire(){
@@ -522,10 +528,10 @@ function torchCut(w,dx,dy){
   SFX.torch();shake=Math.max(shake,3);
 }
 function setWpn(i){
-  if(state!=='aim'||charging||!humanTurn())return;
+  if(paused||state!=='aim'||charging||!humanTurn())return;
   if(ammoOf(WEP[i].id)===0){tip('Out of ammo',1.5);return}
   const pg=i>=7?1:0;if(pg!==wepPage){wepPage=pg;applyPage()}
-  wpn=WEP[i].id;target=null;updateWeps();
+  wpn=WEP[i].id;target=null;lastWpn[turnTeam]=wpn;updateWeps();
 }
 function updateWeps(){
   document.querySelectorAll('#weps .wbtn').forEach((b,i)=>{
@@ -620,7 +626,6 @@ function update(dt){
   for(let i=texts.length-1;i>=0;i--){const t=texts[i];t.t-=dt;t.y-=28*dt;if(t.t<=0)texts.splice(i,1)}
   for(let i=tracers.length-1;i>=0;i--){tracers[i].t-=dt;if(tracers[i].t<=0)tracers.splice(i,1)}
   shake=Math.max(0,shake-dt*20);tipT=Math.max(0,tipT-dt);
-  for(const c of clouds)c.x+=c.v*dt*.5;
   if(weather===1)for(const r of rain){r.y+=r.v*dt;r.x+=wind*26*dt;if(r.y>WATER){r.y=-20;r.x=Math.random()*W}}
   if(weather===2)for(const s of snow){s.p+=dt*1.5;s.y+=s.v*dt;s.x+=(wind*14+Math.sin(s.p)*12)*dt;if(s.y>WATER){s.y=-10;s.x=Math.random()*W}if(s.x<-20)s.x=W+20;if(s.x>W+20)s.x=-20}
   for(const f of fireflies){f.p+=dt*1.2;f.x+=Math.cos(f.p)*f.s*dt;f.y+=Math.sin(f.p*1.7)*f.s*.6*dt}
@@ -856,7 +861,7 @@ let aimDrag=false;
 function aimTo(e,tap){
   if(state!=='aim'||!humanTurn()||!cur||!cur.alive||paused)return;
   const wx=(e.clientX-ox)/sc,wy=(e.clientY-oy)/sc;
-  if(tap){
+  if(tap&&!charging){
     const own=worms.filter(w=>w.team===turnTeam);
     for(let i=0;i<own.length;i++){const w=own[i];if(w.alive&&w!==cur&&Math.hypot(w.x-wx,w.y-wy)<22){cursor[turnTeam]=i;cur=w;updateWeps();tip(cur.name+' selected',1);return}}
   }
