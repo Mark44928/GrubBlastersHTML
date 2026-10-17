@@ -7,8 +7,12 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 ## Features
 
 - Local 2-player hot-seat or vs. computer (Easy / Normal / Hard / Brutal)
+- 2–8 worms per team with configurable starting HP (100 / 150 / 200)
 - Tap any of your worms to take control of it — move anyone, anywhere
-- 2–4 worms per team with configurable starting HP (100 / 150 / 200)
+- Double-tap jump for a backflip — hop backwards with a spin
+- Big customization: team names, AI level, worm count, HP, turn timer, sky, terrain, and weather
+- Low-graphics mode for smoother play on older phones
+- Built-in Help & Controls screen (menu button or the H key)
 - Fully destructible terrain — craters stay, worms fall
 - Shifting wind that bends rockets mid-flight
 - Thirteen weapons on two shelf pages (flip with ⇄): bazooka, grenade, dynamite, shotgun, hammer, mine, sheep, airstrike, teleport, holy grenade, cluster bomb, uzi, blowtorch
@@ -31,6 +35,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Tap or drag the map to aim.
 - Hold FIRE to charge power, release to shoot.
 - Walk with the arrow buttons; climb with the up/down aim buttons; jump with the jump button.
+- Double-tap the jump button (or Enter/Shift) to backflip — a quick backwards hop with a spin.
 - Tap one of your other alive worms to switch to it — you can move any worm on your turn, not just the next in line.
 - After firing you get a short retreat window; press FIRE during it to skip it and end your turn early.
 - Airstrike and teleport arm a map target first — tap the map, then press FIRE.
@@ -39,6 +44,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Drop a mine and walk away: it arms after 2 seconds, waits for any worm to come close, and survives between turns. Shoot one to set off a chain reaction.
 - The ⇄ button flips the weapon shelf between pages; the page follows your selection when you pick a weapon.
 - Watch the wind meter in the HUD: it pushes rockets and slanting rain.
+- Open Help & Controls from the menu button, or press H.
 
 ### Keyboard
 
@@ -49,6 +55,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 | Enter / Shift | Jump |
 | 1–7 | Select weapon on the current shelf page |
 | Q | Flip the weapon shelf page |
+| H | Open Help & Controls |
 | P / Esc | Pause |
 
 ## Weapons
@@ -81,4 +88,4 @@ python -m http.server
 
 ## Tech
 
-Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural. About 58 KB in total.
+Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural. About 64 KB in total.

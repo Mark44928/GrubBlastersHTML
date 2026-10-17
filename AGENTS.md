@@ -99,8 +99,11 @@ canvas.
 - Turn: `turnTeam`, `turnNo`, `cur` (active worm), `cursor[team]` (rotation
   index), `retreat` (post-shot move window, 3 s), `quiet`/`settleT` (settle
   timeout: end turn after 1 s quiet or 25 s hard cap).
-- Settings: `perTeam, diff, hpIdx, ttIdx, guide, muted` (persisted).
-- `inp` = walk/aim booleans; `aimDrag` = map-drag aiming; `paused`.
+- Settings: `perTeam, diff, hpIdx, ttIdx, guide, muted, skyIdx, terIdx, wxIdx, low`
+  (persisted, see below). `TN` holds the (editable) team names.
+- `inp` = walk/aim booleans. `aimDrag` = map-drag aiming. `paused` (`helpWasPaused`
+  remembers it while the Help overlay is open). `jumpT` = timestamp of the last
+  jump, used for the double-tap backflip.
 - `lastWpn[team]` = per-team weapon memory; `wepPage` = shelf page; `target` =
   chosen spot for targeted weapons.
 
@@ -165,7 +168,9 @@ Single `draw()` per frame, painter's order: shake → background → clouds →
 terrain → graves → crates → worms → aim aids (barrel, reticle/target, guide
 arc, charge dots, arrow) → projectiles → tracers/rings → particles → leaves →
 weather → animated water → floating texts. `hud()` updates DOM bars, clock,
-wind meter, and tips.
+wind meter, and tips. **Low graphics** (`low`) is cosmetic-only: it thins
+scenery/particle counts at spawn, skips clouds/leaves/fireflies, and lowers the
+particle cap. It must never change gameplay, damage, or terrain.
 
 ### Loop
 
@@ -183,7 +188,13 @@ rendering.
   clear interactive state.
 - Keyboard: `KM` maps arrows/WASD; `keyOf()` lowercases single chars
   (CapsLock-proof); Space charge, Enter/Shift jump, 1–7 weapon, Q page,
-  P/Esc pause.
+  P/Esc pause, H help.
+- Backflip: `jump()` checks `now-jumpT<350` while airborne and flips
+  (`w.flip=1`, backwards `vx`); `stepWorm` decays `w.flip`, `drawWorm` rotates
+  by it. Keep the flip cosmetic-only (it must not alter damage/terrain).
+- Help overlay (`#help`) is opened by `toggleHelp()`, which pauses the sim and
+  restores the previous paused state on close. `keydown` swallows all keys while
+  it is open and closes it on Esc/P/H.
 - Pause must gate every action entry point (`fire`/`startCharge`/`jump`/
   `setWpn`).
 
@@ -192,11 +203,16 @@ rendering.
 | Key | Meaning | Default |
 |---|---|---|
 | `gb_diff` | AI difficulty index 0–3 | 1 (Normal) |
-| `gb_per` | worms per team 2–4 | 3 |
+| `gb_per` | worms per team 2–8 | 3 |
 | `gb_hp` | HP index 0–2 (100/150/200) | 0 |
 | `gb_tt` | turn timer index 0–3 (20/30/45/60) | 1 (30 s) |
 | `gb_guide` | aim guide `'1'`/`'0'` | off |
 | `gb_mute` | mute `'1'`/`'0'` | off |
+| `gb_tn0`/`gb_tn1` | team names (≤12 chars) | RED / BLUE |
+| `gb_sky` | sky theme index, −1 = random | −1 |
+| `gb_ter` | terrain theme index, −1 = random | −1 |
+| `gb_wx` | weather 0 clear / 1 rain / 2 snow, −1 = random | −1 |
+| `gb_low` | low graphics `'1'`/`'0'` | off |
 
 All reads are wrapped in try/catch (private-mode safe).
 
@@ -238,6 +254,12 @@ There are no automated tests; the game must be checked by hand:
 - Retreat: move after firing, press FIRE to skip, turn ends when quiet.
 - Pause mid-flight; actions while paused are ignored.
 - Keyboard: walk, CapsLock on, blur the window mid-walk (no runaway).
+- Backflip: double-tap jump within ~0.35 s — worm hops backwards and spins
+  (cosmetic only).
+- Customization: rename teams, cycle sky/terrain/weather, toggle low
+  graphics and sound; all persist across reloads.
+- Help: open from the menu and with H; it pauses the game, Esc/H/P closes it,
+  and the previous paused state is restored.
 - Sudden death: turn 16 sea rise + wither; meteors arrive shortly after.
 - Win a match: confetti, score summary, menu returns, wins shown in HUD.
 - Resize/rotate: HUD respects safe areas; fullscreen toggles.
@@ -267,5 +289,9 @@ There are no automated tests; the game must be checked by hand:
   window.
 - Don't rename DOM ids — `$()` lookups and the `el` HUD map depend on them:
   `c, banner, tip, fire, weps, time, wf, wtxt, sd, h0, h1, t0, t1, pause,
-  snd, fs, quit, menu, msg, cnt, lvl, hp, tt, ag, b2, b1`.
+  snd, fs, quit, menu, msg, cnt, lvl, hp, tt, ag, b2, b1`, plus the
+  customization ids `tn0, tn1, sky, ter, wx, gfx, rnd, smute, bhelp, hclose`
+  and `help`.
+- Team names feed `#msg` via `innerHTML` on the game-over screen — always pass
+  them through `esc()`. Everywhere else they go through `textContent`.
 - Keep `index.html` a single file. If it grows, tighten code — don't split.

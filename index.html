@@ -54,6 +54,13 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:
 .row{margin-top:12px;font-size:15px}
 .row button{margin-left:8px;padding:6px 16px;border-radius:10px;border:0;font-weight:800;font-size:16px;min-width:84px}
 .hint{font-size:13px!important;opacity:.65!important;max-width:420px;line-height:1.45}
+#help{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(5,12,30,.8);backdrop-filter:blur(6px);z-index:9;padding:14px}
+#help.hide{display:none}
+#help .card{text-align:left;width:min(560px,94vw)}
+#help h2{margin:16px 0 4px;font-size:16px;color:#ffd54a}
+#help ul{margin:4px 0;padding-left:20px;font-size:14px;line-height:1.55}
+#help .kbd{display:inline-block;background:#0b1530;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:0 6px;font-size:12px;font-weight:800;margin:0 1px}
+#help .big{margin-top:18px}
 </style>
 </head>
 <body>
@@ -90,14 +97,52 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:
   <div class="row">Worm HP: <button id="hp">100</button></div>
   <div class="row">Turn time: <button id="tt">30s</button></div>
   <div class="row">Aim guide: <button id="ag">Off</button></div>
-  <p class="hint">Tap or drag the map to aim · tap your other worms to switch · hold FIRE to charge, release to shoot · ◀ ▶ walk, ⤒ jump · ⇄ flips the weapon shelf · ✈️ and 🌀: tap the map to pick a spot, then FIRE · 🐑 walks on its own, press FIRE again to detonate · 🔨 whacks and knocks back · 🔴 mines arm after 2s, chain-react, and stay between turns · 😇 biggest blast · 🛢️ splits into bomblets · ⚡ six-shot burst · 🔥 cuts a tunnel · press FIRE during retreat to skip it · after 16 turns the sea rises and worms wither!</p>
+  <div class="row">Names: <button id="tn0">RED</button> vs <button id="tn1">BLUE</button></div>
+  <div class="row">Sky: <button id="sky">Auto</button> · Terrain: <button id="ter">Auto</button></div>
+  <div class="row">Weather: <button id="wx">Auto</button> · Graphics: <button id="gfx">High</button></div>
+  <div class="row">Sound: <button id="smute">On</button> · Theme: <button id="rnd">🎲 Random</button></div>
+  <button class="big alt" id="bhelp">❓ Help &amp; Controls</button>
+  <p class="hint">Tap or drag the map to aim · hold FIRE to charge · double-tap jump to backflip!</p>
+</div></div>
+<div id="help" class="hide"><div class="card">
+  <h1>❓ Help &amp; Controls</h1>
+  <h2>Turn</h2>
+  <ul>
+    <li>Tap or drag the map to aim; hold <span class="kbd">FIRE</span> to charge, release to shoot.</li>
+    <li>Walk with <span class="kbd">◀</span> <span class="kbd">▶</span>; adjust aim with <span class="kbd">▲</span> <span class="kbd">▼</span>.</li>
+    <li><span class="kbd">⤒</span> jumps — tap it twice quickly to <b>backflip</b> (hop backwards with a spin).</li>
+    <li>Tap one of your other worms to take control of it.</li>
+    <li>After firing you get a short retreat window; press <span class="kbd">FIRE</span> to skip it.</li>
+  </ul>
+  <h2>Weapons</h2>
+  <ul>
+    <li><span class="kbd">⇄</span> flips the weapon shelf page; keys <span class="kbd">1</span>–<span class="kbd">7</span> pick on-page.</li>
+    <li><b>✈️ Airstrike</b> and <b>🌀 Teleport</b>: tap the map to pick a spot, then <span class="kbd">FIRE</span>.</li>
+    <li><b>🐑 Sheep</b> walks on its own — press <span class="kbd">FIRE</span> again to detonate it.</li>
+    <li><b>🔴 Mines</b> arm after 2 s, stay between turns, and chain-react when shot.</li>
+    <li><b>🔥 Blowtorch</b> cuts a tunnel; <b>😇 Holy Grenade</b> has the biggest blast.</li>
+  </ul>
+  <h2>Keyboard</h2>
+  <ul>
+    <li><span class="kbd">Arrows</span> / <span class="kbd">WASD</span> move &amp; aim · <span class="kbd">Space</span> fire · <span class="kbd">Enter</span> / <span class="kbd">Shift</span> jump</li>
+    <li><span class="kbd">1</span>–<span class="kbd">7</span> weapon · <span class="kbd">Q</span> shelf page · <span class="kbd">P</span> / <span class="kbd">Esc</span> pause · <span class="kbd">H</span> help</li>
+  </ul>
+  <h2>Tips</h2>
+  <ul>
+    <li>The wind meter pushes rockets and rain — check it every turn.</li>
+    <li>After turn 16 the sea rises, worms wither, and meteors fall.</li>
+    <li>Parachuted crates give +HP or bonus ammo.</li>
+    <li>Pick <b>Low graphics</b> in the menu for smoother play on older phones.</li>
+  </ul>
+  <button class="big" id="hclose">Close</button>
 </div></div>
 
 <script>
 'use strict';
 const W=1400,H=800,WATER0=725,G=620,SD_TURN=16;const TT=[20,30,45,60],HP=[100,150,200];
 let WATER=WATER0,waterTarget=WATER0;
-const TC=['#ff5252','#3fa9ff'],TN=['RED','BLUE'];
+const TC=['#ff5252','#3fa9ff'];let TN=['RED','BLUE'];
+const SKYN=['Auto','Day','Sunset','Night'],GROUNDN=['Auto','Grass','Desert','Snow'],WXN=['Auto','Clear','Rain','Snow'];
 const NAMES=['Wiggles','Squirm','Slimer','Noodle','Inch','Gus','Wormy','Slick','Dirt','Pip','Bob','Mudge','Zig','Zag','Nibbles','Grub'];
 const TAUNTS=['Take that!','Boom!','Nice one!','Ouch!','Whoops!','Eat dirt!','Lucky shot!','Ha!','Gotcha!','Watch out!','Incoming!'];
 const WEP=[{id:'bazooka',ico:'🚀'},{id:'grenade',ico:'💣'},{id:'dynamite',ico:'🧨'},{id:'shotgun',ico:'🔫'},{id:'airstrike',ico:'✈️'},{id:'teleport',ico:'🌀'},{id:'sheep',ico:'🐑'},{id:'hammer',ico:'🔨'},{id:'mine',ico:'🔴'},{id:'holy',ico:'😇'},{id:'cluster',ico:'🛢️'},{id:'uzi',ico:'⚡'},{id:'torch',ico:'🔥'}];
@@ -115,6 +160,7 @@ const GROUND=[
 ];
 let skyT=SKY[0],gnd=GROUND[0];
 const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const cv=$('#c'),ctx=cv.getContext('2d');
 if(!ctx.roundRect)CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h){this.rect(x,y,w,h)};
 let sc=1,ox=0,oy=0,dpr=1;
@@ -130,7 +176,7 @@ const SFX={boom:()=>noise(.6,.55,700),small:()=>noise(.25,.35,1800),shot:()=>{no
 
 /* ---------- background & terrain ---------- */
 let bg,terrain,tctx,mask;
-function pickTheme(){skyT=SKY[Math.random()*3|0];gnd=GROUND[Math.random()*3|0]}
+function pickTheme(){skyT=SKY[skyIdx<0?Math.random()*3|0:skyIdx];gnd=GROUND[terIdx<0?Math.random()*3|0:terIdx]}
 function mkBg(){
   bg=document.createElement('canvas');bg.width=W;bg.height=H;const g=bg.getContext('2d');
   const gr=g.createLinearGradient(0,0,0,H);gr.addColorStop(0,skyT.top);gr.addColorStop(.55,skyT.mid);gr.addColorStop(1,skyT.bot);
@@ -183,25 +229,26 @@ let state='menu',cur=null,turnTeam=0,turnTime=30,wind=0,power=0,charging=false,w
 let retreat=0,quiet=0,settleT=0,shots=0,shotT=0,shotD=null,shake=0,aiOn=[false,false],ai=null,perTeam=3,diff=1,cursor=[-1,-1],lastTick=0,wins=[0,0],kdmg=[0,0],kills=[0,0],wepPage=0,shotCfg={r:16,dmg:26,spread:0,delay:.5};
 let target=null,tipMsg='',tipT=0,ammo=[{},{}],curSheep=null,chainFx=[];
 const inp={left:false,right:false,up:false,down:false};
-let ttIdx=1,guide=false,hpIdx=0,lastWpn=['bazooka','bazooka'];
-try{const a=localStorage.getItem('gb_diff'),b=localStorage.getItem('gb_per'),c=localStorage.getItem('gb_tt'),g=localStorage.getItem('gb_guide'),m=localStorage.getItem('gb_mute'),h=localStorage.getItem('gb_hp');if(a!==null)diff=Math.max(0,Math.min(3,+a||0));if(b!==null)perTeam=Math.max(2,Math.min(4,+b||3));if(c!==null)ttIdx=Math.max(0,Math.min(3,+c||1));if(g!==null)guide=g==='1';if(m!==null)muted=m==='1';if(h!==null)hpIdx=Math.max(0,Math.min(2,+h||0))}catch(e){}
+let ttIdx=1,guide=false,hpIdx=0,lastWpn=['bazooka','bazooka'],skyIdx=-1,terIdx=-1,wxIdx=-1,low=false,jumpT=0;
+const numV=(v,d)=>{const x=parseInt(v,10);return isNaN(x)?d:x};
+try{const a=localStorage.getItem('gb_diff'),b=localStorage.getItem('gb_per'),c=localStorage.getItem('gb_tt'),g=localStorage.getItem('gb_guide'),m=localStorage.getItem('gb_mute'),h=localStorage.getItem('gb_hp'),n0=localStorage.getItem('gb_tn0'),n1=localStorage.getItem('gb_tn1'),sk=localStorage.getItem('gb_sky'),te=localStorage.getItem('gb_ter'),wx=localStorage.getItem('gb_wx'),lo=localStorage.getItem('gb_low');if(a!==null)diff=Math.max(0,Math.min(3,+a||0));if(b!==null)perTeam=Math.max(2,Math.min(8,+b||3));if(c!==null)ttIdx=Math.max(0,Math.min(3,+c||1));if(g!==null)guide=g==='1';if(m!==null)muted=m==='1';if(h!==null)hpIdx=Math.max(0,Math.min(2,+h||0));if(n0!==null&&n0.trim())TN[0]=n0.trim().slice(0,12);if(n1!==null&&n1.trim())TN[1]=n1.trim().slice(0,12);skyIdx=numV(sk,-1);terIdx=numV(te,-1);wxIdx=numV(wx,-1);if(lo!==null)low=lo==='1'}catch(e){}
 
 const PTS=[[-5,8],[5,8],[-7,2],[7,2],[-6,-6],[6,-6],[0,-9]];
 function hit(x,y){for(const q of PTS)if(solid(x+q[0],y+q[1]))return true;return false}
 function tip(m,t){tipMsg=m;tipT=t||2}
 function ammoOf(id){const a=ammo[turnTeam];return a&&id in a?a[id]:Infinity}
 function initScenery(){
-  clouds=[];for(let i=0;i<6;i++)clouds.push({x:Math.random()*W,y:40+Math.random()*230,s:.7+Math.random()*.8,v:4+Math.random()*9});
-  leaves=[];for(let i=0;i<18;i++)leaves.push({x:Math.random()*W,y:Math.random()*H*.8,p:Math.random()*6.3,s:2+Math.random()*2});
-  rain=[];for(let i=0;i<70;i++)rain.push({x:Math.random()*W,y:Math.random()*H,l:14+Math.random()*18,v:620+Math.random()*280});
-  snow=[];for(let i=0;i<80;i++)snow.push({x:Math.random()*W,y:Math.random()*H,p:Math.random()*6.3,s:1.2+Math.random()*1.8,v:36+Math.random()*54});
-  fireflies=[];if(skyT.stars&&weather!==1)for(let i=0;i<22;i++)fireflies.push({x:Math.random()*W,y:120+Math.random()*(WATER0-160),p:Math.random()*6.3,s:8+Math.random()*10});
+  clouds=[];for(let i=0;i<(low?2:6);i++)clouds.push({x:Math.random()*W,y:40+Math.random()*230,s:.7+Math.random()*.8,v:4+Math.random()*9});
+  leaves=[];for(let i=0;i<(low?0:18);i++)leaves.push({x:Math.random()*W,y:Math.random()*H*.8,p:Math.random()*6.3,s:2+Math.random()*2});
+  rain=[];for(let i=0;i<(low?30:70);i++)rain.push({x:Math.random()*W,y:Math.random()*H,l:14+Math.random()*18,v:620+Math.random()*280});
+  snow=[];for(let i=0;i<(low?32:80);i++)snow.push({x:Math.random()*W,y:Math.random()*H,p:Math.random()*6.3,s:1.2+Math.random()*1.8,v:36+Math.random()*54});
+  fireflies=[];if(skyT.stars&&weather!==1)for(let i=0;i<(low?8:22);i++)fireflies.push({x:Math.random()*W,y:120+Math.random()*(WATER0-160),p:Math.random()*6.3,s:8+Math.random()*10});
 }
 
 function newGame(mode){
   aiOn=[false,mode==='cpu'];
-  pickTheme();weather=Math.random()<.3?1:Math.random()<.44?2:0;genTerrain();mkBg();initScenery();
-  worms=[];proj=[];parts=[];texts=[];tracers=[];crates=[];graves=[];rings=[];pend=[];shots=0;target=null;turnNo=0;curSheep=null;chainFx=[];lastWpn=['bazooka','bazooka'];
+  pickTheme();weather=wxIdx<0?(Math.random()<.3?1:Math.random()<.44?2:0):wxIdx;genTerrain();mkBg();initScenery();
+  worms=[];proj=[];parts=[];texts=[];tracers=[];crates=[];graves=[];rings=[];pend=[];shots=0;target=null;turnNo=0;curSheep=null;chainFx=[];lastWpn=['bazooka','bazooka'];jumpT=0;
   WATER=WATER0;waterTarget=WATER0;paused=false;$('#pause').textContent='⏸';
   ammo=[{dynamite:2,airstrike:1,teleport:2,sheep:1,mine:1,holy:1,cluster:1,uzi:2,torch:1},{dynamite:2,airstrike:1,teleport:2,sheep:1,mine:1,holy:1,cluster:1,uzi:2,torch:1}];
   const n=perTeam*2,slots=[];
@@ -211,7 +258,7 @@ function newGame(mode){
   const names=NAMES.slice().sort(()=>Math.random()-.5);
   slots.forEach((x,i)=>{
     let best=H;for(let dx=-7;dx<=7;dx+=7){let yy=0;while(yy<H&&!solid(x+dx,yy))yy++;best=Math.min(best,yy)}
-    worms.push({team:tm[i],name:names[i],x,y:best-9,vx:0,vy:0,hp:HP[hpIdx],dh:HP[hpIdx],dir:x<W/2?1:-1,aim:.5,alive:true,air:true,wob:0,flash:0});
+    worms.push({team:tm[i],name:names[i],x,y:best-9,vx:0,vy:0,hp:HP[hpIdx],dh:HP[hpIdx],dir:x<W/2?1:-1,aim:.5,alive:true,air:true,wob:0,flash:0,flip:0});
   });
   cursor=[-1,-1];turnTeam=Math.random()<.5?0:1;wpn='bazooka';
   $('#menu').classList.add('hide');
@@ -242,9 +289,9 @@ function endTurn(){
 }
 function gameOver(t){
   state='over';
-  if(t>=0){wins[t]++;SFX.win();for(let i=0;i<160;i++)parts.push({x:Math.random()*W,y:-20-Math.random()*300,vx:(Math.random()-.5)*60,vy:60+Math.random()*120,life:2.5+Math.random()*1.5,max:4,c:['#ff5252','#3fa9ff','#ffe14a','#7dff7d','#ff9de2'][i%5],s:2+Math.random()*2,g:40,d:.1})}
+  if(t>=0){wins[t]++;SFX.win();for(let i=0;i<(low?60:160);i++)parts.push({x:Math.random()*W,y:-20-Math.random()*300,vx:(Math.random()-.5)*60,vy:60+Math.random()*120,life:2.5+Math.random()*1.5,max:4,c:['#ff5252','#3fa9ff','#ffe14a','#7dff7d','#ff9de2'][i%5],s:2+Math.random()*2,g:40,d:.1})}
   const sum='<br><span style="font-size:13px;opacity:.75;font-weight:600">Score '+wins[0]+' – '+wins[1]+' · Kills '+kills[0]+'/'+kills[1]+' · Damage '+Math.round(kdmg[0])+' / '+Math.round(kdmg[1])+'</span>';
-  $('#msg').innerHTML=(t<0?'Draw! Everybody sleeps with the fishes.':TN[t]+' TEAM WINS! 🏆')+sum;
+  $('#msg').innerHTML=(t<0?'Draw! Everybody sleeps with the fishes.':esc(TN[t])+' TEAM WINS! 🏆')+sum;
   setTimeout(()=>{if(state==='over')$('#menu').classList.remove('hide')},1600);
   banner(t<0?'DRAW':TN[t]+' WINS!',t<0?'#fff':TC[t]);
 }
@@ -299,6 +346,7 @@ function walk(w,dir,dt){
 }
 function stepWorm(w,dt){
   if(!w.alive)return;
+  if(w.flip>0)w.flip=Math.max(0,w.flip-dt*2.2);
   if(!w.air&&!hit(w.x,w.y+1))w.air=true;
   if(!w.air){w.vx=0;w.vy=0;return}
   w.vy+=G*dt;
@@ -330,10 +378,13 @@ function killWorm(w,drown){
   texts.push({x:w.x,y:w.y-40,t:1.8,txt:w.name+(drown?' swims with the fishes':' is toast'),c:'#fff'});
 }
 function jump(){
-  if(paused)return;const w=cur;if(!w||!w.alive||w.air)return;
+  if(paused)return;const w=cur;if(!w||!w.alive)return;
   if(!(state==='aim'||(state==='settle'&&retreat>0)))return;
   if(aiOn[turnTeam])return;
-  w.air=true;w.vy=-290;w.vx=w.dir*95;SFX.jump();
+  const now=performance.now();
+  if(w.air&&now-jumpT<350&&!w.flip){w.vx=-w.dir*165;w.vy=-320;w.flip=1;SFX.jump();jumpT=0;return}
+  if(w.air)return;
+  w.air=true;w.vy=-290;w.vx=w.dir*95;SFX.jump();jumpT=now;
 }
 
 /* ---------- weapons ---------- */
@@ -376,9 +427,9 @@ function doTeleport(){
   for(let k=0;k<=40;k+=2){if(!hit(tx,target.y-k)){found=target.y-k;break}}
   if(found===null||found<24||tx<20||tx>W-20||found>WATER-24){tip("Can't teleport there",2);return false}
   ammo[w.team].teleport--;
-  for(let i=0;i<24;i++){const a=Math.random()*6.283,s=40+Math.random()*120;parts.push({x:w.x,y:w.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:.6,max:.6,c:'#7ee8ff',s:2+Math.random()*3,g:0,d:2})}
+  for(let i=0;i<(low?10:24);i++){const a=Math.random()*6.283,s=40+Math.random()*120;parts.push({x:w.x,y:w.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:.6,max:.6,c:'#7ee8ff',s:2+Math.random()*3,g:0,d:2})}
   w.x=tx;w.y=found;w.vx=w.vy=0;w.air=true;
-  for(let i=0;i<24;i++){const a=Math.random()*6.283,s=40+Math.random()*120;parts.push({x:w.x,y:w.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:.6,max:.6,c:'#c9f6ff',s:2+Math.random()*3,g:0,d:2})}
+  for(let i=0;i<(low?10:24);i++){const a=Math.random()*6.283,s=40+Math.random()*120;parts.push({x:w.x,y:w.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:.6,max:.6,c:'#c9f6ff',s:2+Math.random()*3,g:0,d:2})}
   SFX.tele();return true;
 }
 function shootGun(){
@@ -463,20 +514,20 @@ function updateProj(dt){
       for(const e of worms)if(e.alive&&Math.hypot(e.x-p.x,e.y-p.y)<17){dead=true;explode(p.x,p.y,p.r,p.dmg,p.shooter?p.shooter.team:null);break}
       if(!dead&&p.y>WATER){splash(p.x,WATER);SFX.splash();dead=true}
     }
-    if(rocket&&!dead&&Math.random()<.9){const met=p.meteor===true;parts.push({x:p.x,y:p.y,vx:(Math.random()-.5)*30,vy:(Math.random()-.5)*30,life:met?.7:.6,max:met?.9:.6,c:met?'rgba(255,150,40,.95)':'rgba(230,230,230,1)',s:met?4.5+Math.random()*3.5:3+Math.random()*3,g:met?-40:-20,d:1})}
+    if(rocket&&!dead&&Math.random()<(low?.3:.9)){const met=p.meteor===true;parts.push({x:p.x,y:p.y,vx:(Math.random()-.5)*30,vy:(Math.random()-.5)*30,life:met?.7:.6,max:met?.9:.6,c:met?'rgba(255,150,40,.95)':'rgba(230,230,230,1)',s:met?4.5+Math.random()*3.5:3+Math.random()*3,g:met?-40:-20,d:1})}
     if(p.fuse!==undefined&&!dead){p.fuse-=dt;if(p.fuse<=0){dead=true;if(p.type==='cluster')splitCluster(p);else explode(p.x,p.y,p.r,p.dmg,p.shooter?p.shooter.team:null)}}
     if(dead)proj.splice(i,1);
   }
 }
 function boomFx(x,y,r){
-  if(parts.length>700)return;
-  const cols=['#ffeb3b','#ff9800','#ff5722'];
-  for(let i=0;i<r*.9;i++){const a=Math.random()*6.283,s=Math.random()*r*5;parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-40,life:.4+Math.random()*.5,max:.9,c:cols[i%3],s:3+Math.random()*r/8,g:0,d:2.5})}
-  for(let i=0;i<r*.5;i++){const a=Math.random()*6.283,s=Math.random()*r*2;parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:1+Math.random()*.6,max:1.6,c:'#555',s:5+Math.random()*r/6,g:-60,d:1.5})}
-  for(let i=0;i<r*.8;i++){const a=-Math.random()*3.14,s=80+Math.random()*r*7;parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:.8+Math.random()*.6,max:1.4,c:gnd.d1,s:2+Math.random()*3,g:600,d:.2})}
+  if(parts.length>(low?280:700))return;
+  const cols=['#ffeb3b','#ff9800','#ff5722'],m=low?.4:1;
+  for(let i=0;i<r*.9*m;i++){const a=Math.random()*6.283,s=Math.random()*r*5;parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-40,life:.4+Math.random()*.5,max:.9,c:cols[i%3],s:3+Math.random()*r/8,g:0,d:2.5})}
+  for(let i=0;i<r*.5*m;i++){const a=Math.random()*6.283,s=Math.random()*r*2;parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:1+Math.random()*.6,max:1.6,c:'#555',s:5+Math.random()*r/6,g:-60,d:1.5})}
+  if(!low)for(let i=0;i<r*.8;i++){const a=-Math.random()*3.14,s=80+Math.random()*r*7;parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:.8+Math.random()*.6,max:1.4,c:gnd.d1,s:2+Math.random()*3,g:600,d:.2})}
 }
 function splash(x,y){
-  for(let i=0;i<30;i++){const a=-Math.random()*3.14,s=80+Math.random()*260;parts.push({x,y,vx:Math.cos(a)*s*.6,vy:Math.sin(a)*s,life:.7+Math.random()*.4,max:1.1,c:'#bfe6ff',s:2+Math.random()*3,g:700,d:.3})}
+  for(let i=0;i<(low?12:30);i++){const a=-Math.random()*3.14,s=80+Math.random()*260;parts.push({x,y,vx:Math.cos(a)*s*.6,vy:Math.sin(a)*s,life:.7+Math.random()*.4,max:1.1,c:'#bfe6ff',s:2+Math.random()*3,g:700,d:.3})}
 }
 
 /* ---------- control ---------- */
@@ -522,7 +573,7 @@ function torchCut(w,dx,dy){
     const px=w.x+Math.cos(a)*d,py=w.y-2+Math.sin(a)*d;
     if(py>WATER)break;
     crater(px,py,9);
-    for(let k=0;k<4;k++){const a2=a+(Math.random()-.5)*.9,s=60+Math.random()*160;parts.push({x:px,y:py,vx:Math.cos(a2)*s,vy:Math.sin(a2)*s,life:.3+Math.random()*.3,max:.6,c:k%2?'#ffb300':'#ff5722',s:2+Math.random()*2,g:200,d:1.5})}
+    for(let k=0;k<(low?2:4);k++){const a2=a+(Math.random()-.5)*.9,s=60+Math.random()*160;parts.push({x:px,y:py,vx:Math.cos(a2)*s,vy:Math.sin(a2)*s,life:.3+Math.random()*.3,max:.6,c:k%2?'#ffb300':'#ff5722',s:2+Math.random()*2,g:200,d:1.5})}
     for(const e of worms)if(e.alive&&e!==w&&!burned.has(e)&&Math.hypot(e.x-px,e.y-py)<12){burned.add(e);damageWorm(e,10,w.team)}
   }
   SFX.torch();shake=Math.max(shake,3);
@@ -663,6 +714,7 @@ function update(dt){
 /* ---------- drawing ---------- */
 function drawWorm(w){
   ctx.save();ctx.translate(w.x,w.y);
+  if(w.flip>0)ctx.rotate((1-w.flip)*6.283*w.dir);
   const d=w.dir,sq=w.air?0:Math.sin(w.wob)*.06;
   ctx.scale(1+sq,1-sq);
   ctx.fillStyle=w.flash>0?'#ff6a6a':'#ffb3c1';ctx.strokeStyle='#8a3a4a';ctx.lineWidth=1.6;
@@ -761,7 +813,7 @@ function draw(){
   ctx.save();ctx.beginPath();ctx.rect(0,0,W,H);ctx.clip();
   if(shake>0)ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);
   if(bg)ctx.drawImage(bg,0,0);
-  for(const c of clouds)drawCloud(c);
+  if(!low)for(const c of clouds)drawCloud(c);
   if(terrain)ctx.drawImage(terrain,0,0);
   for(const g of graves)drawGrave(g);
   for(const c of crates)drawCrate(c);
@@ -803,11 +855,11 @@ function draw(){
   ctx.globalAlpha=1;
   for(const p of parts){ctx.globalAlpha=Math.max(0,Math.min(1,p.life/p.max));ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.s,0,6.283);ctx.fill()}
   ctx.globalAlpha=.8;ctx.fillStyle=gnd.leaf;
-  for(const l of leaves){ctx.save();ctx.translate(l.x,l.y);ctx.rotate(l.p);ctx.beginPath();ctx.ellipse(0,0,l.s*1.6,l.s*.7,0,0,6.283);ctx.fill();ctx.restore()}
+  if(!low)for(const l of leaves){ctx.save();ctx.translate(l.x,l.y);ctx.rotate(l.p);ctx.beginPath();ctx.ellipse(0,0,l.s*1.6,l.s*.7,0,0,6.283);ctx.fill();ctx.restore()}
   ctx.globalAlpha=1;
   if(weather===1){ctx.strokeStyle='rgba(190,215,255,.45)';ctx.lineWidth=2;ctx.beginPath();for(const r of rain){ctx.moveTo(r.x,r.y);ctx.lineTo(r.x-wind*1.6,r.y-r.l)}ctx.stroke()}
   if(weather===2){ctx.fillStyle='rgba(255,255,255,.85)';for(const s of snow){ctx.beginPath();ctx.arc(s.x,s.y,s.s,0,6.283);ctx.fill()}}
-  for(const f of fireflies){const a=.4+Math.sin(f.p*2.3)*.35;ctx.globalAlpha=Math.max(.06,a);ctx.fillStyle='#ffe98a';ctx.beginPath();ctx.arc(f.x,f.y,2.2,0,6.283);ctx.fill();ctx.globalAlpha=Math.max(.03,a*.35);ctx.beginPath();ctx.arc(f.x,f.y,5,0,6.283);ctx.fill()}
+  if(!low)for(const f of fireflies){const a=.4+Math.sin(f.p*2.3)*.35;ctx.globalAlpha=Math.max(.06,a);ctx.fillStyle='#ffe98a';ctx.beginPath();ctx.arc(f.x,f.y,2.2,0,6.283);ctx.fill();ctx.globalAlpha=Math.max(.03,a*.35);ctx.beginPath();ctx.arc(f.x,f.y,5,0,6.283);ctx.fill()}
   ctx.globalAlpha=1;
   const t=performance.now()/1000;
   ctx.fillStyle='rgba(25,105,200,.74)';ctx.beginPath();ctx.moveTo(0,H);
@@ -827,7 +879,7 @@ function hud(){
   el.wf.style.left=wind>=0?'50%':(50+wind*5)+'%';el.wf.style.width=Math.abs(wind)*5+'%';
   el.wt.textContent='WIND '+(wind<0?'◀ ':'')+Math.abs(wind)+(wind>0?' ▶':'');
   const hot=turnNo>=SD_TURN;el.sd.textContent=hot?'🌊 SUDDEN DEATH':'TURN '+turnNo;el.sd.classList.toggle('hot',hot);
-  el.t0.textContent='RED'+(wins[0]?' '+wins[0]:'');el.t1.textContent='BLUE'+(wins[1]?' '+wins[1]:'');
+  el.t0.textContent=TN[0]+(wins[0]?' '+wins[0]:'');el.t1.textContent=TN[1]+(wins[1]?' '+wins[1]:'');
   for(let t=0;t<2;t++){const s=worms.filter(w=>w.team===t).reduce((a,w)=>a+w.hp,0);el['h'+t].style.width=(s/(perTeam*HP[hpIdx])*100)+'%'}
   el.fire.style.setProperty('--p',(power*100)+'%');
   let m='';
@@ -876,14 +928,18 @@ addEventListener('pointerup',()=>aimDrag=false);
 addEventListener('pointercancel',()=>aimDrag=false);
 addEventListener('contextmenu',e=>e.preventDefault());
 function togglePause(){if(state==='menu')return;paused=!paused;$('#pause').textContent=paused?'▶':'⏸'}
+let helpWasPaused=false;
+function toggleHelp(on){const h=$('#help'),show=on!==undefined?on:h.classList.contains('hide');if(show){helpWasPaused=paused;paused=true;h.classList.remove('hide')}else{h.classList.add('hide');paused=state==='menu'?false:helpWasPaused;$('#pause').textContent=paused?'▶':'⏸'}}
 const KM={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down',a:'left',d:'right',w:'up',s:'down'};
 const keyOf=e=>e.key.length===1?e.key.toLowerCase():e.key;
 addEventListener('keydown',e=>{
   const k=keyOf(e);
+  if(!$('#help').classList.contains('hide')){if(k==='Escape'||k==='p'||k==='h')toggleHelp(false);e.preventDefault();return}
   if(KM[k]){inp[KM[k]]=true;e.preventDefault()}
   else if(k===' '){if(!e.repeat)startCharge();e.preventDefault()}
   else if(k==='Enter'||k==='Shift'){if(!e.repeat)jump()}
   else if(k==='p'||k==='Escape')togglePause();
+  else if(k==='h')toggleHelp(true);
   else if(k>='1'&&k<='7'){const idx=wepPage*7+(+k-1);if(idx<WEP.length)setWpn(idx)}
   else if(k==='q'){wepPage^=1;applyPage();updateWeps()}
 });
@@ -892,13 +948,23 @@ addEventListener('blur',()=>{inp.left=inp.right=inp.up=inp.down=false});
 
 $('#b2').onclick=()=>{initAudio();newGame('pvp')};
 $('#b1').onclick=()=>{initAudio();newGame('cpu')};
-$('#cnt').textContent=perTeam;$('#lvl').textContent=DIFF[diff].n;$('#hp').textContent=HP[hpIdx];$('#tt').textContent=TT[ttIdx]+'s';$('#ag').textContent=guide?'On':'Off';$('#snd').textContent=muted?'🔇':'🔊';
-$('#cnt').onclick=function(){perTeam=perTeam>=4?2:perTeam+1;this.textContent=perTeam;try{localStorage.setItem('gb_per',perTeam)}catch(e){}};
+$('#cnt').textContent=perTeam;$('#lvl').textContent=DIFF[diff].n;$('#hp').textContent=HP[hpIdx];$('#tt').textContent=TT[ttIdx]+'s';$('#ag').textContent=guide?'On':'Off';$('#snd').textContent=muted?'🔇':'🔊';$('#smute').textContent=muted?'Off':'On';$('#t0').textContent=TN[0];$('#t1').textContent=TN[1];$('#tn0').textContent=TN[0];$('#tn1').textContent=TN[1];$('#sky').textContent=SKYN[skyIdx+1];$('#ter').textContent=GROUNDN[terIdx+1];$('#wx').textContent=WXN[wxIdx+1];$('#gfx').textContent=low?'Low':'High';
+const saveMute=()=>{$('#snd').textContent=muted?'🔇':'🔊';$('#smute').textContent=muted?'Off':'On';try{localStorage.setItem('gb_mute',muted?'1':'0')}catch(e){}};
+$('#cnt').onclick=function(){perTeam=perTeam>=8?2:perTeam+1;this.textContent=perTeam;try{localStorage.setItem('gb_per',perTeam)}catch(e){}};
 $('#lvl').onclick=function(){diff=(diff+1)%4;this.textContent=DIFF[diff].n;try{localStorage.setItem('gb_diff',diff)}catch(e){}};
 $('#hp').onclick=function(){hpIdx=(hpIdx+1)%3;this.textContent=HP[hpIdx];try{localStorage.setItem('gb_hp',hpIdx)}catch(e){}};
 $('#tt').onclick=function(){ttIdx=(ttIdx+1)%4;this.textContent=TT[ttIdx]+'s';try{localStorage.setItem('gb_tt',ttIdx)}catch(e){}};
 $('#ag').onclick=function(){guide=!guide;this.textContent=guide?'On':'Off';try{localStorage.setItem('gb_guide',guide?'1':'0')}catch(e){}};
-$('#snd').onclick=function(){muted=!muted;this.textContent=muted?'🔇':'🔊';try{localStorage.setItem('gb_mute',muted?'1':'0')}catch(e){}};
+$('#tn0').onclick=function(){const v=prompt('Red team name',TN[0]);if(v===null)return;const s=v.trim().slice(0,12);if(!s)return;TN[0]=s;this.textContent=s;$('#t0').textContent=s;try{localStorage.setItem('gb_tn0',s)}catch(e){}};
+$('#tn1').onclick=function(){const v=prompt('Blue team name',TN[1]);if(v===null)return;const s=v.trim().slice(0,12);if(!s)return;TN[1]=s;this.textContent=s;$('#t1').textContent=s;try{localStorage.setItem('gb_tn1',s)}catch(e){}};
+$('#sky').onclick=function(){skyIdx=skyIdx>=2?-1:skyIdx+1;this.textContent=SKYN[skyIdx+1];try{localStorage.setItem('gb_sky',skyIdx)}catch(e){}};
+$('#ter').onclick=function(){terIdx=terIdx>=2?-1:terIdx+1;this.textContent=GROUNDN[terIdx+1];try{localStorage.setItem('gb_ter',terIdx)}catch(e){}};
+$('#wx').onclick=function(){wxIdx=wxIdx>=2?-1:wxIdx+1;this.textContent=WXN[wxIdx+1];try{localStorage.setItem('gb_wx',wxIdx)}catch(e){}};
+$('#gfx').onclick=function(){low=!low;this.textContent=low?'Low':'High';try{localStorage.setItem('gb_low',low?'1':'0')}catch(e){}};
+$('#rnd').onclick=function(){skyIdx=Math.random()*3|0;terIdx=Math.random()*3|0;$('#sky').textContent=SKYN[skyIdx+1];$('#ter').textContent=GROUNDN[terIdx+1];try{localStorage.setItem('gb_sky',skyIdx);localStorage.setItem('gb_ter',terIdx)}catch(e){}};
+$('#snd').onclick=()=>{muted=!muted;saveMute()};
+$('#smute').onclick=()=>{muted=!muted;saveMute()};
+$('#bhelp').onclick=()=>toggleHelp(true);$('#hclose').onclick=()=>toggleHelp(false);
 $('#pause').onclick=togglePause;
 $('#fs').onclick=()=>{const d=document.documentElement;if(document.fullscreenElement)document.exitFullscreen();else(d.requestFullscreen||d.webkitRequestFullscreen||(()=>{})).call(d)};
 $('#quit').onclick=()=>{state='menu';paused=false;charging=false;curSheep=null;$('#pause').textContent='⏸';$('#msg').textContent='Turn-based worm artillery. Blast the other team into the sea!';$('#menu').classList.remove('hide')};
