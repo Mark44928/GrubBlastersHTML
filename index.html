@@ -37,8 +37,8 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:
 .btn.sel{outline:3px solid #ffd54a;background:rgba(255,213,74,.35)}
 .btn.dis{opacity:.35}
 .btn.sm{width:calc(var(--s)*.8);height:calc(var(--s)*.8);font-size:calc(var(--s)*.38)}
-#weps{gap:8px}
-#weps .btn{width:calc(var(--s)*.72);height:calc(var(--s)*.72);font-size:calc(var(--s)*.34);border-radius:16px}
+#weps{gap:6px}
+#weps .btn{width:calc(var(--s)*.66);height:calc(var(--s)*.66);font-size:calc(var(--s)*.32);border-radius:14px}
 #weps .btn.sel{color:#fff}
 .bd{position:absolute;right:3px;bottom:2px;font-size:calc(var(--s)*.2);font-weight:900;background:#0b1530;border-radius:8px;padding:0 5px;line-height:1.3;color:#ffd54a}
 #fire{width:calc(var(--s)*1.7);font-size:calc(var(--s)*.32);letter-spacing:1px;background:linear-gradient(to top,rgba(255,110,40,.95) var(--p,0%),rgba(15,28,60,.62) var(--p,0%))}
@@ -60,9 +60,9 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:
 <canvas id="c"></canvas>
 <div id="ui">
   <div id="top">
-    <div class="team"><span style="color:#ff6b6b">RED</span><div class="bar"><i id="h0" style="background:#ff5252"></i></div></div>
+    <div class="team"><span id="t0" style="color:#ff6b6b">RED</span><div class="bar"><i id="h0" style="background:#ff5252"></i></div></div>
     <div id="mid"><div id="time">30</div><div id="wind"><i id="wf"></i><u></u></div><div id="wtxt">WIND</div><div id="sd"></div></div>
-    <div class="team"><span style="color:#5fb8ff">BLUE</span><div class="bar"><i id="h1" style="background:#3fa9ff"></i></div></div>
+    <div class="team"><span id="t1" style="color:#5fb8ff">BLUE</span><div class="bar"><i id="h1" style="background:#3fa9ff"></i></div></div>
     <div id="icons"><button class="mini" id="pause">⏸</button><button class="mini" id="snd">🔊</button><button class="mini" id="fs">⛶</button><button class="mini" id="quit">✕</button></div>
   </div>
   <div id="banner"></div>
@@ -87,21 +87,22 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:
   <button class="big alt" id="b1">vs Computer</button>
   <div class="row">Worms per team: <button id="cnt">3</button></div>
   <div class="row">Computer level: <button id="lvl">Normal</button></div>
+  <div class="row">Worm HP: <button id="hp">100</button></div>
   <div class="row">Turn time: <button id="tt">30s</button></div>
   <div class="row">Aim guide: <button id="ag">Off</button></div>
-  <p class="hint">Tap or drag the map to aim · tap your other worms to switch · hold FIRE to charge, release to shoot · ◀ ▶ walk, ⤒ jump · ✈️ and 🌀: tap the map to pick a spot, then FIRE · 🐑 walks on its own, press FIRE again to detonate · 🔨 whacks and knocks back · press FIRE during retreat to skip it · after 16 turns the sea rises and worms wither!</p>
+  <p class="hint">Tap or drag the map to aim · tap your other worms to switch · hold FIRE to charge, release to shoot · ◀ ▶ walk, ⤒ jump · ✈️ and 🌀: tap the map to pick a spot, then FIRE · 🐑 walks on its own, press FIRE again to detonate · 🔨 whacks and knocks back · 🔴 mines arm after 2s, chain-react, and stay between turns · press FIRE during retreat to skip it · after 16 turns the sea rises and worms wither!</p>
 </div></div>
 
 <script>
 'use strict';
-const W=1400,H=800,WATER0=725,G=620,SD_TURN=16;const TT=[20,30,45,60];
+const W=1400,H=800,WATER0=725,G=620,SD_TURN=16;const TT=[20,30,45,60],HP=[100,150,200];
 let WATER=WATER0,waterTarget=WATER0;
 const TC=['#ff5252','#3fa9ff'],TN=['RED','BLUE'];
 const NAMES=['Wiggles','Squirm','Slimer','Noodle','Inch','Gus','Wormy','Slick','Dirt','Pip','Bob','Mudge','Zig','Zag','Nibbles','Grub'];
 const TAUNTS=['Take that!','Boom!','Nice one!','Ouch!','Whoops!','Eat dirt!','Lucky shot!','Ha!','Gotcha!','Watch out!','Incoming!'];
-const WEP=[{id:'bazooka',ico:'🚀'},{id:'grenade',ico:'💣'},{id:'dynamite',ico:'🧨'},{id:'shotgun',ico:'🔫'},{id:'airstrike',ico:'✈️'},{id:'teleport',ico:'🌀'},{id:'sheep',ico:'🐑'},{id:'hammer',ico:'🔨'}];
+const WEP=[{id:'bazooka',ico:'🚀'},{id:'grenade',ico:'💣'},{id:'dynamite',ico:'🧨'},{id:'shotgun',ico:'🔫'},{id:'airstrike',ico:'✈️'},{id:'teleport',ico:'🌀'},{id:'sheep',ico:'🐑'},{id:'hammer',ico:'🔨'},{id:'mine',ico:'🔴'}];
 const TARGETED=['airstrike','teleport'];
-const DIFF=[{n:'Easy',an:.16,pn:.16,thr:130},{n:'Normal',an:.06,pn:.07,thr:70},{n:'Hard',an:.015,pn:.02,thr:40}];
+const DIFF=[{n:'Easy',an:.16,pn:.16,thr:130},{n:'Normal',an:.06,pn:.07,thr:70},{n:'Hard',an:.015,pn:.02,thr:40},{n:'Brutal',an:.005,pn:.008,thr:25}];
 const SKY=[
   {top:'#2f7fd1',mid:'#8fd0f5',bot:'#d9f2ff',sun:'rgba(255,244,190,.95)',halo:'rgba(255,244,190,.25)',h1:'#6fa7c9',h2:'#4f8fb0',cloud:'rgba(255,255,255,.75)',stars:false},
   {top:'#3b2a6b',mid:'#e0678a',bot:'#ffc27a',sun:'rgba(255,240,190,.95)',halo:'rgba(255,200,150,.3)',h1:'#8a4f80',h2:'#5a3566',cloud:'rgba(255,205,190,.55)',stars:false},
@@ -180,10 +181,10 @@ function normalAt(x,y){let nx=0,ny=0;for(let j=-4;j<=4;j++)for(let i=-4;i<=4;i++
 let worms=[],proj=[],parts=[],texts=[],tracers=[],crates=[],graves=[],rings=[],leaves=[],clouds=[],pend=[],rain=[],snow=[],fireflies=[];
 let state='menu',cur=null,turnTeam=0,turnTime=30,wind=0,power=0,charging=false,wpn='bazooka',turnNo=0,paused=false,weather=0;
 let retreat=0,quiet=0,settleT=0,shots=0,shotT=0,shotD=null,shake=0,aiOn=[false,false],ai=null,perTeam=3,diff=1,cursor=[-1,-1],lastTick=0,wins=[0,0],kdmg=[0,0],kills=[0,0];
-let target=null,tipMsg='',tipT=0,ammo=[{},{}],curSheep=null;
+let target=null,tipMsg='',tipT=0,ammo=[{},{}],curSheep=null,chainFx=[];
 const inp={left:false,right:false,up:false,down:false};
-let ttIdx=1,guide=false;
-try{const a=localStorage.getItem('gb_diff'),b=localStorage.getItem('gb_per'),c=localStorage.getItem('gb_tt'),g=localStorage.getItem('gb_guide'),m=localStorage.getItem('gb_mute');if(a!==null)diff=Math.max(0,Math.min(2,+a||0));if(b!==null)perTeam=Math.max(2,Math.min(4,+b||3));if(c!==null)ttIdx=Math.max(0,Math.min(3,+c||1));if(g!==null)guide=g==='1';if(m!==null)muted=m==='1'}catch(e){}
+let ttIdx=1,guide=false,hpIdx=0;
+try{const a=localStorage.getItem('gb_diff'),b=localStorage.getItem('gb_per'),c=localStorage.getItem('gb_tt'),g=localStorage.getItem('gb_guide'),m=localStorage.getItem('gb_mute'),h=localStorage.getItem('gb_hp');if(a!==null)diff=Math.max(0,Math.min(3,+a||0));if(b!==null)perTeam=Math.max(2,Math.min(4,+b||3));if(c!==null)ttIdx=Math.max(0,Math.min(3,+c||1));if(g!==null)guide=g==='1';if(m!==null)muted=m==='1';if(h!==null)hpIdx=Math.max(0,Math.min(2,+h||0))}catch(e){}
 
 const PTS=[[-5,8],[5,8],[-7,2],[7,2],[-6,-6],[6,-6],[0,-9]];
 function hit(x,y){for(const q of PTS)if(solid(x+q[0],y+q[1]))return true;return false}
@@ -200,9 +201,9 @@ function initScenery(){
 function newGame(mode){
   aiOn=[false,mode==='cpu'];
   pickTheme();weather=Math.random()<.3?1:Math.random()<.44?2:0;genTerrain();mkBg();initScenery();
-  worms=[];proj=[];parts=[];texts=[];tracers=[];crates=[];graves=[];rings=[];pend=[];shots=0;target=null;turnNo=0;curSheep=null;
+  worms=[];proj=[];parts=[];texts=[];tracers=[];crates=[];graves=[];rings=[];pend=[];shots=0;target=null;turnNo=0;curSheep=null;chainFx=[];
   WATER=WATER0;waterTarget=WATER0;paused=false;$('#pause').textContent='⏸';
-  ammo=[{dynamite:2,airstrike:1,teleport:2,sheep:1},{dynamite:2,airstrike:1,teleport:2,sheep:1}];
+  ammo=[{dynamite:2,airstrike:1,teleport:2,sheep:1,mine:1},{dynamite:2,airstrike:1,teleport:2,sheep:1,mine:1}];
   const n=perTeam*2,slots=[];
   for(let i=0;i<n;i++)slots.push(250+(W-500)*(i+.5)/n+(Math.random()-.5)*30);
   const tm=[];for(let i=0;i<n;i++)tm.push(i%2);
@@ -210,7 +211,7 @@ function newGame(mode){
   const names=NAMES.slice().sort(()=>Math.random()-.5);
   slots.forEach((x,i)=>{
     let best=H;for(let dx=-7;dx<=7;dx+=7){let yy=0;while(yy<H&&!solid(x+dx,yy))yy++;best=Math.min(best,yy)}
-    worms.push({team:tm[i],name:names[i],x,y:best-9,vx:0,vy:0,hp:100,dh:100,dir:x<W/2?1:-1,aim:.5,alive:true,air:true,wob:0,flash:0});
+    worms.push({team:tm[i],name:names[i],x,y:best-9,vx:0,vy:0,hp:HP[hpIdx],dh:HP[hpIdx],dir:x<W/2?1:-1,aim:.5,alive:true,air:true,wob:0,flash:0});
   });
   cursor=[-1,-1];turnTeam=Math.random()<.5?0:1;wpn='bazooka';
   $('#menu').classList.add('hide');
@@ -223,6 +224,7 @@ function startTurn(){
   cursor[turnTeam]=i;cur=all[i];
   if(turnNo>=SD_TURN){waterTarget=Math.max(340,WATER0-(turnNo-SD_TURN+1)*20);if(turnNo===SD_TURN)tip('🌊 Sudden death! The sea rises and worms wither',3.5)}
   if(turnNo>SD_TURN)for(const w of worms){if(!w.alive)continue;w.hp-=5;w.flash=.3;texts.push({x:w.x,y:w.y-34,t:1.3,txt:'-5',c:'#ffb3c1'});if(w.hp<=0){w.hp=0;killWorm(w,false)}}
+  if(turnNo>SD_TURN+2&&Math.random()<.6){pend.push({t:1,x:220+Math.random()*(W-440),meteor:true});tip('☄️ Meteor incoming!',2)}
   if(turnNo>2&&turnNo%3===0&&crates.length<3)spawnCrate();
   wind=Math.round(Math.random()*20-10);turnTime=TT[ttIdx];power=0;charging=false;retreat=0;quiet=0;settleT=0;target=null;curSheep=null;
   if(ammoOf(wpn)===0)wpn='bazooka';
@@ -255,8 +257,8 @@ function spawnCrate(){
 }
 function pickCrate(c){
   const w=cur;SFX.pick();
-  if(c.type==='health'){const g=Math.min(100,w.hp+35)-w.hp;w.hp+=g;texts.push({x:w.x,y:w.y-44,t:1.6,txt:'+'+g+' HP',c:'#7dff7d'})}
-  else{const k=['dynamite','airstrike','teleport','sheep'][Math.random()*4|0];ammo[w.team][k]++;texts.push({x:w.x,y:w.y-44,t:1.8,txt:'+1 '+k,c:'#ffe14a'});updateWeps()}
+  if(c.type==='health'){const g=Math.min(HP[hpIdx],w.hp+35)-w.hp;w.hp+=g;texts.push({x:w.x,y:w.y-44,t:1.6,txt:'+'+g+' HP',c:'#7dff7d'})}
+  else{const k=['dynamite','airstrike','teleport','sheep','mine'][Math.random()*5|0];ammo[w.team][k]++;texts.push({x:w.x,y:w.y-44,t:1.8,txt:'+1 '+k,c:'#ffe14a'});updateWeps()}
 }
 function updateWorld(dt){
   for(let i=crates.length-1;i>=0;i--){
@@ -350,6 +352,7 @@ function fire(){
     if(hw2){hw2.vx=w.dir*380;hw2.vy=-260;hw2.air=true;damageWorm(hw2,30,w.team);rings.push({x:hw2.x,y:hw2.y,r0:6,r1:34,t:0});SFX.bonk()}
     else SFX.shot();
   }
+  else if(wpn==='mine'){ammo[w.team].mine--;proj.push({type:'mine',x:w.x+w.dir*18,y:w.y-8,vx:w.dir*30,vy:-60,age:0,bn:.1,fr:.3,r:50,dmg:55,shooter:w});tip('🔴 Mine armed in 2s — stay clear!',2);SFX.thud()}
   else{shots=2;shotT=0;shotD={dx,dy}}
   charging=false;power=0;state='settle';retreat=wpn==='sheep'?0:3;quiet=0;settleT=0;target=null;updateWeps();
 }
@@ -393,6 +396,7 @@ function explode(x,y,r,dmg,by){
     }
   }
   for(let i=crates.length-1;i>=0;i--){const c=crates[i];if(Math.hypot(c.x-x,c.y-y)<r+10){boomFx(c.x,c.y,10);crates.splice(i,1)}}
+  for(const q of proj)if(q.type==='mine'&&!q.struck&&Math.hypot(q.x-x,q.y-y)<r+16){q.struck=true;chainFx.push(q)}
   rings.push({x,y,r0:r*.3,r1:r*1.8,t:0});
   boomFx(x,y,r);shake=Math.max(shake,r/6);r>30?SFX.boom():SFX.small();
 }
@@ -442,7 +446,11 @@ function updateProj(dt){
         if(p.x<-120||p.x>W+120){dead=true;break}
       }
     }
-    if(rocket&&!dead&&Math.random()<.9)parts.push({x:p.x,y:p.y,vx:(Math.random()-.5)*30,vy:(Math.random()-.5)*30,life:.6,max:.6,c:'rgba(230,230,230,1)',s:3+Math.random()*3,g:-20,d:1});
+    if(p.type==='mine'&&!dead&&p.age>2){
+      for(const e of worms)if(e.alive&&Math.hypot(e.x-p.x,e.y-p.y)<17){dead=true;explode(p.x,p.y,p.r,p.dmg,p.shooter?p.shooter.team:null);break}
+      if(!dead&&p.y>WATER){splash(p.x,WATER);SFX.splash();dead=true}
+    }
+    if(rocket&&!dead&&Math.random()<.9){const met=p.meteor===true;parts.push({x:p.x,y:p.y,vx:(Math.random()-.5)*30,vy:(Math.random()-.5)*30,life:met?.7:.6,max:met?.9:.6,c:met?'rgba(255,150,40,.95)':'rgba(230,230,230,1)',s:met?4.5+Math.random()*3.5:3+Math.random()*3,g:met?-40:-20,d:1})}
     if(p.fuse!==undefined&&!dead){p.fuse-=dt;if(p.fuse<=0){dead=true;explode(p.x,p.y,p.r,p.dmg,p.shooter?p.shooter.team:null)}}
     if(dead)proj.splice(i,1);
   }
@@ -533,7 +541,7 @@ function pickTarget(w){
   const en=worms.filter(e=>e.alive&&e.team!==w.team);if(!en.length)return null;
   if(diff===0)return en[Math.random()*en.length|0];
   let best=null,bs=1e9;
-  for(const e of en){const s=Math.abs(e.x-w.x)-(diff===2?(100-e.hp)*2:0);if(s<bs){bs=s;best=e}}
+  for(const e of en){const s=Math.abs(e.x-w.x)-(diff>=2?(HP[hpIdx]-e.hp)*2:0);if(s<bs){bs=s;best=e}}
   return best;
 }
 function clearLine(a,b){const d=Math.hypot(b.x-a.x,b.y-a.y),n=Math.ceil(d/4);for(let i=1;i<n;i++){const t=i/n;if(solid(a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t))return false}return true}
@@ -551,7 +559,7 @@ function aiTurn(dt){
       w.aim=Math.max(-1.2,Math.min(1.45,Math.atan2(-(tg.y-w.y),Math.abs(tg.x-w.x))));
       ai.phase='gun';ai.t=0;return;
     }
-    if(ammoOf('airstrike')>0&&dist>320&&Math.random()<(diff===2?.75:diff===1?.45:.25)){
+    if(ammoOf('airstrike')>0&&dist>320&&Math.random()<(diff>=2?.75:diff===1?.45:.25)){
       wpn='airstrike';updateWeps();target={x:tg.x+(Math.random()-.5)*D.thr,y:tg.y};ai.phase='strike';ai.t=0;return;
     }
     wpn='bazooka';updateWeps();
@@ -610,12 +618,13 @@ function update(dt){
   }
   if(humanTurn()&&(state==='aim'||(state==='settle'&&retreat>0)))control(dt);
   else if(state==='aim')aiTurn(dt);
-  for(let i=pend.length-1;i>=0;i--){const q=pend[i];q.t-=dt;if(q.t<=0){proj.push({type:'bomb',x:q.x,y:-30,vx:0,vy:420,age:0,shooter:{team:q.team},r:38,dmg:38});pend.splice(i,1)}}
+  for(let i=pend.length-1;i>=0;i--){const q=pend[i];q.t-=dt;if(q.t<=0){if(q.meteor)proj.push({type:'bomb',x:q.x,y:-40,vx:0,vy:520,age:0,shooter:null,r:46,dmg:46,meteor:true});else proj.push({type:'bomb',x:q.x,y:-30,vx:0,vy:420,age:0,shooter:{team:q.team},r:38,dmg:38});pend.splice(i,1)}}
   updateProj(dt);
+  while(chainFx.length){const q=chainFx.pop();const idx=proj.indexOf(q);if(idx<0)continue;proj.splice(idx,1);explode(q.x,q.y,q.r,q.dmg,q.shooter?q.shooter.team:null)}
   if(shots>0){shotT-=dt;if(shotT<=0){shootGun();shots--;shotT=.5}}
   if(state==='settle'){
     retreat=Math.max(0,retreat-dt);settleT+=dt;
-    const q=proj.length===0&&pend.length===0&&shots===0&&worms.every(w=>!w.alive||!w.air)&&retreat<=0;
+    const q=proj.every(p=>p.type==='mine')&&pend.length===0&&shots===0&&worms.every(w=>!w.alive||!w.air)&&retreat<=0;
     quiet=q?quiet+dt:0;
     if(quiet>1||settleT>25)endTurn();
   }
@@ -660,8 +669,14 @@ function drawProj(p){
     ctx.fillStyle='#ffb300';ctx.beginPath();ctx.moveTo(-9,-2);ctx.lineTo(-17-Math.random()*5,0);ctx.lineTo(-9,2);ctx.fill();
   }else if(p.type==='bomb'){
     ctx.rotate(Math.atan2(p.vy,p.vx));
+    if(p.meteor){ctx.fillStyle='rgba(255,140,40,.45)';ctx.beginPath();ctx.arc(-9,0,11,0,6.283);ctx.fill()}
     ctx.fillStyle='#37474f';ctx.beginPath();ctx.ellipse(0,0,10,5,0,0,6.283);ctx.fill();
     ctx.fillStyle='#e53935';ctx.fillRect(-13,-5,5,10);
+  }else if(p.type==='mine'){
+    ctx.fillStyle='#26282c';ctx.strokeStyle='#0c0d10';ctx.lineWidth=1.6;
+    ctx.beginPath();ctx.arc(0,-1,6.5,0,6.283);ctx.fill();ctx.stroke();
+    for(let k=0;k<6;k++){const a=k*1.047;ctx.beginPath();ctx.moveTo(Math.cos(a)*5.5,-1+Math.sin(a)*5.5);ctx.lineTo(Math.cos(a)*9.5,-1+Math.sin(a)*9.5);ctx.stroke()}
+    if(Math.sin(performance.now()/140)>0){ctx.fillStyle='#ff5252';ctx.beginPath();ctx.arc(0,-1,2.2,0,6.283);ctx.fill()}
   }else if(p.type==='grenade'){
     ctx.fillStyle='#3f7d3a';ctx.strokeStyle='#1d3d1b';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,6.5,0,6.283);ctx.fill();ctx.stroke();
     ctx.fillStyle='#8bc34a';ctx.beginPath();ctx.arc(-2,-2,2,0,6.283);ctx.fill();
@@ -760,14 +775,15 @@ function draw(){
   ctx.globalAlpha=1;
   ctx.restore();
 }
-const el={time:$('#time'),wf:$('#wf'),wt:$('#wtxt'),h0:$('#h0'),h1:$('#h1'),fire:$('#fire'),sd:$('#sd'),tip:$('#tip')};
+const el={time:$('#time'),wf:$('#wf'),wt:$('#wtxt'),h0:$('#h0'),h1:$('#h1'),fire:$('#fire'),sd:$('#sd'),tip:$('#tip'),t0:$('#t0'),t1:$('#t1')};
 function hud(){
   if(state==='menu'){return}
   el.time.textContent=state==='aim'?Math.ceil(turnTime):'–';el.time.classList.toggle('low',state==='aim'&&turnTime<=5);
   el.wf.style.left=wind>=0?'50%':(50+wind*5)+'%';el.wf.style.width=Math.abs(wind)*5+'%';
   el.wt.textContent='WIND '+(wind<0?'◀ ':'')+Math.abs(wind)+(wind>0?' ▶':'');
   const hot=turnNo>=SD_TURN;el.sd.textContent=hot?'🌊 SUDDEN DEATH':'TURN '+turnNo;el.sd.classList.toggle('hot',hot);
-  for(let t=0;t<2;t++){const s=worms.filter(w=>w.team===t).reduce((a,w)=>a+w.hp,0);el['h'+t].style.width=(s/(perTeam*100)*100)+'%'}
+  el.t0.textContent='RED'+(wins[0]?' '+wins[0]:'');el.t1.textContent='BLUE'+(wins[1]?' '+wins[1]:'');
+  for(let t=0;t<2;t++){const s=worms.filter(w=>w.team===t).reduce((a,w)=>a+w.hp,0);el['h'+t].style.width=(s/(perTeam*HP[hpIdx])*100)+'%'}
   el.fire.style.setProperty('--p',(power*100)+'%');
   let m='';
   if(paused)m='⏸ PAUSED';
@@ -817,15 +833,16 @@ addEventListener('keydown',e=>{
   else if(e.key===' '){if(!e.repeat)startCharge();e.preventDefault()}
   else if(e.key==='Enter'||e.key==='Shift'){if(!e.repeat)jump()}
   else if(e.key==='p'||e.key==='Escape')togglePause();
-  else if(e.key>='1'&&e.key<='8')setWpn(+e.key-1);
+  else if(e.key>='1'&&e.key<='9')setWpn(+e.key-1);
 });
 addEventListener('keyup',e=>{if(KM[e.key])inp[KM[e.key]]=false;else if(e.key===' ')releaseFire()});
 
 $('#b2').onclick=()=>{initAudio();newGame('pvp')};
 $('#b1').onclick=()=>{initAudio();newGame('cpu')};
-$('#cnt').textContent=perTeam;$('#lvl').textContent=DIFF[diff].n;$('#tt').textContent=TT[ttIdx]+'s';$('#ag').textContent=guide?'On':'Off';$('#snd').textContent=muted?'🔇':'🔊';
+$('#cnt').textContent=perTeam;$('#lvl').textContent=DIFF[diff].n;$('#hp').textContent=HP[hpIdx];$('#tt').textContent=TT[ttIdx]+'s';$('#ag').textContent=guide?'On':'Off';$('#snd').textContent=muted?'🔇':'🔊';
 $('#cnt').onclick=function(){perTeam=perTeam>=4?2:perTeam+1;this.textContent=perTeam;try{localStorage.setItem('gb_per',perTeam)}catch(e){}};
-$('#lvl').onclick=function(){diff=(diff+1)%3;this.textContent=DIFF[diff].n;try{localStorage.setItem('gb_diff',diff)}catch(e){}};
+$('#lvl').onclick=function(){diff=(diff+1)%4;this.textContent=DIFF[diff].n;try{localStorage.setItem('gb_diff',diff)}catch(e){}};
+$('#hp').onclick=function(){hpIdx=(hpIdx+1)%3;this.textContent=HP[hpIdx];try{localStorage.setItem('gb_hp',hpIdx)}catch(e){}};
 $('#tt').onclick=function(){ttIdx=(ttIdx+1)%4;this.textContent=TT[ttIdx]+'s';try{localStorage.setItem('gb_tt',ttIdx)}catch(e){}};
 $('#ag').onclick=function(){guide=!guide;this.textContent=guide?'On':'Off';try{localStorage.setItem('gb_guide',guide?'1':'0')}catch(e){}};
 $('#snd').onclick=function(){muted=!muted;this.textContent=muted?'🔇':'🔊';try{localStorage.setItem('gb_mute',muted?'1':'0')}catch(e){}};
