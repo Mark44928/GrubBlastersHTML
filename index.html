@@ -325,7 +325,7 @@ function damageWorm(w,d,by){
   if(w.hp<=0){w.hp=0;killWorm(w,false)}
 }
 function killWorm(w,drown){
-  w.alive=false;
+  w.alive=false;w.hp=0;
   if(drown){splash(w.x,WATER);SFX.splash()}else{boomFx(w.x,w.y,22);SFX.small();graves.push({x:w.x,y:w.y,vy:0,team:w.team})}
   texts.push({x:w.x,y:w.y-40,t:1.8,txt:w.name+(drown?' swims with the fishes':' is toast'),c:'#fff'});
 }
@@ -873,18 +873,22 @@ function aimTo(e,tap){
 cv.addEventListener('pointerdown',e=>{aimDrag=true;initAudio();aimTo(e,1)});
 cv.addEventListener('pointermove',e=>{if(aimDrag)aimTo(e)});
 addEventListener('pointerup',()=>aimDrag=false);
+addEventListener('pointercancel',()=>aimDrag=false);
 addEventListener('contextmenu',e=>e.preventDefault());
 function togglePause(){if(state==='menu')return;paused=!paused;$('#pause').textContent=paused?'▶':'⏸'}
 const KM={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down',a:'left',d:'right',w:'up',s:'down'};
+const keyOf=e=>e.key.length===1?e.key.toLowerCase():e.key;
 addEventListener('keydown',e=>{
-  if(KM[e.key]){inp[KM[e.key]]=true;e.preventDefault()}
-  else if(e.key===' '){if(!e.repeat)startCharge();e.preventDefault()}
-  else if(e.key==='Enter'||e.key==='Shift'){if(!e.repeat)jump()}
-  else if(e.key==='p'||e.key==='Escape')togglePause();
-  else if(e.key>='1'&&e.key<='7'){const idx=wepPage*7+(+e.key-1);if(idx<WEP.length)setWpn(idx)}
-  else if(e.key==='q'){wepPage^=1;applyPage();updateWeps()}
+  const k=keyOf(e);
+  if(KM[k]){inp[KM[k]]=true;e.preventDefault()}
+  else if(k===' '){if(!e.repeat)startCharge();e.preventDefault()}
+  else if(k==='Enter'||k==='Shift'){if(!e.repeat)jump()}
+  else if(k==='p'||k==='Escape')togglePause();
+  else if(k>='1'&&k<='7'){const idx=wepPage*7+(+k-1);if(idx<WEP.length)setWpn(idx)}
+  else if(k==='q'){wepPage^=1;applyPage();updateWeps()}
 });
-addEventListener('keyup',e=>{if(KM[e.key])inp[KM[e.key]]=false;else if(e.key===' ')releaseFire()});
+addEventListener('keyup',e=>{const k=keyOf(e);if(KM[k])inp[KM[k]]=false;else if(k===' ')releaseFire()});
+addEventListener('blur',()=>{inp.left=inp.right=inp.up=inp.down=false});
 
 $('#b2').onclick=()=>{initAudio();newGame('pvp')};
 $('#b1').onclick=()=>{initAudio();newGame('cpu')};
