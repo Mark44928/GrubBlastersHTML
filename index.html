@@ -799,7 +799,7 @@ function draw(){
   }
   for(const p of proj)drawProj(p);
   for(const t of tracers){ctx.globalAlpha=t.t/.12;ctx.strokeStyle='#fff7b0';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(t.x1,t.y1);ctx.lineTo(t.x2,t.y2);ctx.stroke();ctx.globalAlpha=1}
-  for(const r of rings){ctx.globalAlpha=(1-r.t)*.7;ctx.strokeStyle='#fff';ctx.lineWidth=4*(1-r.t)+1;ctx.beginPath();ctx.arc(r.x,r.y,r.r0+(r.r1-r.r0)*r.t,0,6.283);ctx.stroke()}
+  for(const r of rings){const rt=Math.max(0,Math.min(1,r.t));ctx.globalAlpha=(1-rt)*.7;ctx.strokeStyle='#fff';ctx.lineWidth=4*(1-rt)+1;ctx.beginPath();ctx.arc(r.x,r.y,r.r0+(r.r1-r.r0)*rt,0,6.283);ctx.stroke()}
   ctx.globalAlpha=1;
   for(const p of parts){ctx.globalAlpha=Math.max(0,Math.min(1,p.life/p.max));ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.s,0,6.283);ctx.fill()}
   ctx.globalAlpha=.8;ctx.fillStyle=gnd.leaf;
