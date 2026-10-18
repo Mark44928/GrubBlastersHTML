@@ -413,7 +413,7 @@ function startTurn(){
   wpn=lastWpn[turnTeam];
   if(!wepList().some(x=>x.id===wpn)||ammoOf(wpn)===0)wpn='bazooka';
   wepPage=Math.max(0,Math.floor(wepList().findIndex(x=>x.id===wpn)/7));applyPage();
-  state='aim';ai={phase:'wait',t:0,walkLeft:3};
+  state='aim';ai={phase:'wait',t:0,walkLeft:3,geminiT:0,geminiBusy:false};
   inp.left=inp.right=inp.up=inp.down=false;
   banner(TN[turnTeam]+' · '+cur.name,TC[turnTeam]);updateWeps();
   if(Math.random()<.3)texts.push({x:cur.x,y:cur.y-46,t:2,txt:TAUNTS[Math.random()*TAUNTS.length|0],c:'#e8f4ff'});
