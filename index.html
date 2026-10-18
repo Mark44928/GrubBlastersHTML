@@ -973,14 +973,15 @@ function aiTurn(dt){
   }
 }
 function callGeminiAI(w){
-  console.log('[Gemini] callGeminiAI called, key:', geminiKey ? 'set' : 'MISSING', 'phase:', ai.phase, 'busy:', ai.geminiBusy);
-  if(!geminiKey){ console.log('[Gemini] No API key set'); return; }
-  if(ai.geminiBusy){ console.log('[Gemini] Already busy'); return; }
+  const log=(m)=>console.log('[Gemini]',m), tip2=(m)=>tip('[Gemini] '+m,3);
+  log('callGeminiAI called, key:'+(geminiKey?'set':'MISSING')+', phase:'+ai.phase+', busy:'+ai.geminiBusy);
+  if(!geminiKey){ tip2('No API key set'); return; }
+  if(ai.geminiBusy){ return; }
   const tg=pickTarget(w);
-  if(!tg){ console.log('[Gemini] No target found'); ai.phase='done'; return; }
+  if(!tg){ ai.phase='done'; return; }
   ai.geminiBusy=true;
   const stateInfo=buildGeminiState(w,tg);
-  console.log('[Gemini] State info length:', stateInfo.length);
+  log('State info length: '+stateInfo.length);
   const controller=new AbortController();
   const timeout=setTimeout(()=>controller.abort(),8000);
   fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key='+geminiKey,{
@@ -988,12 +989,12 @@ function callGeminiAI(w){
     body:JSON.stringify({contents:[{role:'user',parts:[{text:GEMINI_SYSTEM_PROMPT+stateInfo}]}],generationConfig:{temperature:0.3,maxOutputTokens:512}})
   }).then(async r=>{
     clearTimeout(timeout);
-    console.log('[Gemini] Response status:', r.status);
+    log('Response status: '+r.status);
     if(!r.ok){
       const e=await r.json().catch(()=>({}));
       const msg=e.error?.message||`HTTP ${r.status}`;
-      if(r.status===429||msg.includes('quota'))tip('Gemini quota exceeded — using built-in AI',3);
-      else if(r.status===400)tip('Gemini bad request — check key',3);
+      if(r.status===429||msg.includes('quota'))tip('Gemini quota exceeded',3);
+      else if(r.status===400)tip('Gemini bad request - check key',3);
       else if(r.status===401||r.status===403)tip('Gemini invalid key',3);
       else tip('Gemini error: '+msg,3);
       ai.geminiBusy=false;ai.phase='think';return;
@@ -1003,10 +1004,10 @@ function callGeminiAI(w){
     if(!d)return;
     ai.geminiBusy=false;
     const txt=d.candidates?.[0]?.content?.parts?.[0]?.text||'';
-    console.log('[Gemini] Response:', txt);
+    log('Response: '+txt);
     parseGeminiAction(txt,w);
   }).catch(e=>{
-    if(e.name==='AbortError')tip('Gemini timeout — using built-in AI',3);
+    if(e.name==='AbortError')tip('Gemini timeout',3);
     else console.error('[Gemini] error',e);
     ai.geminiBusy=false;ai.phase='think';
   });
