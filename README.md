@@ -5,6 +5,7 @@
 [![Last commit](https://img.shields.io/github/last-commit/Mark44928/GrubBlastersHTML?style=flat-square)](https://github.com/Mark44928/GrubBlastersHTML/commits/main)
 [![Single file HTML](https://img.shields.io/badge/single_file-HTML-5fd0ff?style=flat-square)](https://github.com/Mark44928/GrubBlastersHTML)
 [![Dependencies: 0](https://img.shields.io/badge/dependencies-0-brightgreen?style=flat-square)](https://github.com/Mark44928/GrubBlastersHTML)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
 
 Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built entirely as a single, dependency-free HTML file. Two to four teams of worms hurl explosives across procedurally generated, fully destructible terrain while the wind shifts every turn. Last team standing wins.
 
@@ -127,3 +128,9 @@ python -m http.server
 ## Tech
 
 Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 97 KB in total.
+
+## License
+
+MIT — free to use, modify, and share. See [LICENSE](LICENSE).
+
+If Grub Blasters brightened your day, a star on GitHub helps more players find it.
