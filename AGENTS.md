@@ -188,13 +188,13 @@ scanning (never loops forever, even with 4 teams).
 
 ### Weapons
 
-`WEP` array drives shelf order; array index → id. 21 weapons, 7 per page, but
+`WEP` array drives shelf order; array index → id. 22 weapons, 7 per page, but
 all rendering/selection goes through `wepList()` (Bazooka Only returns just the
 bazooka). The shelf shows page-local slots; keyboard `1–7` maps via
 `wepPage*7+(key-1)` into `wepList()`, and weapon buttons are rebuilt by
 `buildWeps()` — each shows the short name (`WEP[].n`) under the icon with an
 ammo badge in the corner (a `⇄` page button is hidden when there is only one page).
-`⇄`/Q cycle `wepPage` modulo the page count (3 pages now). `updateWeps()` hides
+`⇄`/Q cycle `wepPage` modulo the page count (4 pages now). `updateWeps()` hides
 zero-ammo weapons (`visibility:hidden`) and restores them whenever ammo
 returns — it reruns on fire, crate pickup and turn start.
 `TARGETED=['airstrike','teleport','homing','magic','lightning']` use the two-step "tap map, then FIRE"
@@ -216,6 +216,7 @@ and `return`s early so it never sets `state='settle'`.
 | `airstrike` | Targeted; 5 bombs delivered via `pend` |
 | `teleport` | Targeted; `doTeleport` validates the spot (≥24 px below the sky, above water, in bounds) |
 | `sheep` | Wanders (`dir` flips at walls), detonates on an enemy <18 px or 8 s fuse; FIRE detonates on command; ignores its shooter |
+| `cow` | Herd of 3 released one at a time (0.35 s apart, each moos as it appears) marching straight at 95 px/s; explodes on any worm except the shooter (own team included), a >6 px wall, the map edge, or its 10 s fuse; splashes in water; no manual detonation |
 | `hammer` | Melee check 42 px ahead, knockback vx 380 / vy −260, 30 dmg |
 | `mine` | Arms after 2 s, trigger <17 px, persists across turns, explodes when caught in another blast |
 | `holy` | Big blast r 85 dmg 75, choir SFX |
@@ -378,6 +379,7 @@ There are no automated tests; the game must be checked by hand:
 - Wind on Storm: meter stays within the HUD and rockets bend hard.
 - Targeted flow: airstrike / teleport / homing / magic — tap map, reticle appears, FIRE works.
 - Sheep: release, detonate via FIRE; confirm enemy-touch detonation.
+- Mad Cow: release the herd (⇄ page 4) — three cows appear one after another and blow up on the first worm (friend or foe!) or wall; they splash in water.
 - Mine: drop, walk away, arming delay, proximity trigger, chain reaction.
 - Kill and drown worms: HUD bars drop to 0 (no ghost HP); graves appear and
   sink.

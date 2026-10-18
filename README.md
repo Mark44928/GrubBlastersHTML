@@ -27,7 +27,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Built-in Help & Controls screen (menu button or the H key)
 - Fully destructible terrain — craters stay, worms fall
 - Shifting wind that bends rockets mid-flight
-- Twenty-one weapons on three shelf pages (cycle with ⇄): bazooka, grenade, dynamite, shotgun, hammer, mine, sheep, airstrike, teleport, holy grenade, cluster bomb, uzi, blowtorch, homing missile, bunker buster, magic bullet, banana bomb, dragon ball, mole bomb, lightning, flying saucer
+- Twenty-two weapons on four shelf pages (cycle with ⇄): bazooka, grenade, dynamite, shotgun, hammer, mine, sheep, airstrike, teleport, holy grenade, cluster bomb, uzi, blowtorch, homing missile, bunker buster, magic bullet, banana bomb, dragon ball, mole bomb, lightning, flying saucer, mad cow
 - Every shelf button shows its icon plus the weapon name, with the ammo count in the corner
 - Weapons you run out of ammo for vanish from the shelf and come back when you have ammo again
 - Touch-first controls with keyboard support; desktop computers hide the touch pads and play with mouse + keyboard — fullscreen and safe-area insets included
@@ -98,6 +98,7 @@ Ammo below is for the Normal scheme. **Greedy** makes every weapon unlimited, **
 | Airstrike | 1 per team | Pick a target; five bombs rain from the sky |
 | Teleport | 2 per team | Warp your worm to a chosen spot |
 | Sheep | 1 per team | Walks by itself until it finds a worm or is detonated |
+| Mad Cow | 1 per team | Releases three charging cows one after another — each explodes on the first worm (friend or foe) or wall it meets, with Dynamite-strength force (75) |
 | Hammer | Unlimited | Melee whack with heavy knockback |
 | Mine | 1 per team | Arms after 2 s; proximity trigger; chain-reacts |
 | Holy Grenade | 1 per team | 3 s fuse; colossal blast with a white flash and choir tone |
@@ -125,4 +126,4 @@ python -m http.server
 
 ## Tech
 
-Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 94 KB in total.
+Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 97 KB in total.
