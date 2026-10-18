@@ -425,6 +425,8 @@ There are no automated tests; the game must be checked by hand:
   worm with a cyan fuel bar; hold 🚀 / pad to fly with stronger jets, dive
   underwater (drowning is suppressed while fuel lasts), FIRE again to land;
   running dry over water drowns the worm; firing any weapon ends the turn.
+- Share: menu 📣 / game-over 📣 — on a phone the native share sheet opens;
+  on desktop the link is copied with a tip; Add to Home Screen installs like an app.
 - Camera: pinch / scroll to zoom; two-finger drag (or right-drag) pans the
   map and pauses following, then moving or firing snaps the camera back; it
   follows the active worm, the shell in flight, and the airstrike reticle;
@@ -501,7 +503,7 @@ There are no automated tests; the game must be checked by hand:
 - Don't rename DOM ids — `$()` lookups and the `el` HUD map depend on them:
   `c, banner, tip, fire, jump, jet, weps, teams, time, wf, wtxt, sd, pause,
   snd, fs, quit, menu, msg, cnt, lvl, hp, tt, ag, tms, sch, wnd, crt, map, isl, b2, b1`,
-  plus the customization ids `tn0, tn1, tn2, tn3, sky, ter, wx, gfx, rnd, smute, wsel, bhelp, hclose`
+  plus the customization ids `tn0, tn1, tn2, tn3, sky, ter, wx, gfx, rnd, smute, wsel, bhelp, hclose, bshare, shareWin`
   and `help`, plus `custom`/`bcustom`/`cclose` (Customize sub-card),
   plus `rot` (portrait rotate overlay).
 - Team names feed `#msg` via `innerHTML` on the game-over screen — always pass

@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#0b1530">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%A5%3C/text%3E%3C/svg%3E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <title>Grub Blasters</title>
 <style>
 :root{--s:clamp(56px,10vmin,92px)}
@@ -110,8 +113,9 @@ body.pc #c{cursor:crosshair}
   <div class="row">Worm HP: <button id="hp">100</button> · Turn time: <button id="tt">30s</button></div>
   <div class="row">Wind: <button id="wnd">Normal</button> · Crates: <button id="crt">On</button> · Aim guide: <button id="ag">Off</button></div>
   <div class="row">Map: <button id="map">Standard</button> · Islands: <button id="isl">Off</button></div>
-  <button class="big alt" id="bcustom">🎨 Customize</button>
-  <button class="big alt" id="bhelp">❓ Help &amp; Controls</button>
+<button class="big alt" id="bcustom">🎨 Customize</button>
+  <button class="big alt" id="bhelp">❓ Help & Controls</button>
+  <button class="big alt" id="bshare">📣 Share this game</button>
   <p class="hint">Tap or drag the map to aim · hold FIRE to charge · double-tap jump to backflip!</p>
 </div></div>
 <div id="help" class="hide"><div class="card">
@@ -325,6 +329,13 @@ function hitW(w,x,y){for(const q of PTS){const px=x+q[0],py=y+q[1];if(solid(px,p
 function halfW(dy){return dy<-6?2+(dy+8)*.75:dy<-3?3.5+(dy+6)/3:dy<0?4.5:4.5-dy*.4375}
 function wormHit(w,x,y,pad){pad=pad||0;const dy=y-w.y;if(dy<-8-pad||dy>8+pad)return false;return Math.abs(x-w.x)<=halfW(dy<-8?-8:dy>8?8:dy)+pad}
 function tip(m,t){tipMsg=m;tipT=t||2}
+function shareGame(txt){
+  const url=location.href.split('#')[0];
+  const t=txt||'Grub Blasters — turn-based worm artillery in one HTML file. Come blast with me:';
+  if(navigator.share){navigator.share({title:'Grub Blasters',text:t,url}).catch(()=>{})}
+  else if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t+' '+url).then(()=>tip('🔗 Link copied — paste it anywhere!',2.5)).catch(()=>tip(url,4))}
+  else tip(url,4);
+}
 function ammoOf(id){const a=ammo[turnTeam];return a&&id in a?a[id]:Infinity}
 function useAmmo(id){const a=ammo[turnTeam];if(a&&id in a)a[id]--}
 function initScenery(){
@@ -393,7 +404,8 @@ function gameOver(t){
   state='over';
   if(t>=0){wins[t]++;SFX.win();for(let i=0;i<(low?60:160);i++)parts.push({x:Math.random()*W,y:-20-Math.random()*300,vx:(Math.random()-.5)*60,vy:60+Math.random()*120,life:2.5+Math.random()*1.5,max:4,c:['#ff5252','#3fa9ff','#ffe14a','#7dff7d','#ff9de2'][i%5],s:2+Math.random()*2,g:40,d:.1})}
   const T=teamCount,sum='<br><span style="font-size:13px;opacity:.75;font-weight:600">Score '+wins.slice(0,T).join('–')+' · Kills '+kills.slice(0,T).join('/')+' · Damage '+kdmg.slice(0,T).map(Math.round).join(' / ')+'</span>';
-  $('#msg').innerHTML=(t<0?'Draw! Everybody sleeps with the fishes.':esc(TN[t])+' TEAM WINS! 🏆')+sum;
+  $('#msg').innerHTML=(t<0?'Draw! Everybody sleeps with the fishes.':esc(TN[t])+' TEAM WINS! 🏆')+sum+'<br><button class="big alt" id="shareWin" style="margin-top:8px;font-size:15px;padding:8px 16px">📣 Share result</button>';
+  $('#shareWin').onclick=()=>shareGame(t<0?'We drew in Grub Blasters!':TN[t]+' team wins! I played Grub Blasters — come blast with me:');
   setTimeout(()=>{if(state==='over')$('#menu').classList.remove('hide')},1600);
   banner(t<0?'DRAW':TN[t]+' WINS!',t<0?'#fff':TC[t]);
 }
@@ -1366,12 +1378,16 @@ $('#snd').onclick=()=>{muted=!muted;saveMute()};
 $('#smute').onclick=()=>{muted=!muted;saveMute()};$('#wsel').onclick=function(){wsel=!wsel;this.textContent=wsel?'On':'Off';try{localStorage.setItem('gb_wsel',wsel?'1':'0')}catch(e){}};
 $('#bhelp').onclick=()=>toggleHelp(true);$('#hclose').onclick=()=>toggleHelp(false);
 $('#bcustom').onclick=()=>toggleCustom(true);$('#cclose').onclick=()=>toggleCustom(false);
+$('#bshare').onclick=()=>shareGame();
 $('#pause').onclick=togglePause;
 $('#fs').onclick=()=>{const d=document.documentElement;if(document.fullscreenElement)document.exitFullscreen();else(d.requestFullscreen||d.webkitRequestFullscreen||(()=>{})).call(d)};
 $('#quit').onclick=()=>{state='menu';paused=false;charging=false;curSheep=null;curDet=null;$('#pause').textContent='⏸';$('#msg').textContent='Turn-based worm artillery. Blast the other team into the sea!';$('#menu').classList.remove('hide')};
 
 /* ---------- boot ---------- */
 pickTheme();genTerrain();mkBg();initScenery();buildTeams();booted=true;
+const ico="data:image/svg+xml,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230b1530'/%3E%3Ctext x='50' y='68' font-size='64' text-anchor='middle'%3E%F0%9F%92%A5%3C/text%3E%3C/svg%3E");
+const m={name:'Grub Blasters',short_name:'Grub Blasters',display:'fullscreen',orientation:'landscape',background_color:'#0b1530',theme_color:'#0b1530',start_url:'.',icons:[{src:ico,sizes:'any',type:'image/svg+xml'}]};
+const l=document.createElement('link');l.rel='manifest';l.href='data:application/manifest+json,'+encodeURIComponent(JSON.stringify(m));document.head?.appendChild(l);
 let last=0;
 function frame(t){
   const dt=Math.min(.033,(t-last)/1000||0);last=t;

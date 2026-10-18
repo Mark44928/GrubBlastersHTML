@@ -20,6 +20,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Floating islands mode: split the map into 1–6 sky islands that worms battle across
 - Zoomable camera that follows the active worm and any shell in flight (pinch or scroll)
 - Jetpack with a fuel tank — hold 🚀 to fly, fuel refills every turn, and CPU teams fly too
+- One-tap sharing after every win (native share sheet on phones) and Add to Home Screen support for app-like play
 - Tap any of your worms to take control of it — move anyone, anywhere
 - Double-tap jump for a backflip — a backwards somersault that gains height, plus a flat "low backflip" variant
 - Solid worms — they block each other, can be climbed and stood upon (worm stacking), and fall when their footing drops away
@@ -127,7 +128,7 @@ python -m http.server
 
 ## Tech
 
-Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 97 KB in total.
+Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 98 KB in total.
 
 ## License
 
