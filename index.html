@@ -333,24 +333,29 @@ function shareGame(txt){
   const url=location.href.split('#')[0];
   const t=txt||'Grub Blasters — turn-based worm artillery in one HTML file. Come blast with me:';
   const data={title:'Grub Blasters',text:t,url};
-  const can=navigator.canShare&&navigator.canShare(data);
-  if(navigator.share&&(can===true||can===undefined)){
+  if(!window.isSecureContext){return fallback(url,t,'🔒 Not HTTPS — share needs secure context (use the live URL)');}
+  const can=navigator.canShare?navigator.canShare(data):true;
+  if(navigator.share&&can!==false){
     navigator.share(data).catch(e=>{
-      if(e.name!=='AbortError') fallback(url,t);
+      if(e.name!=='AbortError') fallback(url,t,'Share failed: '+e.name);
     });
     return;
   }
-  fallback(url,t);
-  function fallback(u,tx){
+  fallback(url,t,can===false?'Payload rejected by canShare()':'Share unavailable on this browser');
+  function fallback(u,tx,msg){
     if(navigator.clipboard&&navigator.clipboard.writeText){
-      navigator.clipboard.writeText(tx+' '+u).then(()=>tip('🔗 Link copied — paste it anywhere!',2.5)).catch(()=>showCopyModal(u,tx));
-    }else showCopyModal(u,tx);
+      navigator.clipboard.writeText(tx+' '+u).then(()=>{tip('🔗 Link copied — paste it anywhere!',3);showCopyModal(u,tx,'Copied!');}).catch(()=>showCopyModal(u,tx,msg));
+    }else showCopyModal(u,tx,msg);
   }
 }
-function showCopyModal(u,tx){
+function showCopyModal(u,tx,msg){
   const m=document.createElement('div');
-  m.style='position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;font-family:system-ui;padding:24px;gap:16px';
-  m.innerHTML='<h3 style="margin:0;color:#ffcb3d">Share Grub Blasters</h3><p style="margin:0;opacity:.8;text-align:center">Share sheet unavailable — copy the link below:</p><input value="'+u+'" readonly style="width:90%;max-width:400px;padding:12px;font-size:16px;background:#111;border:2px solid #ffcb3d;color:#fff;border-radius:8px;text-align:center"><button class="big" onclick="this.parentElement.remove();navigator.clipboard?.writeText(this.previousElementSibling.value+\' \'+`'+tx.replace(/'/g,"\\'")+'`)||tip(\'Copied!\')">Copy & Close</button>';
+  m.style='position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;font-family:system-ui;padding:24px;gap:12px';
+  m.innerHTML='<h3 style="margin:0;color:#ffcb3d">Share Grub Blasters</h3>'
+    +(msg?'<p style="margin:0;opacity:.7;font-size:13px;color:#ff6b6b;text-align:center">'+msg+'</p>':'')
+    +'<p style="margin:0;opacity:.8;text-align:center">Copy the link below:</p>'
+    +'<input value="'+u+'" readonly style="width:90%;max-width:400px;padding:12px;font-size:16px;background:#111;border:2px solid #ffcb3d;color:#fff;border-radius:8px;text-align:center">'
+    +'<button class="big" onclick="this.parentElement.remove();navigator.clipboard?.writeText(this.previousElementSibling.value+\' \'+`'+tx.replace(/'/g,"\\'")+'`)||tip(\'Copied!\')">Copy & Close</button>';
   document.body.appendChild(m);
 }
 function ammoOf(id){const a=ammo[turnTeam];return a&&id in a?a[id]:Infinity}
