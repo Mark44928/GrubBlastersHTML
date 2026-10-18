@@ -138,7 +138,8 @@ logical canvas, with a fuel-limited jetpack for mobility.
   `lastWpn[4]` are all 4-wide regardless of `teamCount`.
 - Settings: `perTeam, diff, hpIdx, ttIdx, guide, muted, skyIdx, terIdx, wxIdx, low`
   plus `teamCount, schIdx (scheme), wndIdx (wind), cratesOn, mapIdx (map
-  size), isl (floating islands 0–6, `ISLN` labels)` (persisted, see
+  size), isl (floating islands 0–6, `ISLN` labels), wsel (Worm Select on/off)`
+  (persisted, see
   below). `SCH` = Normal / Greedy / Pro Mode / Bazooka Only; `WND` scales wind
   (light .5 / normal 1 / storm 1.75).
 - `inp` = walk/aim booleans (+`jet`). `aimDrag` = map-drag aiming. `paused` (`helpWasPaused`
@@ -152,6 +153,14 @@ logical canvas, with a fuel-limited jetpack for mobility.
   `w.aiJet`/`w.aiJetDir` bursts set in the walk phase, only during
   aim/retreat; refilled for the whole team in `startTurn()`. Draws an exhaust
   flame (`w.jet`) and a fuel bar above the active worm.
+- Flying Saucer (Hedgewars-style utility): per-worm `sau` (0–`SAU_F=240`).
+  Firing the `saucer` weapon boards the craft (no turn end, bypasses the
+  settle tail and returns early); FIRE again lands it; `startTurn()` zeroes
+  `sau`. While `w.sau>0` the same jetting gate in `stepWorm()` applies saucer
+  physics — thrust `SAU_T=1500`, rise cap −430, lateral accel 460 / cap ±260,
+  drain `SAU_DRAIN=38`/s — and the drown check is skipped so the craft can fly
+  underwater; running dry mid-water drowns the worm. Draws a saucer body
+  (`w.sau>0`), a cyan thruster beam (`w.jet`) and a cyan fuel bar.
 
 ### Turn flow
 
@@ -179,7 +188,7 @@ scanning (never loops forever, even with 4 teams).
 
 ### Weapons
 
-`WEP` array drives shelf order; array index → id. 20 weapons, 7 per page, but
+`WEP` array drives shelf order; array index → id. 21 weapons, 7 per page, but
 all rendering/selection goes through `wepList()` (Bazooka Only returns just the
 bazooka). The shelf shows page-local slots; keyboard `1–7` maps via
 `wepPage*7+(key-1)` into `wepList()`, and weapon buttons are rebuilt by
@@ -192,8 +201,11 @@ returns — it reruns on fire, crate pickup and turn start.
 flow (homing/magic still charge like a bazooka on hold; airstrike/teleport/lightning fire instantly).
 Only `CHARGE` (`bazooka, grenade, holy, cluster, bunker, homing, magic, banana, dragon, mole`) charge on hold —
 every other weapon fires instantly from `startCharge()`.
-`fire()` refuses anything not in `wepList()` or with `ammoOf(...)===0`.
-`fire()` dispatches; behavior lives in `updateProj()` / `drawProj()`.
+`fire()` refuses anything not in `wepList()` or with `ammoOf(...)===0` — except
+landing the saucer (`wpn==='saucer'&&w.sau>0` cancels before the ammo check).
+`fire()` dispatches; behavior lives in `updateProj()` / `drawProj()`. The
+`saucer` branch is a movement utility: it spends ammo, boards (`w.sau=SAU_F`)
+and `return`s early so it never sets `state='settle'`.
 
 | id | Special handling |
 |---|---|
@@ -217,6 +229,7 @@ every other weapon fires instantly from `startCharge()`.
 | `dragon` | Very bouncy (`bn .82`/`fr .94`), no retreat; `curDet` + FIRE detonates it (`detonateProj`), 6 bounce `taps` also blow it; `kb 1.6` knockback multiplier (explode's 6th arg) |
 | `mole` | On its first ground contact it keeps its direction but digs slower — velocity × .35, gravity × .25, speed capped at 150 px/s — tunneling through rock (`p.did`/`p.burrow`); the burrow block stamps rim-less r 9 `tunnel()` discs every 4 px — trailing ≥10 px behind the head so the mole's own `solid()` emerge check stays valid — and kicks up dirt particles; emerges when solid-free for 2 px (carving its exit hole), then the next contact explodes it; any worm contact explodes it, as does a 5 s fuse or crossing the water line (explosion r 52 dmg 62) |
 | `lightning` | Targeted; `doLightning` queues 5 `pend` entries with `lit:true`; `strikeLit` scans down for a worm (`wormHit` pad 2) or solid and explodes r 30 dmg 40, drawing a `bolts` jagged bolt with thunder SFX |
+| `saucer` | Movement utility, not a projectile: FIRE boards it (spends ammo, `w.sau=SAU_F`, early `return` — never sets `settle`, never ends the turn); FIRE again lands. Flight physics are in `stepWorm` (SAU_T thrust, SAU_DRAIN, rise cap −430, lateral 460/±260); the drown check is skipped while `w.sau>0` so it can fly underwater (running dry there drowns), and `startTurn()` zeroes `sau` |
 
 Ammo: `ammo[team]` object; missing keys = unlimited (`ammoOf()` returns
 `Infinity`). Always spend ammo via `useAmmo(id)` — it only decrements keys that
@@ -270,7 +283,7 @@ rendering.
 - Buttons: `[data-k]` elements (walk/aim pad + `#jet`) use pointer capture;
   `#fire` is press-and-hold; `#jump`; weapon buttons rebuilt from `wepList()`
   by `buildWeps()`; `⇄` flips shelf pages.
-- Canvas: tap selects one of your own worms (<22 px) or aims; drag aims
+- Canvas: tap selects one of your own worms (<22 px, with Worm Select on) or aims; drag aims
   continuously; targeted weapons set `target`. Two pointers = pinch zoom
   (`cvPts` map, baseline recorded on second pointerdown) plus midpoint
   `panCam` (only past a 16 px drag, so a pure pinch keeps following);
@@ -323,6 +336,7 @@ rendering.
 | `gb_crate` | supply crates `'1'`/`'0'` | on |
 | `gb_map` | map size index 0–2 (1400/2000/2800 wide) | 0 |
 | `gb_isl` | floating islands 0–6 (0 = off) | 0 |
+| `gb_wsel` | Worm Select `'1'`/`'0'` (tap own worms to switch) | on |
 
 All reads are wrapped in try/catch (private-mode safe).
 
@@ -399,10 +413,16 @@ There are no automated tests; the game must be checked by hand:
   backflip (cosmetic only).
 - Customization: 🎨 Customize in the start menu opens the sub-card (Done or
   Esc closes); rename teams, cycle sky/terrain/weather, toggle low
-  graphics and sound; all persist across reloads. Low graphics visibly drops
+  graphics, sound and Worm Select; all persist across reloads. Low graphics visibly drops
   resolution and removes weather/decor while gameplay stays identical.
+- Worm Select: with it On, tap another of your own worms to hand the turn to it
+  (cyan fuel bar follows); with it Off, taps only aim. Toggle persists.
 - Jetpack: hold 🚀 (or J) to climb; the fuel bar above the worm drains, stops
   at 0, and every team member refills on their next turn.
+- Flying Saucer: pick 🛸 (page 3) and FIRE to board — the craft draws under the
+  worm with a cyan fuel bar; hold 🚀 / pad to fly with stronger jets, dive
+  underwater (drowning is suppressed while fuel lasts), FIRE again to land;
+  running dry over water drowns the worm; firing any weapon ends the turn.
 - Camera: pinch / scroll to zoom; two-finger drag (or right-drag) pans the
   map and pauses following, then moving or firing snaps the camera back; it
   follows the active worm, the shell in flight, and the airstrike reticle;
@@ -432,7 +452,9 @@ There are no automated tests; the game must be checked by hand:
 
 - Digs (mole, blowtorch) must stamp `tunnel()`, never `crater()`: each crater
   disc paints a dark scorch ring, so a chain of them reads as a "path of
-  circles" through the rock instead of a clean tunnel.
+  circles" through the rock instead of a clean tunnel. The mole's trail loop
+  must also start at `Math.min(4,lim)` — a fixed `s=4` start carves nothing
+  once slow digging drops the mole below ~4 px per frame.
 - `killWorm` must set `w.hp=0` — drowned / wither-killed worms otherwise show
   ghost HP in the team HUD bars.
 - The worm mask is a deliberately narrow 9×16 coffin (real Worms fidelity):
@@ -477,7 +499,7 @@ There are no automated tests; the game must be checked by hand:
 - Don't rename DOM ids — `$()` lookups and the `el` HUD map depend on them:
   `c, banner, tip, fire, jump, jet, weps, teams, time, wf, wtxt, sd, pause,
   snd, fs, quit, menu, msg, cnt, lvl, hp, tt, ag, tms, sch, wnd, crt, map, isl, b2, b1`,
-  plus the customization ids `tn0, tn1, tn2, tn3, sky, ter, wx, gfx, rnd, smute, bhelp, hclose`
+  plus the customization ids `tn0, tn1, tn2, tn3, sky, ter, wx, gfx, rnd, smute, wsel, bhelp, hclose`
   and `help`, plus `custom`/`bcustom`/`cclose` (Customize sub-card),
   plus `rot` (portrait rotate overlay).
 - Team names feed `#msg` via `innerHTML` on the game-over screen — always pass

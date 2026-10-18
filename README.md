@@ -22,12 +22,12 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Tap any of your worms to take control of it — move anyone, anywhere
 - Double-tap jump for a backflip — a backwards somersault that gains height, plus a flat "low backflip" variant
 - Solid worms — they block each other, can be climbed and stood upon (worm stacking), and fall when their footing drops away
-- Big customization: team count, AI level, worm count, HP, turn timer, wind strength (light / normal / storm), supply crates on/off, and map size — plus a 🎨 Customize screen for team names, sky, terrain, weather, graphics and sound
+- Big customization: team count, AI level, worm count, HP, turn timer, wind strength (light / normal / storm), supply crates on/off, and map size — plus a 🎨 Customize screen for team names, sky, terrain, weather, graphics, sound and Worm Select on/off
 - Low-graphics mode — drops to 1× resolution and strips all effects, scenery and weather — for smoother play on older phones
 - Built-in Help & Controls screen (menu button or the H key)
 - Fully destructible terrain — craters stay, worms fall
 - Shifting wind that bends rockets mid-flight
-- Twenty weapons on three shelf pages (cycle with ⇄): bazooka, grenade, dynamite, shotgun, hammer, mine, sheep, airstrike, teleport, holy grenade, cluster bomb, uzi, blowtorch, homing missile, bunker buster, magic bullet, banana bomb, dragon ball, mole bomb, lightning
+- Twenty-one weapons on three shelf pages (cycle with ⇄): bazooka, grenade, dynamite, shotgun, hammer, mine, sheep, airstrike, teleport, holy grenade, cluster bomb, uzi, blowtorch, homing missile, bunker buster, magic bullet, banana bomb, dragon ball, mole bomb, lightning, flying saucer
 - Every shelf button shows its icon plus the weapon name, with the ammo count in the corner
 - Weapons you run out of ammo for vanish from the shelf and come back when you have ammo again
 - Touch-first controls with keyboard support; desktop computers hide the touch pads and play with mouse + keyboard — fullscreen and safe-area insets included
@@ -68,7 +68,8 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Phones and tablets: play in landscape — portrait shows a rotate reminder and pauses the game.
 - Watch the wind meter in the HUD: it pushes rockets and slanting rain.
 - Open Help & Controls from the menu button, or press H.
-- 🎨 Customize in the menu renames teams and picks sky, terrain, weather, graphics and sound — Done (or Esc) closes it and everything persists.
+- Tap one of your own worms to take control of it mid-turn — turn **Worm Select** off in 🎨 Customize to disable.
+- 🎨 Customize in the menu renames teams and picks sky, terrain, weather, graphics, sound and Worm Select — Done (or Esc) closes it and everything persists.
 
 ### Keyboard
 
@@ -110,6 +111,7 @@ Ammo below is for the Normal scheme. **Greedy** makes every weapon unlimited, **
 | Dragon Ball | 1 per team | Bounces wildly with huge knockback; press FIRE to detonate it (or after six bounces) |
 | Mole Bomb | 2 per team | Tunnels through rock along its firing direction; explodes when it emerges, on a worm, after 5 s, or at the water line |
 | Lightning | 2 per team | Pick a target; five bolts crash down and strike anything in their path |
+| Flying Saucer | 1 per team | Board it with FIRE for the turn — fuel-limited flight with stronger jets that even works underwater (🚀 to lift, walk pad to steer); FIRE again to land (Hedgewars-style) |
 
 Crates can refill dynamite, airstrike, teleport, homing missile, bunker buster, or magic bullet, or grant an extra sheep, mine, holy grenade, cluster bomb, uzi, or blowtorch.
 
@@ -123,4 +125,4 @@ python -m http.server
 
 ## Tech
 
-Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 92 KB in total.
+Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 94 KB in total.
