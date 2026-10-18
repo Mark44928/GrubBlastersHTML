@@ -93,7 +93,7 @@ Ammo below is for the Normal scheme. **Greedy** makes every weapon unlimited, **
 | Cluster Bomb | 1 per team | Splits mid-air into four scattering bomblets |
 | Uzi | 2 per team | Six-shot burst with spread; instant hitscan |
 | Blowtorch | 1 per team | Instantly cuts a short tunnel through terrain (and anyone in it) |
-| Homing Missile | 1 per team | Tap the map to mark a spot, then fire it like a rocket — it locks on and homes in, crashing into anything in the way |
+| Homing Missile | 1 per team | Tap the map to mark a spot, then charge it like a bazooka and fire — it locks on and homes in, crashing into anything in the way |
 | Bunker Buster | 1 per team | Drills into the ground with three stacked blasts — great against dug-in worms |
 
 Crates can refill dynamite, airstrike, teleport, homing missile, or bunker buster, or grant an extra sheep, mine, holy grenade, cluster bomb, uzi, or blowtorch.

@@ -177,7 +177,8 @@ bazooka). The shelf shows page-local slots; keyboard `1–7` maps via
 zero-ammo weapons (`visibility:hidden`) and restores them whenever ammo
 returns — it reruns on fire, crate pickup and turn start.
 `TARGETED=['airstrike','teleport','homing']` use the two-step "tap map, then FIRE"
-flow. `fire()` refuses anything not in `wepList()` or with `ammoOf(...)===0`.
+flow (homing still charges like a bazooka on hold; airstrike/teleport fire instantly).
+`fire()` refuses anything not in `wepList()` or with `ammoOf(...)===0`.
 `fire()` dispatches; behavior lives in `updateProj()` / `drawProj()`.
 
 | id | Special handling |
@@ -195,7 +196,7 @@ flow. `fire()` refuses anything not in `wepList()` or with `ammoOf(...)===0`.
 | `cluster` | Splits into 4 bomblets on fuse/water (`splitCluster`) |
 | `uzi` | 6 hitscan shots with spread, 0.12 s apart |
 | `torch` | `torchCut()` carves a ~110 px tunnel, 10 dmg per worm, insta-fire |
-| `homing` | Targeted (tap to mark); fires bazooka-like, then after a 1 s launch phase steers ≤3 rad/s at the mark (no wind/gravity while locked, can fly under water); after 5 s it duds and drops; explodes on contact or within 14 px of the mark; 45 dmg |
+| `homing` | Targeted (tap to mark) and charged like a bazooka; flies straight for ~150 px, then steers ≤3 rad/s at the mark — wind/gravity never apply until it duds, and it can fly under water; detonates within 14 px of the mark, on contact, or after 5 s when it duds and drops; 45 dmg |
 | `bunker` | Rocket that drills on impact: three stacked blasts (r 50/34/28) carve a vertical tunnel |
 
 Ammo: `ammo[team]` object; missing keys = unlimited (`ammoOf()` returns

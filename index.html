@@ -133,7 +133,7 @@ body.pc #c{cursor:crosshair}
     <li><b>🐑 Sheep</b> walks on its own — press <span class="kbd">FIRE</span> again to detonate it.</li>
     <li><b>🔴 Mines</b> arm after 2 s, stay between turns, and chain-react when shot.</li>
     <li><b>🔥 Blowtorch</b> cuts a tunnel; <b>😇 Holy Grenade</b> has the biggest blast.</li>
-    <li><b>🛰️ Homing Missile</b>: tap the map to mark a target, then fire it like a rocket — it locks on and homes in, but crashes into anything in the way; <b>⛏️ Bunker Buster</b> drills a three-blast tunnel through the ground.</li>
+    <li><b>🛰️ Homing Missile</b>: tap the map to mark a target, then hold FIRE to charge it like a bazooka — it locks on and homes in, but crashes into anything in the way; <b>⛏️ Bunker Buster</b> drills a three-blast tunnel through the ground.</li>
     <li>Weapons with no ammo left vanish from the shelf — they reappear when you have ammo again.</li>
   </ul>
   <h2>Keyboard</h2>
@@ -475,7 +475,7 @@ function fire(){
   }
   else if(wpn==='homing'){
     if(!target){tip('Tap the map to mark a target',2);return}
-    useAmmo('homing');const v=120+power*700;proj.push({type:'homing',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,r:46,dmg:45,shooter:w,tx:target.x,ty:target.y});SFX.launch();
+    useAmmo('homing');const v=90+power*430;proj.push({type:'homing',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,r:46,dmg:45,shooter:w,tx:target.x,ty:target.y});SFX.launch();
   }
   else if(wpn==='bazooka'){const v=120+power*700;proj.push({type:'bazooka',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,shooter:w});SFX.launch()}
   else if(wpn==='bunker'){useAmmo('bunker');const v=80+power*600;proj.push({type:'bunker',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,r:50,dmg:48,shooter:w});SFX.launch()}
@@ -567,14 +567,18 @@ function updateProj(dt){
     if(p.rest&&!solid(p.x,p.y+3))p.rest=false;
     if(!p.rest){
       if(p.type==='bazooka'||p.type==='bunker')p.vx+=wind*4*dt;
-      if(p.type==='homing'&&p.age>=1&&p.age<6){
-        const sp=Math.hypot(p.vx,p.vy)||1,ca=Math.atan2(p.vy,p.vx),wa=Math.atan2(p.ty-p.y,p.tx-p.x);
-        let da=wa-ca;while(da>3.1416)da-=6.2832;while(da<-3.1416)da+=6.2832;
-        const na=ca+Math.max(-3*dt,Math.min(3*dt,da));p.vx=Math.cos(na)*sp;p.vy=Math.sin(na)*sp;
+      if(p.type==='homing'&&!p.dud&&p.age<5.5){
+        const sp=Math.hypot(p.vx,p.vy)||1;
         if(Math.hypot(p.tx-p.x,p.ty-p.y)<14){dead=true;explode(p.x,p.y,p.r,p.dmg,p.shooter?p.shooter.team:null)}
+        p.fly=(p.fly||0)+sp*dt;
+        if(!dead&&p.fly>150){
+          const ca=Math.atan2(p.vy,p.vx),wa=Math.atan2(p.ty-p.y,p.tx-p.x);
+          let da=wa-ca;while(da>3.1416)da-=6.2832;while(da<-3.1416)da+=6.2832;
+          const na=ca+Math.max(-3*dt,Math.min(3*dt,da));p.vx=Math.cos(na)*sp;p.vy=Math.sin(na)*sp;
+        }
       }
-      if(p.type==='homing'&&p.age>=6)p.dud=true;
-      if(p.type!=='homing'||p.age<1||p.dud)p.vy+=G*dt;
+      if(p.type==='homing'&&p.age>=5.5)p.dud=true;
+      if(p.type!=='homing'||p.dud)p.vy+=G*dt;
       const sp=Math.hypot(p.vx,p.vy)*dt,n=Math.max(1,Math.ceil(sp/2));
       for(let k=0;k<n&&!dead&&!stop;k++){
         const nx=p.x+p.vx*dt/n,ny=p.y+p.vy*dt/n;
@@ -596,7 +600,7 @@ function updateProj(dt){
           if(Math.hypot(p.vx,p.vy)<45){p.vx=p.vy=0;p.rest=true}
           stop=true;
         }else{p.x=nx;p.y=ny}
-        if(p.y>WATER&&!(p.type==='homing'&&!p.dud&&p.age<6)){dead=true;if(p.type==='cluster')splitCluster(p);else{splash(p.x,WATER);SFX.splash()}break}
+        if(p.y>WATER&&!(p.type==='homing'&&!p.dud&&p.age<5.5)){dead=true;if(p.type==='cluster')splitCluster(p);else{splash(p.x,WATER);SFX.splash()}break}
         if(p.y>H+120){dead=true;break}
         if(p.x<-120||p.x>W+120){dead=true;break}
       }
@@ -641,7 +645,7 @@ function startCharge(){
   if(state==='settle'&&retreat>0&&humanTurn()){retreat=0;return}
   if(!humanTurn()||state!=='aim'||charging||!cur.alive)return;
   initAudio();
-  if(wpn==='shotgun'||wpn==='torch'||TARGETED.includes(wpn)){fire();return}
+  if(wpn==='shotgun'||wpn==='torch'||wpn==='airstrike'||wpn==='teleport'){fire();return}
   charging=true;power=0;
 }
 function releaseFire(){
@@ -1044,7 +1048,7 @@ function hud(){
   if(paused)m='⏸ PAUSED';
   else if(tipT>0)m=tipMsg;
   else if(curSheep&&humanTurn())m='🐑 Press FIRE to detonate the sheep!';
-  else if(state==='aim'&&humanTurn()&&TARGETED.includes(wpn)&&!target)m='Tap the map to pick a spot, then press FIRE';
+  else if(state==='aim'&&humanTurn()&&TARGETED.includes(wpn)&&!target)m=wpn==='homing'?'Tap the map to mark a target, then hold FIRE':'Tap the map to pick a spot, then press FIRE';
   else if(state==='aim'&&humanTurn()&&TARGETED.includes(wpn)&&target)m='Press FIRE';
   if(m!==el.tip.textContent)el.tip.textContent=m;
   el.tip.classList.toggle('on',!!m);
