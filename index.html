@@ -173,6 +173,7 @@ body.pc #c{cursor:crosshair}
   <div class="row">Sound: <button id="smute">On</button> · Theme: <button id="rnd">🎲 Random</button></div>
   <div class="row">Worm Select: <button id="wsel">On</button></div>
   <div class="row">Gemini API Key: <input id="gkey" type="password" placeholder="Enter Gemini API key" style="flex:1;padding:8px;border-radius:8px;border:2px solid #ffcb3d;background:#111;color:#fff;font-size:14px"></div>
+  <div class="row">Gemini Debug: <button id="gdbg">On</button></div>
   <button class="big" id="cclose">Done</button>
 </div></div>
 <div id="rot"><div class="card"><h1>🔄</h1><p><b>Rotate your device<br>to landscape to play</b></p></div></div>
@@ -315,14 +316,14 @@ function normalAt(x,y){let nx=0,ny=0;for(let j=-4;j<=4;j++)for(let i=-4;i<=4;i++
 /* ---------- game state ---------- */
 let worms=[],proj=[],parts=[],texts=[],tracers=[],crates=[],graves=[],rings=[],leaves=[],clouds=[],pend=[],rain=[],snow=[],fireflies=[],bolts=[];
 let state='menu',cur=null,turnTeam=0,turnTime=30,wind=0,power=0,charging=false,wpn='bazooka',turnNo=0,paused=false,weather=0;
-let retreat=0,quiet=0,settleT=0,shots=0,shotT=0,shotD=null,shake=0,aiOn=[false,false,false,false],ai=null,perTeam=3,diff=1,cursor=[-1,-1,-1,-1],lastTick=0,wins=[0,0,0,0],kdmg=[0,0,0,0],kills=[0,0,0,0],wepPage=0,shotCfg={r:16,dmg:26,spread:0,delay:.5},geminiKey='';
+let retreat=0,quiet=0,settleT=0,shots=0,shotT=0,shotD=null,shake=0,aiOn=[false,false,false,false],ai=null,perTeam=3,diff=1,cursor=[-1,-1,-1,-1],lastTick=0,wins=[0,0,0,0],kdmg=[0,0,0,0],kills=[0,0,0,0],wepPage=0,shotCfg={r:16,dmg:26,spread:0,delay:.5},geminiKey='',geminiDebug=true;
 let target=null,tipMsg='',tipT=0,ammo=[{},{},{},{}],curSheep=null,curDet=null,chainFx=[];
 const inp={left:false,right:false,up:false,down:false,jet:false};
 let ttIdx=1,guide=false,hpIdx=0,lastWpn=['bazooka','bazooka','bazooka','bazooka'],skyIdx=-1,terIdx=-1,wxIdx=-1,jumpT=0,teamCount=2,schIdx=0,wndIdx=1,cratesOn=true,mapIdx=0,jetSndT=0,isl=0,wsel=true;
 let barEls=[],nameEls=[],chipEls=[];
 const numV=(v,d)=>{const x=parseInt(v,10);return isNaN(x)?d:x};
-try{const a=localStorage.getItem('gb_diff'),b=localStorage.getItem('gb_per'),c=localStorage.getItem('gb_tt'),g=localStorage.getItem('gb_guide'),m=localStorage.getItem('gb_mute'),h=localStorage.getItem('gb_hp'),sk=localStorage.getItem('gb_sky'),te=localStorage.getItem('gb_ter'),wx=localStorage.getItem('gb_wx'),lo=localStorage.getItem('gb_low'),tm=localStorage.getItem('gb_teams'),sc=localStorage.getItem('gb_sch'),wn=localStorage.getItem('gb_wnd'),cr=localStorage.getItem('gb_crate'),mp=localStorage.getItem('gb_map'),il=localStorage.getItem('gb_isl'),wsv=localStorage.getItem('gb_wsel'),gk=localStorage.getItem('gb_gkey');if(a!==null)diff=Math.max(0,Math.min(4,+a||0));if(b!==null)perTeam=Math.max(2,Math.min(8,+b||3));if(c!==null)ttIdx=Math.max(0,Math.min(3,+c||1));if(g!==null)guide=g==='1';if(m!==null)muted=m==='1';if(h!==null)hpIdx=Math.max(0,Math.min(2,+h||0));for(let t=0;t<4;t++){const v=localStorage.getItem('gb_tn'+t);if(v!==null&&v.trim())TN[t]=v.trim().slice(0,12)}skyIdx=Math.max(-1,Math.min(3,numV(sk,-1)));terIdx=Math.max(-1,Math.min(3,numV(te,-1)));wxIdx=Math.max(-1,Math.min(2,numV(wx,-1)));if(lo!==null)low=lo==='1';if(tm!==null)teamCount=Math.max(2,Math.min(4,+tm||2));if(sc!==null)schIdx=Math.max(0,Math.min(SCH.length-1,+sc||0));if(wn!==null)wndIdx=Math.max(0,Math.min(WND.length-1,+wn||1));if(cr!==null)cratesOn=cr==='1';if(mp!==null)mapIdx=Math.max(0,Math.min(MAPS.length-1,+mp||0));if(il!==null)isl=Math.max(0,Math.min(6,+il||0));if(wsv!==null)wsel=wsv==='1';geminiKey=gk||''}catch(e){}
-$('#gkey').value=geminiKey;
+try{const a=localStorage.getItem('gb_diff'),b=localStorage.getItem('gb_per'),c=localStorage.getItem('gb_tt'),g=localStorage.getItem('gb_guide'),m=localStorage.getItem('gb_mute'),h=localStorage.getItem('gb_hp'),sk=localStorage.getItem('gb_sky'),te=localStorage.getItem('gb_ter'),wx=localStorage.getItem('gb_wx'),lo=localStorage.getItem('gb_low'),tm=localStorage.getItem('gb_teams'),sc=localStorage.getItem('gb_sch'),wn=localStorage.getItem('gb_wnd'),cr=localStorage.getItem('gb_crate'),mp=localStorage.getItem('gb_map'),il=localStorage.getItem('gb_isl'),wsv=localStorage.getItem('gb_wsel'),gk=localStorage.getItem('gb_gkey'),gd=localStorage.getItem('gb_gdbg');if(a!==null)diff=Math.max(0,Math.min(4,+a||0));if(b!==null)perTeam=Math.max(2,Math.min(8,+b||3));if(c!==null)ttIdx=Math.max(0,Math.min(3,+c||1));if(g!==null)guide=g==='1';if(m!==null)muted=m==='1';if(h!==null)hpIdx=Math.max(0,Math.min(2,+h||0));for(let t=0;t<4;t++){const v=localStorage.getItem('gb_tn'+t);if(v!==null&&v.trim())TN[t]=v.trim().slice(0,12)}skyIdx=Math.max(-1,Math.min(3,numV(sk,-1)));terIdx=Math.max(-1,Math.min(3,numV(te,-1)));wxIdx=Math.max(-1,Math.min(2,numV(wx,-1)));if(lo!==null)low=lo==='1';if(tm!==null)teamCount=Math.max(2,Math.min(4,+tm||2));if(sc!==null)schIdx=Math.max(0,Math.min(SCH.length-1,+sc||0));if(wn!==null)wndIdx=Math.max(0,Math.min(WND.length-1,+wn||1));if(cr!==null)cratesOn=cr==='1';if(mp!==null)mapIdx=Math.max(0,Math.min(MAPS.length-1,+mp||0));if(il!==null)isl=Math.max(0,Math.min(6,+il||0));if(wsv!==null)wsel=wsv==='1';geminiKey=gk||'';geminiDebug=gd!=='0'}catch(e){}
+$('#gkey').value=geminiKey;$('#gdbg').textContent=geminiDebug?'On':'Off';
 
 const PTS=[[-1,-8],[1,-8],[-3.5,-6],[3.5,-6],[-4.5,-3],[4.5,-3],[-4.5,0],[4.5,0],[-3.5,3],[3.5,3],[-2.5,6],[2.5,6],[-1,8],[1,8]];
 function hit(x,y){for(const q of PTS)if(solid(x+q[0],y+q[1]))return true;return false}
@@ -973,7 +974,7 @@ function aiTurn(dt){
   }
 }
 function callGeminiAI(w){
-  const log=(m)=>console.log('[Gemini]',m), tip2=(m)=>tip('[Gemini] '+m,3);
+  const log=(m)=>{if(geminiDebug)console.log('[Gemini]',m)}, tip2=(m)=>tip('[Gemini] '+m,3);
   log('callGeminiAI called, key:'+(geminiKey?'set':'MISSING')+', phase:'+ai.phase+', busy:'+ai.geminiBusy);
   if(!geminiKey){ tip2('No API key set'); return; }
   if(ai.geminiBusy){ return; }
@@ -1482,7 +1483,7 @@ $('#wx').onclick=function(){wxIdx=wxIdx>=2?-1:wxIdx+1;this.textContent=WXN[wxIdx
 $('#gfx').onclick=function(){low=!low;this.textContent=low?'Low':'High';try{localStorage.setItem('gb_low',low?'1':'0')}catch(e){}resize()};
 $('#rnd').onclick=function(){skyIdx=Math.random()*SKY.length|0;terIdx=Math.random()*GROUND.length|0;$('#sky').textContent=SKYN[skyIdx+1];$('#ter').textContent=GROUNDN[terIdx+1];try{localStorage.setItem('gb_sky',skyIdx);localStorage.setItem('gb_ter',terIdx)}catch(e){}};
 $('#snd').onclick=()=>{muted=!muted;saveMute()};
-$('#smute').onclick=()=>{muted=!muted;saveMute()};$('#wsel').onclick=function(){wsel=!wsel;this.textContent=wsel?'On':'Off';try{localStorage.setItem('gb_wsel',wsel?'1':'0')}catch(e){}};$('#gkey').onchange=function(){geminiKey=this.value;try{localStorage.setItem('gb_gkey',this.value)}catch(e){}};
+$('#smute').onclick=()=>{muted=!muted;saveMute()};$('#wsel').onclick=function(){wsel=!wsel;this.textContent=wsel?'On':'Off';try{localStorage.setItem('gb_wsel',wsel?'1':'0')}catch(e){}};$('#gkey').onchange=function(){geminiKey=this.value;try{localStorage.setItem('gb_gkey',this.value)}catch(e){}};$('#gdbg').onclick=function(){geminiDebug=!geminiDebug;this.textContent=geminiDebug?'On':'Off';try{localStorage.setItem('gb_gdbg',geminiDebug?'1':'0')}catch(e){}};
 $('#bhelp').onclick=()=>toggleHelp(true);$('#hclose').onclick=()=>toggleHelp(false);
 $('#bcustom').onclick=()=>toggleCustom(true);$('#cclose').onclick=()=>toggleCustom(false);
 $('#bshare').onclick=()=>shareGame();
