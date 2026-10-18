@@ -981,7 +981,19 @@ function callGeminiAI(w){
   fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key='+geminiKey,{
     method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({contents:[{role:'user',parts:[{text:GEMINI_SYSTEM_PROMPT+stateInfo}]}],generationConfig:{temperature:0.3,maxOutputTokens:512}})
-  }).then(r=>r.json()).then(d=>{
+  }).then(async r=>{
+    if(!r.ok){
+      const e=await r.json().catch(()=>({}));
+      const msg=e.error?.message||`HTTP ${r.status}`;
+      if(r.status===429||msg.includes('quota'))tip('Gemini quota exceeded — using built-in AI',3);
+      else if(r.status===400)tip('Gemini bad request — check key',3);
+      else if(r.status===401||r.status===403)tip('Gemini invalid key',3);
+      else tip('Gemini error: '+msg,3);
+      ai.geminiBusy=false;ai.phase='think';return;
+    }
+    return r.json();
+  }).then(d=>{
+    if(!d)return;
     ai.geminiBusy=false;
     const txt=d.candidates?.[0]?.content?.parts?.[0]?.text||'';
     parseGeminiAction(txt,w);
