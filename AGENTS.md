@@ -68,7 +68,8 @@ logical canvas, with a fuel-limited jetpack for mobility.
 
 1. `<style>` — all CSS (HUD, buttons, menu, safe-area insets).
 2. DOM UI: `#c` canvas, `#ui` overlay (`#top` team HUD, `#mid` timer + wind,
-   `#bottom` controls) plus `#banner`, `#tip`, and the `#menu` start card.
+   `#bottom` controls) plus `#banner`, `#tip`, the `#menu` start card, and the
+   `#help` / `#custom` overlays (Help, Customize sub-card).
 3. `<script>` — everything else, `'use strict'`.
 
 ### Coordinate model
@@ -84,6 +85,8 @@ logical canvas, with a fuel-limited jetpack for mobility.
 - `camFollow(dt)` (end of `update`) smoothly targets the active worm, the
   midpoint of worm+`target` for targeted weapons, or the first live
   non-mine projectile during settle.
+- `camManual` pauses following: `panCam(dx,dy)` pans by screen px and sets it;
+  movement input, fire, jump, charge, aim-tap and `startTurn` clear it.
 - `resize()` recomputes `dpr` (cap 2), canvas bitmap, `fit`, the vignette
   canvas and re-clamps the camera.
 - All gameplay code speaks logical pixels only.
@@ -93,9 +96,16 @@ logical canvas, with a fuel-limited jetpack for mobility.
 - `genTerrain()` rasterizes layered sine noise + Gaussian bumps into a
   `terrain` canvas (surface heights sampled every 4 px); the ground is fully
   solid below the surface — no buried voids.
+- `isl>0` switches `genTerrain()` to **floating islands**: `islands[]` of
+  `{cx,hw,ty,th}` blobs (`seg=W/isl`, `hw≤seg*.38`, jitter ±.07seg so they
+  can never overlap, bottoms stay above `WATER0`). `newGame()` then spreads
+  worm spawn slots per island (`per[k]` slots across `cx±(hw-40)`) instead of
+  the flat across-map formula.
 - A `Uint8Array mask` (W×H) is rebuilt from alpha>100; `solid(x,y)` reads it.
 - `crater(x,y,r)` cuts the canvas (dark rim + destination-out) and zeroes the
-  mask — it is the ONLY way terrain changes.
+  mask — it is the ONLY explosion-style terrain change. `tunnel(x,y,r)` is the
+  rim-less variant (destination-out + mask only, no scorch ring) used by the
+  mole and blowtorch for clean continuous digs.
 - `hit(x,y)` tests a 14-point worm hitbox (`PTS`, a coffin silhouette ~9 px wide
   × 16 px tall — the real Worms mask, narrower than the drawn sprite) against
   terrain; `normalAt()` estimates bounce normals from the mask;
@@ -116,7 +126,7 @@ logical canvas, with a fuel-limited jetpack for mobility.
 ### Core state (module-level globals)
 
 - Entity arrays: `worms, proj, parts, texts, tracers, crates, graves, rings,
-  leaves, clouds, pend, rain, snow, fireflies`.
+  leaves, clouds, pend, rain, snow, fireflies, bolts`.
 - `state`: `'menu' | 'aim' | 'settle' | 'over'`. `aim` = current worm may
   move/aim/fire; `settle` = projectiles resolving + retreat window; `over` =
   match finished.
@@ -127,7 +137,8 @@ logical canvas, with a fuel-limited jetpack for mobility.
   0–3, editable). `aiOn[4]`, `wins[4]`, `kdmg[4]`, `kills[4]`, `ammo[4]`,
   `lastWpn[4]` are all 4-wide regardless of `teamCount`.
 - Settings: `perTeam, diff, hpIdx, ttIdx, guide, muted, skyIdx, terIdx, wxIdx, low`
-  plus `teamCount, schIdx (scheme), wndIdx (wind), cratesOn` (persisted, see
+  plus `teamCount, schIdx (scheme), wndIdx (wind), cratesOn, mapIdx (map
+  size), isl (floating islands 0–6, `ISLN` labels)` (persisted, see
   below). `SCH` = Normal / Greedy / Pro Mode / Bazooka Only; `WND` scales wind
   (light .5 / normal 1 / storm 1.75).
 - `inp` = walk/aim booleans (+`jet`). `aimDrag` = map-drag aiming. `paused` (`helpWasPaused`
@@ -168,16 +179,19 @@ scanning (never loops forever, even with 4 teams).
 
 ### Weapons
 
-`WEP` array drives shelf order; array index → id. 15 weapons, 7 per page, but
+`WEP` array drives shelf order; array index → id. 20 weapons, 7 per page, but
 all rendering/selection goes through `wepList()` (Bazooka Only returns just the
 bazooka). The shelf shows page-local slots; keyboard `1–7` maps via
 `wepPage*7+(key-1)` into `wepList()`, and weapon buttons are rebuilt by
-`buildWeps()` (a `⇄` page button is hidden when there is only one page).
+`buildWeps()` — each shows the short name (`WEP[].n`) under the icon with an
+ammo badge in the corner (a `⇄` page button is hidden when there is only one page).
 `⇄`/Q cycle `wepPage` modulo the page count (3 pages now). `updateWeps()` hides
 zero-ammo weapons (`visibility:hidden`) and restores them whenever ammo
 returns — it reruns on fire, crate pickup and turn start.
-`TARGETED=['airstrike','teleport','homing']` use the two-step "tap map, then FIRE"
-flow (homing still charges like a bazooka on hold; airstrike/teleport fire instantly).
+`TARGETED=['airstrike','teleport','homing','magic','lightning']` use the two-step "tap map, then FIRE"
+flow (homing/magic still charge like a bazooka on hold; airstrike/teleport/lightning fire instantly).
+Only `CHARGE` (`bazooka, grenade, holy, cluster, bunker, homing, magic, banana, dragon, mole`) charge on hold —
+every other weapon fires instantly from `startCharge()`.
 `fire()` refuses anything not in `wepList()` or with `ammoOf(...)===0`.
 `fire()` dispatches; behavior lives in `updateProj()` / `drawProj()`.
 
@@ -198,6 +212,11 @@ flow (homing still charges like a bazooka on hold; airstrike/teleport fire insta
 | `torch` | `torchCut()` carves a ~110 px tunnel, 10 dmg per worm, insta-fire |
 | `homing` | Targeted (tap to mark) and charged like a bazooka; flies straight for ~150 px, then steers ≤3 rad/s at the mark — wind/gravity never apply until it duds, and it can fly under water; detonates within 14 px of the mark, on contact, or after 5 s when it duds and drops; 45 dmg |
 | `bunker` | Rocket that drills on impact: three stacked blasts (r 50/34/28) carve a vertical tunnel |
+| `magic` | Superweapon (1/team): targeted + charged; accelerates 140→700 px/s, ~80 px straight launch then steers ≤4.5 rad/s at the mark with no gravity/wind and flies under water; detonates within 20 px of the mark, on contact, or after 9 s with a holy-sized blast (r 88 dmg 85, ~100 HP at center) |
+| `banana` | 3 s fuse lob; `splitBanana()` fires an r 64 dmg 66 blast then 5 staggered `bomblet`s (`ban:true`, fuses .45–1.6 s) |
+| `dragon` | Very bouncy (`bn .82`/`fr .94`), no retreat; `curDet` + FIRE detonates it (`detonateProj`), 6 bounce `taps` also blow it; `kb 1.6` knockback multiplier (explode's 6th arg) |
+| `mole` | On its first ground contact it keeps its direction but digs slower — velocity × .35, gravity × .25, speed capped at 150 px/s — tunneling through rock (`p.did`/`p.burrow`); the burrow block stamps rim-less r 9 `tunnel()` discs every 4 px — trailing ≥10 px behind the head so the mole's own `solid()` emerge check stays valid — and kicks up dirt particles; emerges when solid-free for 2 px (carving its exit hole), then the next contact explodes it; any worm contact explodes it, as does a 5 s fuse or crossing the water line (explosion r 52 dmg 62) |
+| `lightning` | Targeted; `doLightning` queues 5 `pend` entries with `lit:true`; `strikeLit` scans down for a worm (`wormHit` pad 2) or solid and explodes r 30 dmg 40, drawing a `bolts` jagged bolt with thunder SFX |
 
 Ammo: `ammo[team]` object; missing keys = unlimited (`ammoOf()` returns
 `Infinity`). Always spend ammo via `useAmmo(id)` — it only decrements keys that
@@ -236,9 +255,9 @@ chips are built once per game by `buildTeams()` (per-team name, HP bar, and
 Canvas text uses the `FONT` stack; the title/banner/clock use a condensed
 display stack via CSS. **Low graphics** (`low`) is cosmetic-only: `resize()`
 caps `dpr` at 1 (4× fewer pixels on most phones), and it draws no clouds,
-leaves, fireflies or vignette, spawns minimal rain/snow without terrain
-speckle, coarsens the water mesh, thins scenery/particle counts and lowers the
-particle cap. It must never change gameplay, damage, or terrain.
+leaves, fireflies, rain, snow or vignette, coarsens the water mesh, thins
+scenery/particle counts and lowers the particle cap. It must never change
+gameplay, damage, or terrain.
 
 ### Loop
 
@@ -253,9 +272,11 @@ rendering.
   by `buildWeps()`; `⇄` flips shelf pages.
 - Canvas: tap selects one of your own worms (<22 px) or aims; drag aims
   continuously; targeted weapons set `target`. Two pointers = pinch zoom
-  (`cvPts` map, baseline recorded on second pointerdown); wheel zooms on
+  (`cvPts` map, baseline recorded on second pointerdown) plus midpoint
+  `panCam` (only past a 16 px drag, so a pure pinch keeps following);
+  right/middle-button drag = `panDrag`. Wheel zooms on
   desktop; `+`/`-`/`=` keys zoom. `pointercancel` and `blur` must clear
-  interactive state.
+  interactive state (including `panDrag`).
 - `PC` (UA + `maxTouchPoints` check) adds `body.pc`: desktop CSS hides the
   touch pad groups (`#bottom>.grp:not(#weps)`), shows a crosshair cursor, and
   the menu hint switches to keyboard text; weapons are clickable with the
@@ -301,6 +322,7 @@ rendering.
 | `gb_wnd` | wind index 0–2 (light .5 / normal 1 / storm 1.75) | 1 |
 | `gb_crate` | supply crates `'1'`/`'0'` | on |
 | `gb_map` | map size index 0–2 (1400/2000/2800 wide) | 0 |
+| `gb_isl` | floating islands 0–6 (0 = off) | 0 |
 
 All reads are wrapped in try/catch (private-mode safe).
 
@@ -313,8 +335,9 @@ All reads are wrapped in try/catch (private-mode safe).
   `updateProj()` and a visual in `drawProj()`, starting ammo in `SCH[0]`'s
   loadout in `newGame()`, the crate pool in `pickCrate()`, and README tables.
   Shelf pages and `buildWeps()` update automatically via `wepList()`.
-- New settings: button in `#menu` (or HUD), load inside the localStorage
-  `try{}` block, persist in the click handler, document in README.
+- New settings: button in `#menu` or the `#custom` sub-menu (or HUD), load
+  inside the localStorage `try{}` block, persist in the click handler, document
+  in README.
 - No comments beyond the section dividers unless genuinely needed.
 - Commit messages: one imperative summary line, details after a colon
   (see `git log`).
@@ -339,7 +362,7 @@ There are no automated tests; the game must be checked by hand:
 - Set teams to 4 and play a few turns; verify the HUD chips, team names, banner
   colors, and that the turn arrows cycle through living teams.
 - Wind on Storm: meter stays within the HUD and rockets bend hard.
-- Targeted flow: airstrike / teleport / homing — tap map, reticle appears, FIRE works.
+- Targeted flow: airstrike / teleport / homing / magic — tap map, reticle appears, FIRE works.
 - Sheep: release, detonate via FIRE; confirm enemy-touch detonation.
 - Mine: drop, walk away, arming delay, proximity trigger, chain reaction.
 - Kill and drown worms: HUD bars drop to 0 (no ghost HP); graves appear and
@@ -358,23 +381,39 @@ There are no automated tests; the game must be checked by hand:
   the sim pauses; rotate back and it resumes.
 - Ammo shelf: empty a limited weapon — its icon vanishes from the shelf;
   pressing its old key slot tips "Out of ammo".
-- New weapons: homing missile — mark a spot, fire it above obstacles and it
-  homes in (duds and drops after ~5 s); bunker buster carves a three-blast
-  tunnel into the ground.
+- New weapons: homing missile — the yellow aim cross shows while no mark is
+  set; mark a spot, fire it above obstacles and it homes in (duds and drops
+  after ~5 s); bunker buster carves a three-blast tunnel into the ground;
+  magic bullet (gold reticle) spirals around obstacles to the mark and
+  detonates with a Holy-Grenade-sized blast — one per team, and it fails and
+  explodes in place after 9 s if it cannot reach; banana bomb erupts into
+  five bananas that burst in sequence; the dragon ball bounces wildly and
+  blows on FIRE (or after six bounces) with extra knockback; the mole bomb
+  tunnels through rock along its firing direction, exploding when it emerges
+  and hits something, on a worm, after 5 s, or at the water line; lightning strikes five
+  jagged bolts at the target, hitting worms above cover.
 - Weapon shelf: ⇄ and Q cycle all three pages, and the page follows the
   active weapon at turn start.
 - Backflip: double-tap jump within ~0.35 s — worm leaps backwards with a
   somersault (higher than a normal jump); a third quick tap gives the flat low
   backflip (cosmetic only).
-- Customization: rename teams, cycle sky/terrain/weather, toggle low
+- Customization: 🎨 Customize in the start menu opens the sub-card (Done or
+  Esc closes); rename teams, cycle sky/terrain/weather, toggle low
   graphics and sound; all persist across reloads. Low graphics visibly drops
   resolution and removes weather/decor while gameplay stays identical.
 - Jetpack: hold 🚀 (or J) to climb; the fuel bar above the worm drains, stops
   at 0, and every team member refills on their next turn.
-- Camera: pinch / scroll to zoom; it follows the active worm, the shell in
-  flight, and the airstrike reticle; edges stay clamped inside the map.
+- Camera: pinch / scroll to zoom; two-finger drag (or right-drag) pans the
+  map and pauses following, then moving or firing snaps the camera back; it
+  follows the active worm, the shell in flight, and the airstrike reticle;
+  edges stay clamped inside the map.
 - Map size: play a turn on Wide and Epic — terrain, water, sky and scenery
   span the full width and worms spawn spread out.
+- Islands: set Islands to 4 — four separate floating landmasses with water
+  gaps, worms spread across them, none drowned at spawn; set back to Off and
+  regenerate.
+- Weapon shelf labels: every button shows its name under the icon (Bazooka …
+  Magic) with the ammo badge in the corner.
 - Help: open from the menu and with H; it pauses the game, Esc/H/P closes it,
   and the previous paused state is restored.
 - Sudden death: turn 16 sea rise + wither; meteors arrive shortly after.
@@ -391,6 +430,9 @@ There are no automated tests; the game must be checked by hand:
 
 ## Pitfalls (things that have bitten us)
 
+- Digs (mole, blowtorch) must stamp `tunnel()`, never `crater()`: each crater
+  disc paints a dark scorch ring, so a chain of them reads as a "path of
+  circles" through the rock instead of a clean tunnel.
 - `killWorm` must set `w.hp=0` — drowned / wither-killed worms otherwise show
   ghost HP in the team HUD bars.
 - The worm mask is a deliberately narrow 9×16 coffin (real Worms fidelity):
@@ -430,13 +472,14 @@ There are no automated tests; the game must be checked by hand:
   misbehaves.
 - Rockets skip their own shooter only for 0.25 s (`p.age>.25`); sheep/mines
   exclude `e!==p.shooter`. Keep shooter exclusion when adding projectiles.
-- `retreat=(wpn==='sheep'||aiOn[turnTeam])?0:3` — AI and sheep get no retreat
-  window.
+- `retreat=(wpn==='sheep'||wpn==='dragon'||aiOn[turnTeam])?0:3` — AI, sheep
+  and the dragon ball get no retreat window.
 - Don't rename DOM ids — `$()` lookups and the `el` HUD map depend on them:
   `c, banner, tip, fire, jump, jet, weps, teams, time, wf, wtxt, sd, pause,
-  snd, fs, quit, menu, msg, cnt, lvl, hp, tt, ag, tms, sch, wnd, crt, map, b2, b1`,
+  snd, fs, quit, menu, msg, cnt, lvl, hp, tt, ag, tms, sch, wnd, crt, map, isl, b2, b1`,
   plus the customization ids `tn0, tn1, tn2, tn3, sky, ter, wx, gfx, rnd, smute, bhelp, hclose`
-  and `help`, plus `rot` (portrait rotate overlay).
+  and `help`, plus `custom`/`bcustom`/`cclose` (Customize sub-card),
+  plus `rot` (portrait rotate overlay).
 - Team names feed `#msg` via `innerHTML` on the game-over screen — always pass
   them through `esc()`. Everywhere else they go through `textContent`.
 - Keep `index.html` a single file. If it grows, tighten code — don't split.
