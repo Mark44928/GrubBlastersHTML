@@ -14,6 +14,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Jetpack with a fuel tank — hold 🚀 to fly, fuel refills every turn, and CPU teams fly too
 - Tap any of your worms to take control of it — move anyone, anywhere
 - Double-tap jump for a backflip — a backwards somersault that gains height, plus a flat "low backflip" variant
+- Solid worms — they block each other, can be climbed and stood upon (worm stacking), and fall when their footing drops away
 - Big customization: team count, team names, AI level, worm count, HP, turn timer, wind strength (light / normal / storm), supply crates on/off, map size, sky, terrain, and weather
 - Low-graphics mode — drops to 1× resolution and thins all effects, scenery and weather — for smoother play on older phones
 - Built-in Help & Controls screen (menu button or the H key)
@@ -40,6 +41,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Tap or drag the map to aim.
 - Hold FIRE to charge power, release to shoot.
 - Walk with the arrow buttons; climb with the up/down aim buttons; jump with the jump button.
+- Worms are solid — you can't walk through one; stand on a teammate's head to stack up, and anyone standing on a worm falls when it moves away.
 - Double-tap the jump button (or Enter/Shift) to backflip — a backwards somersault that gains height; tap jump once more mid-flip for a flat "low backflip".
 - Hold 🚀 to fire the jetpack and fly; the fuel bar over your worm drains as you go and refills at the start of your next turn.
 - Pinch the map (or scroll) to zoom — the camera follows your worm, the shell in flight, and your airstrike target.

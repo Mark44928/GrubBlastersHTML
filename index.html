@@ -267,6 +267,8 @@ try{const a=localStorage.getItem('gb_diff'),b=localStorage.getItem('gb_per'),c=l
 
 const PTS=[[-1,-8],[1,-8],[-3.5,-6],[3.5,-6],[-4.5,-3],[4.5,-3],[-4.5,0],[4.5,0],[-3.5,3],[3.5,3],[-2.5,6],[2.5,6],[-1,8],[1,8]];
 function hit(x,y){for(const q of PTS)if(solid(x+q[0],y+q[1]))return true;return false}
+function wormAt(self,x,y){for(const e of worms)if(e!==self&&e.alive&&wormHit(e,x,y,0))return true;return false}
+function hitW(w,x,y){for(const q of PTS){const px=x+q[0],py=y+q[1];if(solid(px,py)||wormAt(w,px,py))return true}return false}
 function halfW(dy){return dy<-6?2+(dy+8)*.75:dy<-3?3.5+(dy+6)/3:dy<0?4.5:4.5-dy*.4375}
 function wormHit(w,x,y,pad){pad=pad||0;const dy=y-w.y;if(dy<-8-pad||dy>8+pad)return false;return Math.abs(x-w.x)<=halfW(dy<-8?-8:dy>8?8:dy)+pad}
 function tip(m,t){tipMsg=m;tipT=t||2}
@@ -386,7 +388,7 @@ function updateWorld(dt){
 function walk(w,dir,dt){
   const nx=w.x+dir*58*dt;
   for(let up=0;up<=8;up++){
-    if(!hit(nx,w.y-up)){w.x=nx;w.y-=up;w.wob+=dt*14;for(let k=0;k<8&&!hit(w.x,w.y+1);k++)w.y+=1;return true}
+    if(!hitW(w,nx,w.y-up)){w.x=nx;w.y-=up;w.wob+=dt*14;for(let k=0;k<8&&!hitW(w,w.x,w.y+1);k++)w.y+=1;return true}
   }
   return false;
 }
@@ -406,7 +408,7 @@ function stepWorm(w,dt){
     jetSndT-=dt;if(jetSndT<=0){SFX.jet();jetSndT=.12}
     if(!low||Math.random()<.4)parts.push({x:w.x-w.dir*6+(Math.random()-.5)*4,y:w.y+8+Math.random()*4,vx:-w.dir*40+(Math.random()-.5)*60,vy:120+Math.random()*80,life:.25+Math.random()*.2,max:.5,c:Math.random()<.5?'#ffd54a':'#ff8a3c',s:1.5+Math.random()*1.5,g:60,d:1})
   }
-  if(!w.air&&!hit(w.x,w.y+1))w.air=true;
+  if(!w.air&&!hitW(w,w.x,w.y+1))w.air=true;
   if(!w.air){w.vx=0;w.vy=0;return}
   w.vy+=G*dt;
   let sx=w.vx*dt;const sy=w.vy*dt;
@@ -414,10 +416,10 @@ function stepWorm(w,dt){
   for(let i=0;i<n;i++){
     if(sx!==0){
       const nx=w.x+sx/n;
-      if(!hit(nx,w.y))w.x=nx;else if(!hit(nx,w.y-2)){w.x=nx;w.y-=2}else{w.vx*=-.35;sx=0}
+      if(!hitW(w,nx,w.y))w.x=nx;else if(!hitW(w,nx,w.y-2)){w.x=nx;w.y-=2}else{w.vx*=-.35;sx=0}
     }
     const ny=w.y+sy/n;
-    if(!hit(w.x,ny))w.y=ny;
+    if(!hitW(w,w.x,ny))w.y=ny;
     else{
       if(w.vy>0){const dmg=Math.round((w.vy-480)/9);if(dmg>3)damageWorm(w,dmg);w.air=false;w.vx=0}
       w.vy=0;break;
@@ -485,7 +487,7 @@ function doAirstrike(){
 }
 function doTeleport(){
   const w=cur,tx=target.x;let found=null;
-  for(let k=0;k<=40;k+=2){if(!hit(tx,target.y-k)){found=target.y-k;break}}
+  for(let k=0;k<=40;k+=2){if(!hitW(w,tx,target.y-k)){found=target.y-k;break}}
   if(found===null||found<24||tx<20||tx>W-20||found>WATER-24){tip("Can't teleport there",2);return false}
   useAmmo('teleport');
   for(let i=0;i<(low?10:24);i++){const a=Math.random()*6.283,s=40+Math.random()*120;parts.push({x:w.x,y:w.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:.6,max:.6,c:'#7ee8ff',s:2+Math.random()*3,g:0,d:2})}

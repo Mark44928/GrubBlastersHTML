@@ -105,6 +105,11 @@ logical canvas, with a fuel-limited jetpack for mobility.
   `walk()` climbs up to 8 px (real Worms step height) and the coffin slips
   through a worm-wide hole (10 px in the integer mask grid).
   New projectile-vs-worm checks must use `wormHit`, not center distances.
+- Worms are solid to each other: `hitW(w,x,y)` tests the terrain mask plus
+  every other living worm's coffin (`wormAt`), and it is what `walk()`,
+  `stepWorm()` gravity and `doTeleport()` validation use — so worms block each
+  other, can be stood on (worm stacking) and fall when their footing moves
+  away.
 - Water line `WATER` starts at `WATER0=725` and rises during sudden death.
 
 ### Core state (module-level globals)
@@ -327,6 +332,9 @@ There are no automated tests; the game must be checked by hand:
 - Keyboard: walk, CapsLock on, blur the window mid-walk (no runaway).
 - Hitbox: blast a worm-wide hole and drop a worm into it; a worm climbs an
   8 px ledge automatically (narrow coffin mask, like the real game).
+- Solid worms: walk into a worm — blocked (or climbed when within 8 px);
+  stand on a worm's head; move or teleport the bottom worm away and the top
+  one falls.
 - Backflip: double-tap jump within ~0.35 s — worm leaps backwards with a
   somersault (higher than a normal jump); a third quick tap gives the flat low
   backflip (cosmetic only).
@@ -362,6 +370,8 @@ There are no automated tests; the game must be checked by hand:
   artwork, or worms stop slipping through worm-wide holes and climbing 8 px
   ledges — and projectile pads must stay small (`wormHit` pad is the
   projectile's own mask, not a hit allowance).
+- Movement/terrain checks must use `hitW(w,…)` (walk, gravity, teleport):
+  plain `hit()` ignores other worms and lets them phase through each other.
 - Keyboard goes through `keyOf()` — without it, CapsLock breaks WASD.
 - Clear `inp` on `window blur` and `aimDrag` on `pointercancel`, or inputs
   stick after interruptions.
