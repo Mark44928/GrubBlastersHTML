@@ -1512,7 +1512,7 @@ booted=true;
 (typeof queueMicrotask==='function'?queueMicrotask:setTimeout)(()=>{
   try{genTerrain();}catch(e){console.error('genTerrain error',e)}
   try{mkBg();}catch(e){console.error('mkBg error',e);bg=null}
-  (typeof requestIdleCallback==='function'?requestIdleCallback:setTimeout)(()=>{try{initScenery()}catch(e){console.error('initScenery error',e)}},2000)
+  if(typeof requestIdleCallback==='function')requestIdleCallback(()=>{try{initScenery()}catch(e){console.error('initScenery error',e)}},{timeout:2000});else setTimeout(()=>{try{initScenery()}catch(e){console.error('initScenery error',e)}},2000)
 },0);
 const ico="data:image/svg+xml,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230b1530'/%3E%3Ctext x='50' y='68' font-size='64' text-anchor='middle'%3E%F0%9F%92%A5%3C/text%3E%3C/svg%3E");
 const m={name:'Grub Blasters',short_name:'Grub Blasters',display:'fullscreen',orientation:'landscape',background_color:'#0b1530',theme_color:'#0b1530',start_url:'.',icons:[{src:ico,sizes:'any',type:'image/svg+xml'}]};
