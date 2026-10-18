@@ -96,7 +96,7 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:
 <div id="menu"><div class="card">
   <h1>🐛 Grub Blasters</h1>
   <p id="msg">Turn-based worm artillery. Blast the other team into the sea!</p>
-  <button class="big" id="b2">2 Players</button>
+  <button class="big" id="b2">Local Multiplayer</button>
   <button class="big alt" id="b1">vs Computer</button>
   <div class="row">Teams: <button id="tms">2</button> · Worms each: <button id="cnt">3</button></div>
   <div class="row">Computer level: <button id="lvl">Normal</button> · Scheme: <button id="sch">Normal</button></div>
@@ -216,7 +216,6 @@ function mkBg(){
   g.fillStyle=skyT.sun;g.beginPath();g.arc(1120,140,58,0,6.283);g.fill();
   [[skyT.h1,430,60,.004],[skyT.h2,500,48,.007]].forEach(([c,b,a,f])=>{g.fillStyle=c;g.beginPath();g.moveTo(0,H);const ph=Math.random()*9;for(let x=0;x<=W;x+=10)g.lineTo(x,b+Math.sin(x*f+ph)*a+Math.sin(x*f*2.7+ph)*a*.3);g.lineTo(W,H);g.fill()});
 }
-function surf(pts,x){return pts[Math.min(pts.length-1,Math.max(0,Math.round(x/4)))][1]}
 function genTerrain(){
   terrain=document.createElement('canvas');terrain.width=W;terrain.height=H;
   tctx=terrain.getContext('2d',{willReadFrequently:true});
@@ -238,9 +237,6 @@ function genTerrain(){
   tctx.lineJoin='round';
   tctx.strokeStyle=gnd.g1;tctx.lineWidth=16;tctx.beginPath();pts.forEach(([x,y],i)=>i?tctx.lineTo(x,y):tctx.moveTo(x,y));tctx.stroke();
   tctx.strokeStyle=gnd.g2;tctx.lineWidth=8;tctx.beginPath();pts.forEach(([x,y],i)=>i?tctx.lineTo(x,y-1):tctx.moveTo(x,y-1));tctx.stroke();
-  tctx.globalCompositeOperation='destination-out';
-  for(let i=0;i<5;i++){const cx=260+Math.random()*(W-520);const sy=surf(pts,cx);tctx.beginPath();tctx.arc(cx,sy+110+Math.random()*120,35+Math.random()*40,0,6.283);tctx.fill()}
-  tctx.globalCompositeOperation='source-over';
   const d=tctx.getImageData(0,0,W,H).data;mask=new Uint8Array(W*H);
   for(let i=0;i<mask.length;i++)mask[i]=d[i*4+3]>100?1:0;
 }

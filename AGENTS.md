@@ -91,7 +91,8 @@ logical canvas, with a fuel-limited jetpack for mobility.
 ### Terrain & collision
 
 - `genTerrain()` rasterizes layered sine noise + Gaussian bumps into a
-  `terrain` canvas; surface heights are sampled every 4 px (`surf()`).
+  `terrain` canvas (surface heights sampled every 4 px); the ground is fully
+  solid below the surface — no buried voids.
 - A `Uint8Array mask` (W×H) is rebuilt from alpha>100; `solid(x,y)` reads it.
 - `crater(x,y,r)` cuts the canvas (dark rim + destination-out) and zeroes the
   mask — it is the ONLY way terrain changes.
@@ -314,7 +315,7 @@ All reads are wrapped in try/catch (private-mode safe).
 
 There are no automated tests; the game must be checked by hand:
 
-- Start both modes (2 Players, vs Computer) and each difficulty once; with
+- Start both modes (Local Multiplayer, vs Computer) and each difficulty once; with
   4 teams vs Computer check the 2v2 split (two human teams, two CPU).
 - Fire a weapon from each shelf page; verify ammo decrements and unlimited
   weapons stay unlimited. Try each scheme once (Greedy: everything unlimited;
@@ -390,7 +391,7 @@ There are no automated tests; the game must be checked by hand:
   aiming/zoom.
 - `W`/`H` are dynamic: `newGame()` sets `W` from `MAPS[mapIdx]` and calls
   `resize()` before `genTerrain()`/`mkBg()`/`initScenery()`. Anything cached at
-  boot (terrain, `mask`, `bg`, `surf` points, scenery) must be rebuilt there —
+  boot (terrain, `mask`, `bg`, terrain points, scenery) must be rebuilt there —
   never assume 1400.
 - Jetpack is gated inside `stepWorm()` (`w===cur`, aim/retreat, `!paused`):
   human turns need `inp.jet && !aiOn[turnTeam]`, AI turns use `w.aiJet>0` and
