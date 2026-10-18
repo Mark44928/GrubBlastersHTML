@@ -214,8 +214,9 @@ const GROUND=[
 let skyT=SKY[0],gnd=GROUND[0];
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-window.addEventListener('error',e=>{console.error('Global error',e);tip('Error: '+e.message,4)});
-window.addEventListener('unhandledrejection',e=>{console.error('Unhandled rejection',e.reason);tip('Error: '+e.reason,4)});
+window.addEventListener('error',e=>{console.error('Global error',e);tip('Error: '+e.message,4);showError(e.message)});
+window.addEventListener('unhandledrejection',e=>{console.error('Unhandled rejection',e.reason);tip('Error: '+e.reason,4);showError(e.reason)});
+function showError(msg){const d=document.createElement('div');d.style='position:fixed;top:10px;left:10px;right:10px;background:#ff3333;color:#fff;padding:12px;border-radius:8px;z-index:9999;font-family:monospace;font-size:12px;white-space:pre-wrap';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),8000)}
 
 const cv=$('#c'),ctx=cv.getContext('2d');
 if(!ctx){alert('Canvas 2D context not supported');throw new Error('No 2D context');}
