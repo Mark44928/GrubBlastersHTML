@@ -172,6 +172,7 @@ body.pc #c{cursor:crosshair}
   <div class="row">Weather: <button id="wx">Auto</button> · Graphics: <button id="gfx">High</button></div>
   <div class="row">Sound: <button id="smute">On</button> · Theme: <button id="rnd">🎲 Random</button></div>
   <div class="row">Worm Select: <button id="wsel">On</button></div>
+  <div class="row">Gemini API Key: <input id="gkey" type="password" placeholder="Enter Gemini API key" style="flex:1;padding:8px;border-radius:8px;border:2px solid #ffcb3d;background:#111;color:#fff;font-size:14px"></div>
   <button class="big" id="cclose">Done</button>
 </div></div>
 <div id="rot"><div class="card"><h1>🔄</h1><p><b>Rotate your device<br>to landscape to play</b></p></div></div>
@@ -190,7 +191,7 @@ const TAUNTS=['Take that!','Boom!','Nice one!','Ouch!','Whoops!','Eat dirt!','Lu
 const WEP=[{id:'bazooka',ico:'🚀',n:'Bazooka'},{id:'grenade',ico:'💣',n:'Grenade'},{id:'dynamite',ico:'🧨',n:'Dynamite'},{id:'shotgun',ico:'🔫',n:'Shotgun'},{id:'airstrike',ico:'✈️',n:'Airstrike'},{id:'teleport',ico:'🌀',n:'Teleport'},{id:'sheep',ico:'🐑',n:'Sheep'},{id:'hammer',ico:'🔨',n:'Hammer'},{id:'mine',ico:'🔴',n:'Mine'},{id:'holy',ico:'😇',n:'Holy'},{id:'cluster',ico:'🛢️',n:'Cluster'},{id:'uzi',ico:'⚡',n:'Uzi'},{id:'torch',ico:'🔥',n:'Torch'},{id:'homing',ico:'🛰️',n:'Homing'},{id:'bunker',ico:'⛏️',n:'Bunker'},{id:'magic',ico:'🪄',n:'Magic'},{id:'banana',ico:'🍌',n:'Banana'},{id:'dragon',ico:'🐉',n:'Dragon'},{id:'mole',ico:'🦫',n:'Mole'},{id:'lightning',ico:'🌩️',n:'Lightning'},{id:'saucer',ico:'🛸',n:'Saucer'},{id:'cow',ico:'🐄',n:'Mad Cow'}];
 const TARGETED=['airstrike','teleport','homing','magic','lightning'];
 const CHARGE=['bazooka','grenade','holy','cluster','bunker','homing','magic','banana','dragon','mole'];
-const DIFF=[{n:'Easy',an:.16,pn:.16,thr:130},{n:'Normal',an:.06,pn:.07,thr:70},{n:'Hard',an:.015,pn:.02,thr:40},{n:'Brutal',an:.005,pn:.008,thr:25}];
+const DIFF=[{n:'Easy',an:.16,pn:.16,thr:130},{n:'Normal',an:.06,pn:.07,thr:70},{n:'Hard',an:.015,pn:.02,thr:40},{n:'Brutal',an:.005,pn:.008,thr:25},{n:'Gemini',an:0,pn:0,thr:0}];
 const SCH=[
   {n:'Normal',ammo:()=>({dynamite:2,airstrike:1,teleport:2,sheep:1,cow:1,mine:1,holy:1,cluster:1,uzi:2,torch:1,homing:1,bunker:1,magic:1,banana:1,dragon:1,mole:2,lightning:2,saucer:1})},
   {n:'Greedy',ammo:()=>({})},
@@ -314,13 +315,13 @@ function normalAt(x,y){let nx=0,ny=0;for(let j=-4;j<=4;j++)for(let i=-4;i<=4;i++
 /* ---------- game state ---------- */
 let worms=[],proj=[],parts=[],texts=[],tracers=[],crates=[],graves=[],rings=[],leaves=[],clouds=[],pend=[],rain=[],snow=[],fireflies=[],bolts=[];
 let state='menu',cur=null,turnTeam=0,turnTime=30,wind=0,power=0,charging=false,wpn='bazooka',turnNo=0,paused=false,weather=0;
-let retreat=0,quiet=0,settleT=0,shots=0,shotT=0,shotD=null,shake=0,aiOn=[false,false,false,false],ai=null,perTeam=3,diff=1,cursor=[-1,-1,-1,-1],lastTick=0,wins=[0,0,0,0],kdmg=[0,0,0,0],kills=[0,0,0,0],wepPage=0,shotCfg={r:16,dmg:26,spread:0,delay:.5};
+let retreat=0,quiet=0,settleT=0,shots=0,shotT=0,shotD=null,shake=0,aiOn=[false,false,false,false],ai=null,perTeam=3,diff=1,cursor=[-1,-1,-1,-1],lastTick=0,wins=[0,0,0,0],kdmg=[0,0,0,0],kills=[0,0,0,0],wepPage=0,shotCfg={r:16,dmg:26,spread:0,delay:.5},geminiKey='';
 let target=null,tipMsg='',tipT=0,ammo=[{},{},{},{}],curSheep=null,curDet=null,chainFx=[];
 const inp={left:false,right:false,up:false,down:false,jet:false};
 let ttIdx=1,guide=false,hpIdx=0,lastWpn=['bazooka','bazooka','bazooka','bazooka'],skyIdx=-1,terIdx=-1,wxIdx=-1,jumpT=0,teamCount=2,schIdx=0,wndIdx=1,cratesOn=true,mapIdx=0,jetSndT=0,isl=0,wsel=true;
 let barEls=[],nameEls=[],chipEls=[];
 const numV=(v,d)=>{const x=parseInt(v,10);return isNaN(x)?d:x};
-try{const a=localStorage.getItem('gb_diff'),b=localStorage.getItem('gb_per'),c=localStorage.getItem('gb_tt'),g=localStorage.getItem('gb_guide'),m=localStorage.getItem('gb_mute'),h=localStorage.getItem('gb_hp'),sk=localStorage.getItem('gb_sky'),te=localStorage.getItem('gb_ter'),wx=localStorage.getItem('gb_wx'),lo=localStorage.getItem('gb_low'),tm=localStorage.getItem('gb_teams'),sc=localStorage.getItem('gb_sch'),wn=localStorage.getItem('gb_wnd'),cr=localStorage.getItem('gb_crate'),mp=localStorage.getItem('gb_map'),il=localStorage.getItem('gb_isl'),wsv=localStorage.getItem('gb_wsel');if(a!==null)diff=Math.max(0,Math.min(3,+a||0));if(b!==null)perTeam=Math.max(2,Math.min(8,+b||3));if(c!==null)ttIdx=Math.max(0,Math.min(3,+c||1));if(g!==null)guide=g==='1';if(m!==null)muted=m==='1';if(h!==null)hpIdx=Math.max(0,Math.min(2,+h||0));for(let t=0;t<4;t++){const v=localStorage.getItem('gb_tn'+t);if(v!==null&&v.trim())TN[t]=v.trim().slice(0,12)}skyIdx=Math.max(-1,Math.min(3,numV(sk,-1)));terIdx=Math.max(-1,Math.min(3,numV(te,-1)));wxIdx=Math.max(-1,Math.min(2,numV(wx,-1)));if(lo!==null)low=lo==='1';if(tm!==null)teamCount=Math.max(2,Math.min(4,+tm||2));if(sc!==null)schIdx=Math.max(0,Math.min(SCH.length-1,+sc||0));if(wn!==null)wndIdx=Math.max(0,Math.min(WND.length-1,+wn||1));if(cr!==null)cratesOn=cr==='1';if(mp!==null)mapIdx=Math.max(0,Math.min(MAPS.length-1,+mp||0));if(il!==null)isl=Math.max(0,Math.min(6,+il||0));if(wsv!==null)wsel=wsv==='1'}catch(e){}
+try{const a=localStorage.getItem('gb_diff'),b=localStorage.getItem('gb_per'),c=localStorage.getItem('gb_tt'),g=localStorage.getItem('gb_guide'),m=localStorage.getItem('gb_mute'),h=localStorage.getItem('gb_hp'),sk=localStorage.getItem('gb_sky'),te=localStorage.getItem('gb_ter'),wx=localStorage.getItem('gb_wx'),lo=localStorage.getItem('gb_low'),tm=localStorage.getItem('gb_teams'),sc=localStorage.getItem('gb_sch'),wn=localStorage.getItem('gb_wnd'),cr=localStorage.getItem('gb_crate'),mp=localStorage.getItem('gb_map'),il=localStorage.getItem('gb_isl'),wsv=localStorage.getItem('gb_wsel'),gk=localStorage.getItem('gb_gkey');if(a!==null)diff=Math.max(0,Math.min(4,+a||0));if(b!==null)perTeam=Math.max(2,Math.min(8,+b||3));if(c!==null)ttIdx=Math.max(0,Math.min(3,+c||1));if(g!==null)guide=g==='1';if(m!==null)muted=m==='1';if(h!==null)hpIdx=Math.max(0,Math.min(2,+h||0));for(let t=0;t<4;t++){const v=localStorage.getItem('gb_tn'+t);if(v!==null&&v.trim())TN[t]=v.trim().slice(0,12)}skyIdx=Math.max(-1,Math.min(3,numV(sk,-1)));terIdx=Math.max(-1,Math.min(3,numV(te,-1)));wxIdx=Math.max(-1,Math.min(2,numV(wx,-1)));if(lo!==null)low=lo==='1';if(tm!==null)teamCount=Math.max(2,Math.min(4,+tm||2));if(sc!==null)schIdx=Math.max(0,Math.min(SCH.length-1,+sc||0));if(wn!==null)wndIdx=Math.max(0,Math.min(WND.length-1,+wn||1));if(cr!==null)cratesOn=cr==='1';if(mp!==null)mapIdx=Math.max(0,Math.min(MAPS.length-1,+mp||0));if(il!==null)isl=Math.max(0,Math.min(6,+il||0));if(wsv!==null)wsel=wsv==='1';geminiKey=gk||''}catch(e){}
 
 const PTS=[[-1,-8],[1,-8],[-3.5,-6],[3.5,-6],[-4.5,-3],[4.5,-3],[-4.5,0],[4.5,0],[-3.5,3],[3.5,3],[-2.5,6],[2.5,6],[-1,8],[1,8]];
 function hit(x,y){for(const q of PTS)if(solid(x+q[0],y+q[1]))return true;return false}
@@ -576,8 +577,8 @@ function fire(){
   }
   else if(wpn==='bazooka'){const v=120+power*700;proj.push({type:'bazooka',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,shooter:w});SFX.launch()}
   else if(wpn==='bunker'){useAmmo('bunker');const v=80+power*600;proj.push({type:'bunker',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,r:50,dmg:48,shooter:w});SFX.launch()}
-  else if(wpn==='grenade'){const v=80+power*620;proj.push({type:'grenade',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:3,r:52,dmg:55,bn:.5,fr:.75,shooter:w});SFX.shot()}
-  else if(wpn==='dynamite'){useAmmo('dynamite');proj.push({type:'dynamite',x:w.x+w.dir*10,y:w.y,vx:w.dir*40,vy:-80,age:0,fuse:4,r:78,dmg:80,bn:.1,fr:.3,shooter:w});SFX.thud()}
+  else if(wpn==='grenade'){const v=80+power*620;proj.push({type:'grenade',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:3,r:52,dmg:55,bn:.5,fr:.75,hr:6.5,shooter:w});SFX.shot()}
+  else if(wpn==='dynamite'){useAmmo('dynamite');proj.push({type:'dynamite',x:w.x+w.dir*10,y:w.y,vx:w.dir*40,vy:-80,age:0,fuse:4,r:78,dmg:80,bn:.1,fr:.3,hr:8,shooter:w});SFX.thud()}
   else if(wpn==='sheep'){useAmmo('sheep');const s={type:'sheep',x:w.x+w.dir*10,y:w.y-6,vx:0,vy:0,dir:w.dir,wob:0,age:0,fuse:8,r:60,dmg:70,shooter:w};proj.push(s);curSheep=s;SFX.bleat()}
   else if(wpn==='cow'){useAmmo('cow');for(let k=0;k<3;k++)proj.push({type:'cow',x:w.x+w.dir*7,y:w.y-6,vx:0,vy:0,dir:w.dir,wob:k*2.1,age:0,delay:.35*k,fuse:10,r:70,dmg:75,kb:1.2,shooter:w})}
   else if(wpn==='hammer'){
@@ -587,11 +588,11 @@ function fire(){
     else SFX.shot();
   }
   else if(wpn==='mine'){useAmmo('mine');proj.push({type:'mine',x:w.x+w.dir*18,y:w.y-8,vx:w.dir*30,vy:-60,age:0,bn:.1,fr:.3,r:50,dmg:55,shooter:w});tip('🔴 Mine armed in 2s — stay clear!',2);SFX.thud()}
-  else if(wpn==='holy'){useAmmo('holy');const v=80+power*620;proj.push({type:'holy',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:3,r:85,dmg:75,bn:.45,fr:.7,shooter:w});SFX.launch()}
-  else if(wpn==='cluster'){useAmmo('cluster');const v=80+power*640;proj.push({type:'cluster',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:1.4,r:34,dmg:30,bn:.4,fr:.6,shooter:w});SFX.shot()}
-  else if(wpn==='banana'){useAmmo('banana');const v=70+power*600;proj.push({type:'banana',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:3,r:64,dmg:66,bn:.35,fr:.6,shooter:w});SFX.shot()}
+  else if(wpn==='holy'){useAmmo('holy');const v=80+power*620;proj.push({type:'holy',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:3,r:85,dmg:75,bn:.45,fr:.7,hr:8,shooter:w});SFX.launch()}
+  else if(wpn==='cluster'){useAmmo('cluster');const v=80+power*640;proj.push({type:'cluster',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:1.4,r:34,dmg:30,bn:.4,fr:.6,hr:6,shooter:w});SFX.shot()}
+  else if(wpn==='banana'){useAmmo('banana');const v=70+power*600;proj.push({type:'banana',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:3,r:64,dmg:66,bn:.35,fr:.6,hr:6,shooter:w});SFX.shot()}
   else if(wpn==='dragon'){useAmmo('dragon');const v=60+power*380;const d={type:'dragon',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,r:70,dmg:55,kb:1.6,bn:.82,fr:.94,shooter:w};proj.push(d);curDet=d;SFX.launch()}
-  else if(wpn==='mole'){useAmmo('mole');const v=80+power*600;proj.push({type:'mole',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:5,r:52,dmg:62,shooter:w});SFX.launch()}
+  else if(wpn==='mole'){useAmmo('mole');const v=80+power*600;proj.push({type:'mole',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:5,r:52,dmg:62,hr:6,shooter:w});SFX.launch()}
   else if(wpn==='uzi'){useAmmo('uzi');shots=6;shotT=0;shotD={dx,dy};shotCfg={r:10,dmg:12,spread:.07,delay:.12};SFX.shot()}
   else if(wpn==='torch'){useAmmo('torch');torchCut(w,dx,dy)}
   else if(wpn==='saucer'){useAmmo('saucer');w.sau=SAU_F;tip('🛸 Flying Saucer — 🚀 to lift, FIRE to land',2.5);SFX.saucer();updateWeps();charging=false;power=0;return}
@@ -678,7 +679,8 @@ function updateProj(dt){
       if(!hit(p.x,sny))p.y=sny;else{p.vy=0;for(let k=0;k<8&&!hit(p.x,p.y+1);k++)p.y+=1}
       if(p.x<15||p.x>W-15)p.dir*=-1;
       const by=p.shooter?p.shooter.team:null;
-      let near=false;for(const e of worms)if(e.alive&&e!==p.shooter&&wormHit(e,p.x,p.y,3)){near=true;break}
+      const pad=p.hr||3;
+      let near=false;for(const e of worms)if(e.alive&&e!==p.shooter&&wormHit(e,p.x,p.y,pad)){near=true;break}
       p.fuse-=dt;
       if(near||p.fuse<=0){explode(p.x,p.y,p.r,p.dmg,by);dead=true}
       else if(p.y>WATER){splash(p.x,WATER);SFX.splash();dead=true}
@@ -697,7 +699,8 @@ function updateProj(dt){
         const sny=p.y+p.vy*dt;
         if(!hit(p.x,sny))p.y=sny;else{p.vy=0;for(let k=0;k<8&&!hit(p.x,p.y+1);k++)p.y+=1}
         const by=p.shooter?p.shooter.team:null;
-        let near=false;for(const e of worms)if(e.alive&&e!==p.shooter&&wormHit(e,p.x,p.y,3)){near=true;break}
+        const pad=p.hr||3;
+        let near=false;for(const e of worms)if(e.alive&&e!==p.shooter&&wormHit(e,p.x,p.y,pad)){near=true;break}
         p.fuse-=dt;
         if(near||p.fuse<=0||p.x<12||p.x>W-12){explode(p.x,p.y,p.r,p.dmg,by,p.kb);dead=true}
         else if(p.y>WATER){splash(p.x,WATER);SFX.splash();dead=true}
@@ -774,7 +777,8 @@ function updateProj(dt){
       if(!dead&&p.y>WATER-6){dead=true;explode(p.x,p.y,p.r,p.dmg,p.shooter?p.shooter.team:null)}
     }
     if(p.type==='mine'&&!dead&&p.age>2){
-      for(const e of worms)if(e.alive&&wormHit(e,p.x,p.y,5)){dead=true;explode(p.x,p.y,p.r,p.dmg,p.shooter?p.shooter.team:null);break}
+      const pad=p.hr||5;
+      for(const e of worms)if(e.alive&&wormHit(e,p.x,p.y,pad)){dead=true;explode(p.x,p.y,p.r,p.dmg,p.shooter?p.shooter.team:null);break}
       if(!dead&&p.y>WATER){splash(p.x,WATER);SFX.splash();dead=true}
     }
     if(rocket&&!dead&&!(p.type==='mole'&&p.burrow)&&Math.random()<(low?.3:.9)){const met=p.meteor===true;parts.push({x:p.x,y:p.y,vx:(Math.random()-.5)*30,vy:(Math.random()-.5)*30,life:met?.7:.6,max:met?.9:.6,c:met?'rgba(255,150,40,.95)':p.type==='magic'?'rgba(255,224,110,.95)':'rgba(230,230,230,1)',s:met?4.5+Math.random()*3.5:3+Math.random()*3,g:met?-40:-20,d:1})}
@@ -854,9 +858,11 @@ function torchCut(w,dx,dy){
 const wepList=()=>schIdx===3?WEP.filter(w=>w.id==='bazooka'):WEP;
 function setWpn(i){
   if(paused||state!=='aim'||charging||!humanTurn())return;
-  const w=wepList()[i];if(!w)return;
+  const L=wepList();if(i<0||i>=L.length)return;
+  const w=L[i];if(!w)return;
   if(ammoOf(w.id)===0){tip('Out of ammo',1.5);return}
-  wpn=w.id;target=null;lastWpn[turnTeam]=wpn;updateWeps();
+  wpn=w.id;target=null;lastWpn[turnTeam]=wpn;
+  wepPage=Math.floor(i/7);applyPage();updateWeps();
 }
 function updateWeps(){
   const L=wepList();
@@ -907,6 +913,12 @@ function clearLine(a,b){const d=Math.hypot(b.x-a.x,b.y-a.y),n=Math.ceil(d/4);for
 function aiTurn(dt){
   const w=cur,D=DIFF[diff];ai.t+=dt;
   if(ai.phase==='wait'){if(ai.t>.9){ai.phase='think';ai.t=0}return}
+  if(diff===4&&geminiKey&&ai.phase!=='gemini'){ai.phase='gemini';ai.geminiT=0}
+  if(ai.phase==='gemini'){
+    ai.geminiT+=dt;
+    if(ai.geminiT>.5){ai.geminiT=0;callGeminiAI(w);}
+    return;
+  }
   if(ai.phase==='think'){
     const tg=pickTarget(w);if(!tg){ai.phase='done';return}
     const dir=tg.x>w.x?1:-1;w.dir=dir;
@@ -958,6 +970,51 @@ function aiTurn(dt){
     power+=dt*.9;
     if(power>=ai.plan.p){power=ai.plan.p;charging=false;fire();ai.phase='done'}
   }
+}
+function callGeminiAI(w){
+  if(!geminiKey||ai.geminiBusy)return;
+  const tg=pickTarget(w);
+  if(!tg){ai.phase='done';return}
+  ai.geminiBusy=true;
+  const stateInfo=buildGeminiState(w,tg);
+  fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key='+geminiKey,{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({contents:[{role:'user',parts:[{text:GEMINI_SYSTEM_PROMPT+stateInfo}]}],generationConfig:{temperature:0.3,maxOutputTokens:512}})
+  }).then(r=>r.json()).then(d=>{
+    ai.geminiBusy=false;
+    const txt=d.candidates?.[0]?.content?.parts?.[0]?.text||'';
+    parseGeminiAction(txt,w);
+  }).catch(()=>{ai.geminiBusy=false;ai.phase='think'});
+}
+
+const GEMINI_SYSTEM_PROMPT=`You are an expert Grub Blasters player. Grub Blasters is a turn-based artillery game (Worms-style) with these mechanics:
+- 2-4 teams of worms battle on destructible terrain
+- Each turn: move (walk/jump/jetpack), aim, charge power, fire
+- Weapons: bazooka (wind-affected rocket), grenade (bounces, timed fuse), dynamite (dropped, big boom), shotgun (instant hitscan), airstrike (targeted), teleport (targeted), sheep (walks, explodes on contact), hammer (melee), mine (proximity), holy (big boom), cluster (splits), uzi (burst), torch (tunnels), homing (targeted+homing), bunker (drills), magic (super homing), banana (splits), dragon (bouncy, manual detonate), mole (tunnels), lightning (targeted strikes), saucer (flyable vehicle), cow (herd charge)
+- Wind affects bazooka/bunker rockets (shown in HUD)
+- Terrain is fully destructible, worms fall when ground removed
+- Worms have HP, die at 0, can drown in water
+- Jetpack has limited fuel, refills each turn
+- Sudden death: water rises, worms wither, meteors fall after turn 16
+Return ONLY a JSON action: {"weapon":"bazooka|grenade|...","aim":-1.2 to 1.45,"power":0 to 1,"walk":"left|right|none","jetpack":true|false,"jump":true|false,"target":{"x":number,"y":number}|null}
+Current state:`;
+function buildGeminiState(w,tg){
+  const alive=worms.filter(e=>e.alive).map(e=>({team:e.team,x:Math.round(e.x),y:Math.round(e.y),hp:e.hp,dir:e.dir,fuel:Math.round(e.fuel)}));
+  const my={team:w.team,x:Math.round(w.x),y:Math.round(w.y),hp:w.hp,dir:w.dir,fuel:Math.round(w.fuel),weapon:wpn,ammo:ammoOf(wpn),aim:Math.round(w.aim*100)/100,power:Math.round(power*100)/100,wind:Math.round(wind*100)/100,turnTime:Math.round(turnTime)};
+  const target={x:Math.round(tg.x),y:Math.round(tg.y),team:tg.team,hp:tg.hp,dist:Math.round(Math.hypot(tg.x-w.x,tg.y-w.y))};
+  const weapons=wepList().filter(x=>ammoOf(x.id)>0||!ammoOf(x.id)).map(x=>x.id);
+  return JSON.stringify({my,target,alive,weapons,turnTeam,turnNo,water:WATER,width:W,height:H});
+}
+function parseGeminiAction(txt,w){
+  try{const a=JSON.parse(txt.match(/\{[\s\S]*\}/)?.[0]||'{}');
+    if(a.weapon&&wepList().some(x=>x.id===a.weapon)&&(ammoOf(a.weapon)>0||!ammoOf(a.weapon))){wpn=a.weapon;updateWeps()}
+    if(typeof a.aim==='number'){ai.plan={a:Math.max(-1.2,Math.min(1.45,a.aim)),p:typeof a.power==='number'?Math.max(0,Math.min(1,a.power)):.75};ai.phase='aim';return}
+    if(a.walk==='left'){ai.phase='walk';ai.walkDir=-1;ai.walkLeft=2;return}
+    if(a.walk==='right'){ai.phase='walk';ai.walkDir=1;ai.walkLeft=2;return}
+    if(a.jump){jump(w);return}
+    if(a.target){target=a.target;ai.phase='strike';return}
+    ai.phase='think';
+  }catch(e){ai.phase='think'}
 }
 
 /* ---------- camera ---------- */
@@ -1363,8 +1420,9 @@ addEventListener('keydown',e=>{
   else if(k==='Enter'||k==='Shift'){if(!e.repeat)jump()}
   else if(k==='p'||k==='Escape')togglePause();
   else if(k==='h')toggleHelp(true);
-  else if(k>='1'&&k<='7'){const idx=wepPage*7+(+k-1);if(idx<wepList().length)setWpn(idx)}
-  else if(k==='q'){wepPage=(wepPage+1)%Math.max(1,Math.ceil(wepList().length/7));applyPage();updateWeps()}
+  else if(k>='1'&&k<='7'){const idx=+k-1;if(idx<wepList().length)setWpn(idx)}
+  else if(k==='ArrowLeft'||k==='a'){const L=wepList();const idx=(wepPage*7+7-1)%L.length;setWpn(idx)}
+  else if(k==='ArrowRight'||k==='d'){const L=wepList();const idx=(wepPage*7+7)%L.length;setWpn(idx)}
   else if(k==='j')inp.jet=true;
   else if(k==='+'||k==='=')zoomBy(1.25);
   else if(k==='-')zoomBy(.8);
@@ -1397,7 +1455,7 @@ $('#wx').onclick=function(){wxIdx=wxIdx>=2?-1:wxIdx+1;this.textContent=WXN[wxIdx
 $('#gfx').onclick=function(){low=!low;this.textContent=low?'Low':'High';try{localStorage.setItem('gb_low',low?'1':'0')}catch(e){}resize()};
 $('#rnd').onclick=function(){skyIdx=Math.random()*SKY.length|0;terIdx=Math.random()*GROUND.length|0;$('#sky').textContent=SKYN[skyIdx+1];$('#ter').textContent=GROUNDN[terIdx+1];try{localStorage.setItem('gb_sky',skyIdx);localStorage.setItem('gb_ter',terIdx)}catch(e){}};
 $('#snd').onclick=()=>{muted=!muted;saveMute()};
-$('#smute').onclick=()=>{muted=!muted;saveMute()};$('#wsel').onclick=function(){wsel=!wsel;this.textContent=wsel?'On':'Off';try{localStorage.setItem('gb_wsel',wsel?'1':'0')}catch(e){}};
+$('#smute').onclick=()=>{muted=!muted;saveMute()};$('#wsel').onclick=function(){wsel=!wsel;this.textContent=wsel?'On':'Off';try{localStorage.setItem('gb_wsel',wsel?'1':'0')}catch(e){}};$('#gkey').onchange=function(){geminiKey=this.value;try{localStorage.setItem('gb_gkey',this.value)}catch(e){}};
 $('#bhelp').onclick=()=>toggleHelp(true);$('#hclose').onclick=()=>toggleHelp(false);
 $('#bcustom').onclick=()=>toggleCustom(true);$('#cclose').onclick=()=>toggleCustom(false);
 $('#bshare').onclick=()=>shareGame();
