@@ -20,7 +20,10 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Built-in Help & Controls screen (menu button or the H key)
 - Fully destructible terrain — craters stay, worms fall
 - Shifting wind that bends rockets mid-flight
-- Thirteen weapons on two shelf pages (flip with ⇄): bazooka, grenade, dynamite, shotgun, hammer, mine, sheep, airstrike, teleport, holy grenade, cluster bomb, uzi, blowtorch
+- Fifteen weapons on three shelf pages (cycle with ⇄): bazooka, grenade, dynamite, shotgun, hammer, mine, sheep, airstrike, teleport, holy grenade, cluster bomb, uzi, blowtorch, homing missile, bunker buster
+- Weapons you run out of ammo for vanish from the shelf and come back when you have ammo again
+- Touch-first controls with keyboard support; desktop computers hide the touch pads and play with mouse + keyboard — fullscreen and safe-area insets included
+- Portrait phones and tablets get a friendly "rotate your device" reminder (desktops are exempt)
 - Proximity mines that arm after 2 s, persist across turns, and chain-react when shot
 - Parachuted supply crates: +HP or bonus ammo
 - Weather: rain, snow, and drifting fireflies on clear nights
@@ -33,7 +36,6 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Four random sky themes (day, sunset, night, dawn) and four terrain themes (grass, desert, snow, rock)
 - Native system fonts and parallax clouds for a clean, pretty look
 - Procedural sound effects synthesized with Web Audio — no audio files
-- Touch-first controls with keyboard support, fullscreen, and safe-area insets for phones
 - Pause, mute (persisted), and fullscreen buttons; settings persist in localStorage
 
 ## How to play
@@ -44,14 +46,17 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Worms are solid — you can't walk through one; stand on a teammate's head to stack up, and anyone standing on a worm falls when it moves away.
 - Double-tap the jump button (or Enter/Shift) to backflip — a backwards somersault that gains height; tap jump once more mid-flip for a flat "low backflip".
 - Hold 🚀 to fire the jetpack and fly; the fuel bar over your worm drains as you go and refills at the start of your next turn.
-- Pinch the map (or scroll) to zoom — the camera follows your worm, the shell in flight, and your airstrike target.
+- Pinch the map (or scroll) to zoom — the camera follows your worm, the shell in flight, and your marked target.
 - Tap one of your other alive worms to switch to it — you can move any worm on your turn, not just the next in line.
 - After firing you get a short retreat window; press FIRE during it to skip it and end your turn early.
-- Airstrike and teleport arm a map target first — tap the map, then press FIRE.
+- Airstrike, teleport, and the homing missile arm a map target first — tap the map, then press FIRE.
 - Release the sheep and it wanders on its own, blowing up on the first worm it touches (or after 8 s); press FIRE again to detonate it on command.
 - The hammer smacks a nearby enemy hard and sends them flying — knockback can drown a worm.
 - Drop a mine and walk away: it arms after 2 seconds, waits for any worm to come close, and survives between turns. Shoot one to set off a chain reaction.
-- The ⇄ button flips the weapon shelf between pages; the page follows your selection when you pick a weapon.
+- The ⇄ button cycles the weapon shelf pages; the page follows your selection when you pick a weapon.
+- Weapons you're out of ammo for disappear from the shelf until you have ammo again — keyboard selection just says "Out of ammo".
+- On a computer the touch pads hide themselves — aim with the mouse, click the weapon shelf (or press 1–7), hold Space to charge, Enter/Shift to jump, and use the shortcuts below.
+- Phones and tablets: play in landscape — portrait shows a rotate reminder and pauses the game.
 - Watch the wind meter in the HUD: it pushes rockets and slanting rain.
 - Open Help & Controls from the menu button, or press H.
 
@@ -65,7 +70,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 | J | Jetpack (hold) |
 | + / − | Zoom in / out |
 | 1–7 | Select weapon on the current shelf page |
-| Q | Flip the weapon shelf page |
+| Q | Cycle the weapon shelf pages |
 | H | Open Help & Controls |
 | P / Esc | Pause |
 
@@ -88,8 +93,10 @@ Ammo below is for the Normal scheme. **Greedy** makes every weapon unlimited, **
 | Cluster Bomb | 1 per team | Splits mid-air into four scattering bomblets |
 | Uzi | 2 per team | Six-shot burst with spread; instant hitscan |
 | Blowtorch | 1 per team | Instantly cuts a short tunnel through terrain (and anyone in it) |
+| Homing Missile | 1 per team | Tap the map to mark a spot, then fire it like a rocket — it locks on and homes in, crashing into anything in the way |
+| Bunker Buster | 1 per team | Drills into the ground with three stacked blasts — great against dug-in worms |
 
-Crates can refill dynamite, airstrike, teleport, or grant an extra sheep, mine, holy grenade, cluster bomb, uzi, or blowtorch.
+Crates can refill dynamite, airstrike, teleport, homing missile, or bunker buster, or grant an extra sheep, mine, holy grenade, cluster bomb, uzi, or blowtorch.
 
 ## Running locally
 
@@ -101,4 +108,4 @@ python -m http.server
 
 ## Tech
 
-Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A zoomable, clamped camera follows the action across maps up to 2800×800. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 74 KB in total.
+Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A zoomable, clamped camera follows the action across maps up to 2800×800. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 79 KB in total.
