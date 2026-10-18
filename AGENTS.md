@@ -95,8 +95,16 @@ logical canvas, with a fuel-limited jetpack for mobility.
 - A `Uint8Array mask` (W×H) is rebuilt from alpha>100; `solid(x,y)` reads it.
 - `crater(x,y,r)` cuts the canvas (dark rim + destination-out) and zeroes the
   mask — it is the ONLY way terrain changes.
-- `hit(x,y)` tests a 7-point worm hitbox (`PTS`); `normalAt()` estimates bounce
-  normals from the mask.
+- `hit(x,y)` tests a 14-point worm hitbox (`PTS`, a coffin silhouette ~9 px wide
+  × 16 px tall — the real Worms mask, narrower than the drawn sprite) against
+  terrain; `normalAt()` estimates bounce normals from the mask;
+  `wormHit(w,x,y,pad)` is the same coffin (half-width profile `halfW`: widest
+  4.5 px at mid-body, tapering to 1 px at the feet (+8) and 2 px at the head
+  (−8), center `w.y`) expanded by the projectile's own mask: rockets/missiles
+  (`pad 3`), shotgun/uzi bullets (`pad 1`), mines (`pad 5`), sheep (`pad 3`).
+  `walk()` climbs up to 8 px (real Worms step height) and the coffin slips
+  through a worm-wide hole (10 px in the integer mask grid).
+  New projectile-vs-worm checks must use `wormHit`, not center distances.
 - Water line `WATER` starts at `WATER0=725` and rises during sudden death.
 
 ### Core state (module-level globals)
@@ -240,8 +248,11 @@ rendering.
   (CapsLock-proof); Space charge, Enter/Shift jump, J jetpack, `+`/`-` zoom,
   1–7 weapon, Q page, P/Esc pause, H help.
 - Backflip: `jump()` checks `now-jumpT<350` while airborne and flips
-  (`w.flip=1`, backwards `vx`); `stepWorm` decays `w.flip`, `drawWorm` rotates
-  by it. Keep the flip cosmetic-only (it must not alter damage/terrain).
+  (`w.flip=1`, `w.lowFlip=0`, backwards `vx=-dir*120`, `vy=-330` — higher than a
+  normal jump); a third tap within the window flattens it into the low backflip
+  (`w.lowFlip=1`, `vy≥-200`). `stepWorm` decays `w.flip` (faster when low),
+  `drawWorm` rotates by `(1-w.flip)*-6.283*w.dir` (true backward somersault).
+  Keep the flip cosmetic-only (it must not alter damage/terrain).
 - Help overlay (`#help`) is opened by `toggleHelp()`, which pauses the sim and
   restores the previous paused state on close. `keydown` swallows all keys while
   it is open and closes it on Esc/P/H.
@@ -314,8 +325,11 @@ There are no automated tests; the game must be checked by hand:
 - Retreat: move after firing, press FIRE to skip, turn ends when quiet.
 - Pause mid-flight; actions while paused are ignored.
 - Keyboard: walk, CapsLock on, blur the window mid-walk (no runaway).
-- Backflip: double-tap jump within ~0.35 s — worm hops backwards and spins
-  (cosmetic only).
+- Hitbox: blast a worm-wide hole and drop a worm into it; a worm climbs an
+  8 px ledge automatically (narrow coffin mask, like the real game).
+- Backflip: double-tap jump within ~0.35 s — worm leaps backwards with a
+  somersault (higher than a normal jump); a third quick tap gives the flat low
+  backflip (cosmetic only).
 - Customization: rename teams, cycle sky/terrain/weather, toggle low
   graphics and sound; all persist across reloads. Low graphics visibly drops
   resolution and removes weather/decor while gameplay stays identical.
@@ -343,6 +357,11 @@ There are no automated tests; the game must be checked by hand:
 
 - `killWorm` must set `w.hp=0` — drowned / wither-killed worms otherwise show
   ghost HP in the team HUD bars.
+- The worm mask is a deliberately narrow 9×16 coffin (real Worms fidelity):
+  narrower than the ~17 px drawn sprite. Don't "fix" `PTS`/`halfW` to the
+  artwork, or worms stop slipping through worm-wide holes and climbing 8 px
+  ledges — and projectile pads must stay small (`wormHit` pad is the
+  projectile's own mask, not a hit allowance).
 - Keyboard goes through `keyOf()` — without it, CapsLock breaks WASD.
 - Clear `inp` on `window blur` and `aimDrag` on `pointercancel`, or inputs
   stick after interruptions.

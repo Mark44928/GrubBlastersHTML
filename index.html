@@ -115,7 +115,7 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:
   <ul>
     <li>Tap or drag the map to aim; hold <span class="kbd">FIRE</span> to charge, release to shoot.</li>
     <li>Walk with <span class="kbd">◀</span> <span class="kbd">▶</span>; adjust aim with <span class="kbd">▲</span> <span class="kbd">▼</span>.</li>
-    <li><span class="kbd">⤒</span> jumps — tap it twice quickly to <b>backflip</b> (hop backwards with a spin).</li>
+    <li><span class="kbd">⤒</span> jumps — tap it twice quickly to <b>backflip</b> (hop backwards with a somersault); tap once more mid-flip for a flat <b>low backflip</b>.</li>
     <li><span class="kbd">🚀</span> <b>jetpack</b> — hold to fly; fuel drains fast and refills every turn. CPU teams fly too.</li>
     <li>Pinch (or scroll) to zoom — the camera follows the active worm and any shell in flight.</li>
     <li>Tap one of your other worms to take control of it.</li>
@@ -265,8 +265,10 @@ let barEls=[],nameEls=[],chipEls=[];
 const numV=(v,d)=>{const x=parseInt(v,10);return isNaN(x)?d:x};
 try{const a=localStorage.getItem('gb_diff'),b=localStorage.getItem('gb_per'),c=localStorage.getItem('gb_tt'),g=localStorage.getItem('gb_guide'),m=localStorage.getItem('gb_mute'),h=localStorage.getItem('gb_hp'),sk=localStorage.getItem('gb_sky'),te=localStorage.getItem('gb_ter'),wx=localStorage.getItem('gb_wx'),lo=localStorage.getItem('gb_low'),tm=localStorage.getItem('gb_teams'),sc=localStorage.getItem('gb_sch'),wn=localStorage.getItem('gb_wnd'),cr=localStorage.getItem('gb_crate'),mp=localStorage.getItem('gb_map');if(a!==null)diff=Math.max(0,Math.min(3,+a||0));if(b!==null)perTeam=Math.max(2,Math.min(8,+b||3));if(c!==null)ttIdx=Math.max(0,Math.min(3,+c||1));if(g!==null)guide=g==='1';if(m!==null)muted=m==='1';if(h!==null)hpIdx=Math.max(0,Math.min(2,+h||0));for(let t=0;t<4;t++){const v=localStorage.getItem('gb_tn'+t);if(v!==null&&v.trim())TN[t]=v.trim().slice(0,12)}skyIdx=Math.max(-1,Math.min(3,numV(sk,-1)));terIdx=Math.max(-1,Math.min(3,numV(te,-1)));wxIdx=Math.max(-1,Math.min(2,numV(wx,-1)));if(lo!==null)low=lo==='1';if(tm!==null)teamCount=Math.max(2,Math.min(4,+tm||2));if(sc!==null)schIdx=Math.max(0,Math.min(SCH.length-1,+sc||0));if(wn!==null)wndIdx=Math.max(0,Math.min(WND.length-1,+wn||1));if(cr!==null)cratesOn=cr==='1';if(mp!==null)mapIdx=Math.max(0,Math.min(MAPS.length-1,+mp||0))}catch(e){}
 
-const PTS=[[-5,8],[5,8],[-7,2],[7,2],[-6,-6],[6,-6],[0,-9]];
+const PTS=[[-1,-8],[1,-8],[-3.5,-6],[3.5,-6],[-4.5,-3],[4.5,-3],[-4.5,0],[4.5,0],[-3.5,3],[3.5,3],[-2.5,6],[2.5,6],[-1,8],[1,8]];
 function hit(x,y){for(const q of PTS)if(solid(x+q[0],y+q[1]))return true;return false}
+function halfW(dy){return dy<-6?2+(dy+8)*.75:dy<-3?3.5+(dy+6)/3:dy<0?4.5:4.5-dy*.4375}
+function wormHit(w,x,y,pad){pad=pad||0;const dy=y-w.y;if(dy<-8-pad||dy>8+pad)return false;return Math.abs(x-w.x)<=halfW(dy<-8?-8:dy>8?8:dy)+pad}
 function tip(m,t){tipMsg=m;tipT=t||2}
 function ammoOf(id){const a=ammo[turnTeam];return a&&id in a?a[id]:Infinity}
 function useAmmo(id){const a=ammo[turnTeam];if(a&&id in a)a[id]--}
@@ -292,7 +294,7 @@ function newGame(mode){
   const names=NAMES.slice().sort(()=>Math.random()-.5);
   slots.forEach((x,i)=>{
     let best=H;for(let dx=-7;dx<=7;dx+=7){let yy=0;while(yy<H&&!solid(x+dx,yy))yy++;best=Math.min(best,yy)}
-    worms.push({team:tm[i],name:names[i],x,y:best-9,vx:0,vy:0,hp:HP[hpIdx],dh:HP[hpIdx],dir:x<W/2?1:-1,aim:.5,alive:true,air:true,wob:0,flash:0,flip:0,fuel:FUEL,jet:false,aiJet:0,aiJetDir:0});
+    worms.push({team:tm[i],name:names[i],x,y:best-9,vx:0,vy:0,hp:HP[hpIdx],dh:HP[hpIdx],dir:x<W/2?1:-1,aim:.5,alive:true,air:true,wob:0,flash:0,flip:0,lowFlip:0,fuel:FUEL,jet:false,aiJet:0,aiJetDir:0});
   });
   cursor=[-1,-1,-1,-1];turnTeam=Math.random()*teamCount|0;wpn='bazooka';
   buildTeams();buildWeps();
@@ -383,14 +385,14 @@ function updateWorld(dt){
 /* ---------- worm physics ---------- */
 function walk(w,dir,dt){
   const nx=w.x+dir*58*dt;
-  for(let up=0;up<=6;up++){
+  for(let up=0;up<=8;up++){
     if(!hit(nx,w.y-up)){w.x=nx;w.y-=up;w.wob+=dt*14;for(let k=0;k<8&&!hit(w.x,w.y+1);k++)w.y+=1;return true}
   }
   return false;
 }
 function stepWorm(w,dt){
   if(!w.alive)return;
-  if(w.flip>0)w.flip=Math.max(0,w.flip-dt*2.2);
+  if(w.flip>0)w.flip=Math.max(0,w.flip-dt*(w.lowFlip?2.6:1.4));
   const jetting=w===cur&&w.fuel>0&&!paused&&(state==='aim'||(state==='settle'&&retreat>0))&&((inp.jet&&!aiOn[turnTeam])||w.aiJet>0);
   w.jet=jetting;
   if(jetting){
@@ -439,7 +441,8 @@ function jump(){
   if(!(state==='aim'||(state==='settle'&&retreat>0)))return;
   if(aiOn[turnTeam])return;
   const now=performance.now();
-  if(w.air&&now-jumpT<350&&!w.flip){w.vx=-w.dir*165;w.vy=-320;w.flip=1;SFX.jump();jumpT=0;return}
+  if(w.flip>0&&!w.lowFlip&&now-jumpT<350){w.lowFlip=1;w.vy=Math.max(w.vy,-200);w.vx=-w.dir*150;w.flip=Math.min(w.flip,.7);SFX.jump();jumpT=0;return}
+  if(w.air&&now-jumpT<350&&!w.flip){w.vx=-w.dir*120;w.vy=-330;w.flip=1;w.lowFlip=0;SFX.jump();jumpT=now;return}
   if(w.air)return;
   w.air=true;w.vy=-290;w.vx=w.dir*95;SFX.jump();jumpT=now;
 }
@@ -499,7 +502,7 @@ function shootGun(){
     x+=dx*3;y+=dy*3;
     if(x<-60||x>W+60||y>H+60||y<-400)break;
     if(solid(x,y)){hp={x,y};break}
-    let hw=false;for(const e of worms)if(e.alive&&e!==w&&Math.hypot(e.x-x,e.y-y)<10){hw=true;break}
+    let hw=false;for(const e of worms)if(e.alive&&e!==w&&wormHit(e,x,y,1)){hw=true;break}
     if(hw){hp={x,y};break}
   }
   tracers.push({x1,y1,x2:x,y2:y,t:.12});SFX.shot();
@@ -536,7 +539,7 @@ function updateProj(dt){
       if(!hit(p.x,sny))p.y=sny;else{p.vy=0;for(let k=0;k<8&&!hit(p.x,p.y+1);k++)p.y+=1}
       if(p.x<15||p.x>W-15)p.dir*=-1;
       const by=p.shooter?p.shooter.team:null;
-      let near=false;for(const e of worms)if(e.alive&&e!==p.shooter&&Math.hypot(e.x-p.x,e.y-p.y)<18){near=true;break}
+      let near=false;for(const e of worms)if(e.alive&&e!==p.shooter&&wormHit(e,p.x,p.y,3)){near=true;break}
       p.fuse-=dt;
       if(near||p.fuse<=0){explode(p.x,p.y,p.r,p.dmg,by);dead=true}
       else if(p.y>WATER){splash(p.x,WATER);SFX.splash();dead=true}
@@ -551,7 +554,7 @@ function updateProj(dt){
       for(let k=0;k<n&&!dead&&!stop;k++){
         const nx=p.x+p.vx*dt/n,ny=p.y+p.vy*dt/n;
         if(rocket){
-          let hw=false;for(const e of worms)if(e.alive&&(e!==p.shooter||p.age>.25)&&Math.hypot(e.x-nx,e.y-ny)<11){hw=true;break}
+          let hw=false;for(const e of worms)if(e.alive&&(e!==p.shooter||p.age>.25)&&wormHit(e,nx,ny,3)){hw=true;break}
           p.x=nx;p.y=ny;
           if(solid(nx,ny)||hw){dead=true;explode(nx,ny,p.r||48,p.dmg||50,p.shooter?p.shooter.team:null)}
         }else if(solid(nx,ny)){
@@ -569,7 +572,7 @@ function updateProj(dt){
       }
     }
     if(p.type==='mine'&&!dead&&p.age>2){
-      for(const e of worms)if(e.alive&&Math.hypot(e.x-p.x,e.y-p.y)<17){dead=true;explode(p.x,p.y,p.r,p.dmg,p.shooter?p.shooter.team:null);break}
+      for(const e of worms)if(e.alive&&wormHit(e,p.x,p.y,5)){dead=true;explode(p.x,p.y,p.r,p.dmg,p.shooter?p.shooter.team:null);break}
       if(!dead&&p.y>WATER){splash(p.x,WATER);SFX.splash();dead=true}
     }
     if(rocket&&!dead&&Math.random()<(low?.3:.9)){const met=p.meteor===true;parts.push({x:p.x,y:p.y,vx:(Math.random()-.5)*30,vy:(Math.random()-.5)*30,life:met?.7:.6,max:met?.9:.6,c:met?'rgba(255,150,40,.95)':'rgba(230,230,230,1)',s:met?4.5+Math.random()*3.5:3+Math.random()*3,g:met?-40:-20,d:1})}
@@ -794,7 +797,7 @@ function update(dt){
 /* ---------- drawing ---------- */
 function drawWorm(w){
   ctx.save();ctx.translate(w.x,w.y);
-  if(w.flip>0)ctx.rotate((1-w.flip)*6.283*w.dir);
+  if(w.flip>0)ctx.rotate((1-w.flip)*-6.283*w.dir);
   const d=w.dir,sq=w.air?0:Math.sin(w.wob)*.06;
   ctx.scale(1+sq,1-sq);
   ctx.fillStyle=w.flash>0?'#ff6a6a':'#ffb3c1';ctx.strokeStyle='#8a3a4a';ctx.lineWidth=1.6;
