@@ -214,6 +214,9 @@ const GROUND=[
 let skyT=SKY[0],gnd=GROUND[0];
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+window.addEventListener('error',e=>{console.error('Global error',e);tip('Error: '+e.message,4)});
+window.addEventListener('unhandledrejection',e=>{console.error('Unhandled rejection',e.reason);tip('Error: '+e.reason,4)});
+
 const cv=$('#c'),ctx=cv.getContext('2d');
 if(!ctx){alert('Canvas 2D context not supported');throw new Error('No 2D context');}
 if(!ctx.roundRect)CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h){this.rect(x,y,w,h)};
