@@ -215,6 +215,7 @@ let skyT=SKY[0],gnd=GROUND[0];
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const cv=$('#c'),ctx=cv.getContext('2d');
+if(!ctx){alert('Canvas 2D context not supported');throw new Error('No 2D context');}
 if(!ctx.roundRect)CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h){this.rect(x,y,w,h)};
 const PC=!/Android|iPhone|iPad|iPod|Mobile|Tablet|Silk|Kindle/i.test(navigator.userAgent)&&(navigator.maxTouchPoints||0)===0;
 document.body.classList.toggle('pc',PC);
@@ -1500,16 +1501,26 @@ $('#fs').onclick=()=>{const d=document.documentElement;if(document.fullscreenEle
 $('#quit').onclick=()=>{state='menu';paused=false;charging=false;curSheep=null;curDet=null;$('#pause').textContent='⏸';$('#msg').textContent='Turn-based worm artillery. Blast the other team into the sea!';$('#menu').classList.remove('hide')};
 
 /* ---------- boot ---------- */
-pickTheme();buildTeams();buildWeps();booted=true;
-(typeof queueMicrotask==='function'?queueMicrotask:setTimeout)(()=>{genTerrain();mkBg();(typeof requestIdleCallback==='function'?requestIdleCallback:setTimeout)(initScenery,2000)},0);
+try{pickTheme();}catch(e){console.error('pickTheme error',e);skyT=SKY[0];gnd=GROUND[0]}
+try{buildTeams();}catch(e){console.error('buildTeams error',e)}
+try{buildWeps();}catch(e){console.error('buildWeps error',e)}
+booted=true;
+(typeof queueMicrotask==='function'?queueMicrotask:setTimeout)(()=>{
+  try{genTerrain();}catch(e){console.error('genTerrain error',e)}
+  try{mkBg();}catch(e){console.error('mkBg error',e);bg=null}
+  (typeof requestIdleCallback==='function'?requestIdleCallback:setTimeout)(()=>{try{initScenery()}catch(e){console.error('initScenery error',e)}},2000)
+},0);
 const ico="data:image/svg+xml,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230b1530'/%3E%3Ctext x='50' y='68' font-size='64' text-anchor='middle'%3E%F0%9F%92%A5%3C/text%3E%3C/svg%3E");
 const m={name:'Grub Blasters',short_name:'Grub Blasters',display:'fullscreen',orientation:'landscape',background_color:'#0b1530',theme_color:'#0b1530',start_url:'.',icons:[{src:ico,sizes:'any',type:'image/svg+xml'}]};
 const l=document.createElement('link');l.rel='manifest';l.href='data:application/manifest+json,'+encodeURIComponent(JSON.stringify(m));document.head?.appendChild(l);
 let last=0;
 function frame(t){
-  const dt=Math.min(.033,(t-last)/1000||0);last=t;
-  if(!paused)update(dt);
-  draw();hud();requestAnimationFrame(frame);
+  try{
+    const dt=Math.min(.033,(t-last)/1000||0);last=t;
+    if(!paused)update(dt);
+    draw();hud();
+  }catch(e){console.error('Frame error',e)}
+  requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
 </script>
