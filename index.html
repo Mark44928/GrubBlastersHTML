@@ -1396,7 +1396,7 @@ const fb=$('#fire');
 fb.addEventListener('pointerdown',e=>{e.preventDefault();fb.classList.add('on');try{fb.setPointerCapture(e.pointerId)}catch(_){}startCharge()});
 const fup=()=>{fb.classList.remove('on');releaseFire()};
 fb.addEventListener('pointerup',fup);fb.addEventListener('pointercancel',fup);fb.addEventListener('lostpointercapture',fup);
-const wb=$('#weps'),wepSel=null;
+const wb=$('#weps');let wepSel=null;
 function buildWeps(){
   wb.innerHTML='';
   const L=wepList();
