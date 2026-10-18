@@ -978,7 +978,7 @@ function callGeminiAI(w){
   if(!tg){ai.phase='done';return}
   ai.geminiBusy=true;
   const stateInfo=buildGeminiState(w,tg);
-  fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key='+geminiKey,{
+  fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key='+geminiKey,{
     method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({contents:[{role:'user',parts:[{text:GEMINI_SYSTEM_PROMPT+stateInfo}]}],generationConfig:{temperature:0.3,maxOutputTokens:512}})
   }).then(async r=>{
@@ -1009,6 +1009,7 @@ const GEMINI_SYSTEM_PROMPT=`You are an expert Grub Blasters player. Grub Blaster
 - Worms have HP, die at 0, can drown in water
 - Jetpack has limited fuel, refills each turn
 - Sudden death: water rises, worms wither, meteors fall after turn 16
+Powered by Gemini 3.5 Flash-Lite.
 Return ONLY a JSON action: {"weapon":"bazooka|grenade|...","aim":-1.2 to 1.45,"power":0 to 1,"walk":"left|right|none","jetpack":true|false,"jump":true|false,"target":{"x":number,"y":number}|null}
 Current state:`;
 function buildGeminiState(w,tg){
