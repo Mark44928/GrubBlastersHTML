@@ -478,6 +478,9 @@ All reads are wrapped in try/catch (private-mode safe).
 
 - Compact vanilla JS: terse names, dense one-liners, section dividers
   `/* ---------- x ---------- */`. Match surrounding style; do not reformat.
+- For deep codebase reviews, use the Task tool (explore agent) to read the
+  entire file in one pass — it catches bugs a skim misses. Run a full bug
+  sweep before every publish.
 - Logical pixels everywhere; the canvas handles scaling, not CSS.
 - New weapons: append to `WEP`, add a `fire()` branch, handling in
   `updateProj()` and a visual in `drawProj()`, starting ammo in `SCH[0]`'s
