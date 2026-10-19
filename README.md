@@ -16,7 +16,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 ## Features
 
 - Local hot-seat play for 2–4 teams, or fight the computer (Baby / Easy / Normal / Hard / Brutal) — your teams always face an equal number of CPU teams (4 teams = 2 vs 2)
-- 2–8 worms per team with configurable starting HP (100 / 150 / 200)
+- 2–8 worms per team with a starting-HP slider (50–200)
 - Weapon schemes: Normal, Greedy (every weapon unlimited), Pro Mode (scarce specials, no airstrike), and Bazooka Only
 - Three map sizes — Standard, Wide, and Epic — so big armies never clutter
 - Floating islands mode: split the map into 1–6 sky islands that worms battle across
@@ -26,14 +26,21 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Tap any of your worms to take control of it — move anyone, anywhere
 - Double-tap jump for a backflip — a backwards somersault that gains height, plus a flat "low backflip" variant
 - Solid worms — they block each other, can be climbed and stood upon (worm stacking), and fall when their footing drops away
-- Big customization: team count, computer level, scheme, worm count, HP, turn timer, wind strength (light / normal / storm), gravity (low / normal / high), sudden death timing, retreat time, jetpack fuel, supply crates on/off, explosive barrels on/off, map size, islands and aim guide — plus 🎨 Customize for team names and colors, sky, terrain, weather, graphics, sound and Worm Select on/off
+- Big customization: team count, computer level, scheme, worm count, HP and turn timer sliders, wind strength (0–2.5× slider — calm days to full storms), gravity (low / normal / high), sudden death timing, retreat time, jetpack fuel, supply crates on/off, barrels on/off/oil-only, map size and islands — plus 🎨 Customize for team names and colors, sky, terrain, weather and the aim guide, and ⚙️ Settings for interface theme, sound, vibration, auto replay, Worm Select, crate radar, graphics and fullscreen
+- Cinematic explosions — layered boom audio, shockwave rings, fireballs, smoke, sparks, rim embers and dirt debris, with screen shake (and phone vibration) that scales with the blast
+- Combo kill banners: blow up two or more worms in one blast for DOUBLE KILL / TRIPLE KILL / chain callouts — with a slow-motion flourish when a shot ends the match
+- Turn replay: press R (or the 🎬 button) right after a shot to watch the last turn play out again — FIRE cycles play / 3× speed / pause, slow-mo with S, Esc closes; Auto Replay in ⚙️ Settings plays every turn back for you
+- Two interface themes: the default Modern look (glassy panels, gradients, tap feedback) and the original Classic look — switch anytime in ⚙️ Settings → Interface. Two more palettes round out the set: Gruvbox (warm retro, #fabd2f accents) and Tokyo Night (cool neon, #7aa2f7 accents).
 - Low-graphics mode — drops to 1× resolution and strips all effects, scenery and weather — for smoother play on older phones
+- Barrels: On (a mix of drums and oil drums), Oil only (every barrel is an oil drum that ignites the ground when it blows), Barrel only (only plain drums, no oil), or Off
 - Built-in Help & Controls screen (menu button or the H key)
 - Fully destructible terrain — craters stay, worms fall
 - Shifting wind that bends rockets mid-flight
-- Twenty-five weapons in one tap-to-open shelf menu: bazooka, grenade, dynamite, shotgun, hammer, mine, sheep, airstrike, teleport, holy grenade, cluster bomb, uzi, blowtorch, homing missile, bunker buster, magic bullet, banana bomb, dragon ball, mole bomb, lightning, flying saucer, mad cow, minigun, kamikaze, 1.5x damage
+- Thirty-three weapons in one tap-to-open shelf menu: bazooka, grenade, dynamite, shotgun, fire punch, mine, sheep, airstrike, teleport, holy grenade, cluster bomb, uzi, blowtorch, homing missile, bunker buster, magic bullet, banana bomb, dragon ball, mole bomb, lightning, flying saucer, mad cows, minigun, kamikaze, 1.5x damage, invulnerable, napalm strike, dynamite bundle, carpet bombing, nuke, homing pigeon, skunk
 - The shelf panel shows each weapon's icon, name and remaining ammo
-- Explosive barrels scattered across the map are solid — stand on them, or shoot one to erupt it, chaining into mines and other barrels. Blow the ground out from under one and it drops (toggle in 🎨 Customize)
+- Explosive barrels scattered across the map are solid — stand on them, or shoot one to erupt it, chaining into mines and other barrels. Some are oil drums that ignite the ground when they blow. Blow the ground out from under one and it drops (toggle in 🎨 Customize)
+- Napalm and oil drums set the ground on fire — flames keep damaging anything standing in them turn after turn; the skunk's gas cloud poisons worms, and a health crate cures them
+- A crate radar rings the screen edge with gold arrows pointing to off-screen supply crates (toggle in ⚙️ Settings)
 - Bouncing weapons (Grenade, Holy, Cluster, Banana, Mine, Dragon) ricochet off worms' bodies and barrels instead of passing through them — drop one straight onto a worm's head and it sits there until it blows, real-Worms style
 - A 🔄 restart button in the top-right HUD restarts the current match from the beginning — same terrain, worms and barrels — after a quick confirmation
 - Weapons you run out of ammo for vanish from the shelf and come back when you have ammo again
@@ -46,12 +53,12 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Sudden death — after turn 16 the sea rises, worms wither, and meteors start falling
 - Session scoreboard: wins shown live in the HUD, kills and damage in the game-over summary
 - Optional aim guide dotting the predicted path of your bazooka while you charge
-- Configurable turn timer (20 / 30 / 45 / 60 s)
+- Configurable turn timer (10–60 s slider)
 - Red worm names when health runs low; victory confetti on the winner
 - Four sky themes (day, sunset, night, dawn) — Auto rolls one per match, Real Time follows your device clock — and four terrain themes (grass, desert, snow, rock)
 - Native system fonts and parallax clouds for a clean, pretty look
 - Procedural sound effects synthesized with Web Audio — no audio files
-- Pause, mute (persisted), and fullscreen buttons; settings persist in localStorage
+- Pause button plus ⚙️ Settings — interface theme (Modern / Classic / Gruvbox / Tokyo Night), sound, vibration (haptic feedback on phones), auto replay, Worm Select, crate radar, graphics and fullscreen; settings persist in localStorage
 
 ## How to play
 
@@ -67,7 +74,9 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Airstrike, teleport, the homing missile, the magic bullet, and lightning arm a map target first — tap the map, then press FIRE.
 - Release the sheep and it wanders on its own, blowing up on the first worm it touches (or after 8 s); press FIRE again to detonate it on command. The dragon ball bounces on the same FIRE-to-detonate rule (it also blows after six bounces).
 - The banana bomb bursts into five bananas that go off one after another; the mole bomb tunnels through rock in a dead-straight line in the direction you fired it and detonates the moment it finishes digging and pokes out of the rock. It also blows on a worm, after 5 seconds, or at the water line.
-- The hammer smacks a nearby enemy hard and sends them flying — knockback can drown a worm.
+- The napalm strike sets the ground alight where it lands — flames bite anyone standing in them every couple of seconds, and oil drums spread the fire when they blow. The skunk sprays tall poisoned gas (wind carries it): anything in the cloud gets poisoned for the rest of the match — 5 HP a turn, never fatal — until a health crate cures it. The homing pigeon is fearless, flying straight through terrain to reach your marked spot.
+- The fire punch is an uppercut that knocks a nearby enemy straight up into the air (and carves through terrain) — useful for launching worms into mines or water. Based on Ryu's Shoryuken.
+- Invulnerable shields the active worm in a bubble for the rest of the turn — immune to damage, fall damage and poison, but NOT drowning or knockback.
 - Drop a mine and walk away: it arms after 2 seconds, waits for any worm to come close, and survives between turns. Shoot one to set off a chain reaction. Armed mines are solid — but walking close or landing on one still trips the trigger first.
 - The weapon shelf opens as a panel listing every weapon with icon, name and ammo; it follows your selection, and keyboard 1–7 maps to the first seven entries.
 - Weapons you're out of ammo for disappear from the shelf until you have ammo again — keyboard selection just says "Out of ammo".
@@ -75,8 +84,9 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Phones and tablets: play in landscape — portrait shows a rotate reminder and pauses the game.
 - Watch the wind meter in the HUD: it pushes rockets and slanting rain.
 - Open Help & Controls from the menu button, or press H.
-- Tap one of your own worms to take control of it mid-turn — turn **Worm Select** off in 🎨 Customize to disable.
-- 🎨 Customize in the menu renames teams, cycles their colors, and sets gravity, sudden death, retreat time, jetpack fuel, sky, terrain, weather, graphics, sound and Worm Select — Done (or Esc) closes it and everything persists.
+- Tap one of your own worms to take control of it mid-turn — turn **Worm Select** off in ⚙️ Settings to disable.
+- After your shot lands you can watch it again: the 🎬 button appears (or press R). FIRE cycles play / 3× / pause, S slows it down, Esc closes it, and Auto Replay in ⚙️ Settings plays every turn back automatically.
+- 🎨 Customize in the menu sets the match itself (teams, worms, HP, turn time, computer level, scheme, gravity, sudden death, retreat time, jetpack fuel, wind, crates, barrels, map, islands, names, colors, sky, terrain, weather, aim guide) while ⚙️ Settings holds the interface theme (Modern / Classic / Gruvbox / Tokyo Night), sound, vibration, auto replay, Worm Select, crate radar, graphics and fullscreen — Done (or Esc) closes either card and everything persists.
 - Don't like how the match is going? The 🔄 button (top-right of the HUD) restarts it from turn 1 — the exact same map, worms and barrels — after a quick confirmation.
 - Shoot an explosive barrel and run: the blast sets off mines and other barrels nearby in a chain reaction. Barrels are solid — jump on top for a perch — and drop straight down when the ground beneath is destroyed.
 
@@ -90,6 +100,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 | J | Jetpack (hold) |
 | + / − | Zoom in / out |
 | 1–7 | Select a weapon from the shelf |
+| R | Replay the last turn (also Esc/Enter to close, S for slow motion, FIRE to skip) |
 | H | Open Help & Controls |
 | P / Esc | Pause |
 
@@ -106,9 +117,9 @@ Ammo below is for the Normal scheme. **Greedy** makes every weapon unlimited, **
 | Airstrike | 1 per team | Pick a target; five bombs rain from the sky |
 | Teleport | 2 per team | Warp your worm to a chosen spot |
 | Sheep | 1 per team | Walks by itself until it finds a worm or is detonated |
-| Mad Cow | 1 per team | Releases three charging cows one after another — each explodes on the first worm (friend or foe) or wall it meets, with Dynamite-strength force (75) |
-| Hammer | Unlimited | Melee whack with heavy knockback |
-| Mine | 1 per team | Solid object; arms after 2 s; proximity trigger; chain-reacts |
+| Mad Cows | 1 per team | Releases three charging cows one after another — each explodes on the first worm (friend or foe) or wall it meets, with Dynamite-strength force (75) |
+| Fire Punch | Unlimited | Melee punch with heavy knockback that ignites the ground |
+| Invulnerable | 2 per team | Shields the active worm in a bubble for the rest of the turn — immune to damage, fall damage and poison, but NOT drowning or knockback || Mine | 1 per team | Solid object; arms after 2 s; proximity trigger; chain-reacts |
 | Holy Grenade | 1 per team | 3 s fuse; colossal blast with a white flash and choir tone |
 | Cluster Bomb | 1 per team | Splits mid-air into four scattering bomblets |
 | Uzi | 2 per team | Six-shot burst with spread; instant hitscan |
@@ -124,8 +135,14 @@ Ammo below is for the Normal scheme. **Greedy** makes every weapon unlimited, **
 | Minigun | 1 per team | A rapid 16-shot spray of instant hitscan bullets with spread |
 | Kamikaze | 2 per team | Your worm launches a suicidal charge — aim the direction first and it drills a dead-straight tunnel that way (point it up to dig diagonally); it detonates on the first worm it meets, at a map border, at the water, or after ~2 s — the kamikaze worm never survives |
 | 1.5x Damage | 2 per team | Multiplies all damage you deal (and your explosion knockback) by 1.5 for the rest of the turn — stacks with nothing else, doesn't end your turn (Hedgewars-style) |
+| Napalm Strike | 1 per team | Charged lob that bursts into burning ground — the fire keeps damaging anything standing in it |
+| Dynamite Bundle | 1 per team | One bundle, three sticks: it pops open and the dynamite blows one after another |
+| Carpet Bombing | 1 per team | Pick a target; five bouncing bombs cascade across the area, each blowing several times |
+| Nuke | 1 per team | The big one — a shaped triple blast that leaves a smoking mushroom cloud |
+| Homing Pigeon | 1 per team | Pick a target and release it — the bird flies straight through terrain and detonates on arrival (water stops it) |
+| Skunk | 1 per team | Release it, then press FIRE to spray tall poisoned gas (wind carries it) — worms in the cloud are poisoned; FIRE again to detonate. It happily picks up crates on the way |
 
-Crates can refill dynamite, airstrike, teleport, homing missile, bunker buster, or magic bullet, or grant an extra sheep, mine, holy grenade, cluster bomb, uzi, blowtorch, minigun, kamikaze or 1.5x damage.
+Crates can refill dynamite, airstrike, teleport, homing missile, bunker buster, magic bullet, napalm strike, dynamite bundle, carpet bombing, nuke, homing pigeon or skunk, or grant an extra sheep, mine, holy grenade, cluster bomb, uzi, blowtorch, minigun, kamikaze or 1.5x damage.
 
 ## Running locally
 
@@ -137,7 +154,7 @@ python -m http.server
 
 ## Tech
 
-Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 117 KB in total.
+Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 155 KB in total.
 
 ## License
 

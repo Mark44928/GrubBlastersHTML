@@ -71,7 +71,7 @@ logical canvas, with a fuel-limited jetpack for mobility.
    `#bottom` controls) plus `#banner`, `#tip`, the `#menu` start card (carries
    a temporary promotional `#soon` 2.0.0 teaser line — remove once 2.0.0
    ships), and the
-   `#help` / `#custom` overlays (Help, Customize sub-card).
+   `#help` / `#custom` / `#settings` overlays (Help, Customize and Settings sub-cards).
 3. `<script>` — everything else, `'use strict'`.
 
 ### Coordinate model
@@ -142,7 +142,8 @@ logical canvas, with a fuel-limited jetpack for mobility.
 ### Core state (module-level globals)
 
 - Entity arrays: `worms, proj, parts, texts, tracers, crates, graves, rings,
-  leaves, clouds, pend, rain, snow, fireflies, bolts, barrels, barFx`.
+  leaves, clouds, pend, rain, snow, fireflies, bolts, barrels, barFx, fires,
+  gas`.
 - `state`: `'menu' | 'aim' | 'settle' | 'over'`. `aim` = current worm may
   move/aim/fire; `settle` = projectiles resolving + retreat window; `over` =
   match finished.
@@ -152,15 +153,20 @@ logical canvas, with a fuel-limited jetpack for mobility.
 - Teams: `teamCount` (2–4). `TC[4]`/`TN[4]` are the team colors/names (TN index
   0–3, editable). `aiOn[4]`, `wins[4]`, `kdmg[4]`, `kills[4]`, `ammo[4]`,
   `lastWpn[4]` are all 4-wide regardless of `teamCount`.
-- Settings: `perTeam, diff, hpIdx, ttIdx, guide, muted, skyIdx, terIdx, wxIdx, low`
-  plus `teamCount, schIdx (scheme), wndIdx (wind), cratesOn, barrelsOn, mapIdx (map
+- Settings: `perTeam, diff, maxHP (50–200 slider), turnSec (10–60 slider),
+  guide, muted, hap (haptics), radar (crate radar), low, skyIdx, terIdx, wxIdx`
+  plus `teamCount, schIdx (scheme), windK (wind strength 0–2.5× slider; legacy
+  `gb_wnd` indices migrate via the `gb_wndv` marker), cratesOn, barrelsOn, barrelOil
+  (oil-only barrels), barrelDrum (drum-only, no oil), mapIdx (map
   size), isl (floating islands 0–6, `ISLN` labels), wsel (Worm Select on/off),
   gravIdx (gravity `GRAVK` .6/1/1.5 → `GV=G*GRAVK[gravIdx]`), sdIdx (sudden death
   `SDT` 16/25/9999 → `sdTurn`), retIdx (retreat `RETV` Off/3s/6s), fuelIdx (jetpack
-  `FUELV` 75/150/250 → `FUEL`), colIdx (team colors, `PAL`/`TC`)`
+  `FUELV` 75/150/250 → `FUEL`), colIdx (team colors, `PAL`/`TC`), autoRep
+  (Auto Replay), uiTheme ('modern'/'classic'/'gruvbox'/'tokyo' — toggled by the
+  `#iface` select; Modern and Classic use the `body:not(.classic)` override
+  block, Gruvbox and Tokyo Night are full `body.gruvbox`/`body.tokyo` palettes)`
   (persisted, see
-  below). `DIFF` = Baby / Easy / Normal / Hard / Brutal. `SCH` = Normal / Greedy / Pro Mode / Bazooka Only; `WND` scales wind
-  (light .5 / normal 1 / storm 1.75).
+  below). `DIFF` = Baby / Easy / Normal / Hard / Brutal. `SCH` = Normal / Greedy / Pro Mode / Bazooka Only.
 - `inp` = walk/aim booleans (+`jet`). `aimDrag` = map-drag aiming. `paused` (`helpWasPaused`
   remembers it while the Help overlay is open). `jumpT` = timestamp of the last
   jump, used for the double-tap backflip. `jetSndT` throttles the thruster SFX;
@@ -192,7 +198,8 @@ logical canvas, with a fuel-limited jetpack for mobility.
   `killWorm()` guarantees the kamikaze worm dies.
   No retreat (`retreat` expression includes `kamikaze`).
 - Explosive barrels: `barrels[]` = `{x,y,dead,vy}` (built by `buildBarrels()`,
-  skipped when `barrelsOn` is off; count 5+W/700). Solid to worms
+  skipped when `barrelsOn` is off; count 5+W/700). `barrelOil` makes every
+  barrel an oil drum. Solid to worms
   (`propSolid`), drawn before worms (`drawBarrel`). `updateWorld()` drops
   unsupported barrels straight down (vertical only, gravity capped 700, small
   landing bounces at `vy>110`), removes dead or submerged ones, and nudges a
@@ -214,7 +221,37 @@ logical canvas, with a fuel-limited jetpack for mobility.
   `restartMatch()`: redraws the terrain canvas from the copy, `mask.set(...)`,
   restores the arrays, resets water/turn/ammo/wpn/camera and calls
   `startTurn()` — the same match replays instead of regenerating. Quitting to
-  the menu nulls `matchSnap`.
+  the menu nulls `matchSnap`. Restart and quit also null `rec`, `rep`, `repC`
+  and `lastMovie` (a stale movie must never replay against a fresh match).
+- Explosions & feedback (2.0.0): `explode()` keeps a 0.25 s … shake
+  `Math.min(26,r/4.5)`, fires `buzz(ms)` haptics for `r≥60`, and `boomFx`
+  spawns the layered blast (white core flash, fireball, smoke, sparks, rim
+  embers, dirt debris). Kill combos: `killWorm(w,drown,by)` counts enemy kills
+  (rival `by` only — suicides, drowns, falls and wither never combo) landing within
+  `comboT` (1500 ms) into `comboN` and banners DOUBLE / TRIPLE / QUAD KILL /
+  CHAIN ×N (`slowT .55`); when the blast drops the match to ≤1 living team the
+  killcam sets `slowT 1.3` and a camera zoom punch. `frame()` scales `dt` by
+  `slowT>0?0.35:1`.
+- Fire & poison (2.0.0): `fires[]` = `{x,y,r,by,age}` ground fires lit by
+  `ignite(x,y,r,by)` (napalm, oil drums); `update()` retints their lifetime and
+  every `fireT` (0.45 s) deals 5 silent damage (`damageWorm(w,d,by,silent)` —
+  4th param suppresses number/flash) to worms inside. `gas[]` skunk clouds
+  drift with `wind`, poison on contact (`w.gasCd` 1.5 s cooldown,
+  `w.poison` capped at 2 stacks) and fade. `startTurn()` deals each poisoned
+  worm `min(5*poison, hp-1)` (never fatal) with a tip; health crates cure
+  (`CURED` text).
+- Turn replay (2.0.0): `rec` records at 20 Hz (500-frame ≈ 25 s cap) while
+  `state==='settle'` — `startRec()` sits at the tail of `fire()` (the
+  saucer/xdmg early returns deliberately never record); `crater`, `tunnel`,
+  `tunnelSeg`, `tracer` and `explode` push `rec.ev` events (`c/t/s/l/b`).
+  `finishRec()` on turn end stores `lastMovie`; `autoRep` (Auto Replay
+  setting) auto-plays it (`autoPlayed` guards one show per movie). Playback
+  builds `repC` from a copy of the terrain canvas and re-stamps events;
+  `state==='replay'` short-circuits `update()`/`draw()`; FIRE cycles play →
+  3× → pause (with a tip), S slow-mo, Esc/Enter/🎬 exits; `stopReplay(false)` from an
+  'end' movie hands back to `state='settle'` so `endTurn()` advances the turn;
+  from 'over' it re-shows the menu. The `#replay` button hides until a movie
+  exists.
 
 ### Turn flow
 
@@ -246,7 +283,7 @@ scanning (never loops forever, even with 4 teams).
 
 ### Weapons
 
-`WEP` array drives shelf order; array index → id. 25 weapons, no pages, but
+`WEP` array drives shelf order; array index → id. 33 weapons, no pages, but
 all rendering/selection goes through `wepList()` (Bazooka Only returns just the
 bazooka). The shelf is a custom drop-up built by `buildWeps()`: a `#weps`
 button shows the active weapon's icon/name/ammo (`∞` or `×n`) and opens a
@@ -256,9 +293,9 @@ full-width fixed panel (`.wep-pan`, grid, z-index 5, below the overlays) of
 pickup and turn start; an outside `pointerdown` closes the panel via
 `closeWepPan()` (also called when the menu returns). Keyboard `1–7` maps
 directly into `wepList()` indexes.
-`TARGETED=['airstrike','teleport','homing','magic','lightning']` use the two-step "tap map, then FIRE"
-flow (homing/magic still charge like a bazooka on hold; airstrike/teleport/lightning fire instantly).
-Only `CHARGE` (`bazooka, grenade, holy, cluster, bunker, homing, magic, banana, dragon, mole`) charge on hold —
+`TARGETED=['airstrike','teleport','homing','magic','lightning','carpet','nuke','pigeon']` use the two-step "tap map, then FIRE"
+flow (homing/magic still charge like a bazooka on hold; the others fire instantly).
+Only `CHARGE` (`bazooka, grenade, holy, cluster, bunker, homing, magic, banana, dragon, mole, napalm, bundle`) charge on hold —
 every other weapon fires instantly from `startCharge()`.
 `fire()` refuses anything not in `wepList()` or with `ammoOf(...)===0` — except
 landing the saucer (`wpn==='saucer'&&w.sau>0` cancels before the ammo check).
@@ -280,7 +317,8 @@ early-return trick for the damage buff.
 | `xdmg` | Utility: spends ammo, sets `dmgBoost`, returns early — no settle, no turn end |
 | `kamikaze` | Sets `w.kam=2.2` and the aim vector `w.kdx`/`w.kdy`; the charge, digging and explosion live in `stepWorm()` (see Core state) |
 | `minigun` | Rapid hitscan volley via the shared `shots/shotT/shotCfg` machinery: 16 shots, dmg 6, spread .09, 0.07 s spacing |
-| `hammer` | Melee check 42 px ahead, knockback vx 380 / vy −260, 30 dmg |
+| `firepunch` | Melee uppercut: checks 22 px ahead and 60 px above, knocks target up (vx 120/vy −420), 30 dmg, carves through terrain |
+| `invuln` | Utility (2/team): sets `w.invuln=true` for the rest of the turn; blocks damage, fall damage and poison; does NOT block drowning, knockback or kamikaze sacrifice |
 | `mine` | Solid to worms once armed (pad 8 proximity always trips before the ±5/±6 block); arms after 2 s, trigger <17 px, persists across turns, bounces off worms and barrels, explodes when caught in another blast |
 | `holy` | Big blast r 85 dmg 75, choir SFX |
 | `cluster` | Splits into 4 bomblets on fuse/water (`splitCluster`) |
@@ -294,6 +332,12 @@ early-return trick for the damage buff.
 | `mole` | On its first ground contact it locks its impact direction (`p.dux`/`p.duy`) and drills in a dead-straight line at a constant 150 px/s with gravity disabled — tunneling through rock (`p.did`/`p.burrow`); the burrow block stamps smooth rim-less r 9 `tunnelSeg()` capsules — trailing ≥10 px behind the head so the mole's own `solid()` emerge check stays valid — and kicks up dirt particles; explodes the moment it finishes digging and pokes out (solid-free for 2 px); any worm contact explodes it, as does a 5 s fuse or crossing the water line (explosion r 52 dmg 62) |
 | `lightning` | Targeted; `doLightning` queues 5 `pend` entries with `lit:true`; `strikeLit` scans down for a worm (`wormHit` pad 2) or solid and explodes r 30 dmg 40, drawing a `bolts` jagged bolt with thunder SFX |
 | `saucer` | Movement utility, not a projectile: FIRE boards it (spends ammo, `w.sau=SAU_F`, early `return` — never sets `settle`, never ends the turn); FIRE again lands. Flight physics are in `stepWorm` (SAU_T thrust, SAU_DRAIN, rise cap −430, lateral 460/±260); the drown check is skipped while `w.sau>0` so it can fly underwater (running dry there drowns), and `startTurn()` zeroes `sau` |
+| `napalm` | Charged lob (CHARGE); on fuse 2.2 s / impact bursts r 46 dmg 34 and `ignite(x,y,r,by)` lights up to 16 ground fires (cap 26, each r ~11–22, life 4–6.5 s) |
+| `bundle` | Charged lob; fuse 2.6 s / impact pops r 30 dmg 20 then `splitBundle()` releases 3 dynamite sticks (r 64 dmg 58, fuses 1.1–2.4 s) |
+| `carpet` | Targeted `doCarpet()`: 5 `pend` bombers walk the target across ±104 px; each carpet proj explodes up to 4 times per bounce (r 26 dmg 22) before vanishing |
+| `nuke` | Targeted `doNuke()`: `pend` bomb after 1.2 s → `nukeBlast()` = r 190 dmg 140 plus two r 88 dmg 30 side blasts, `slowT 1.25`, buzz(140), mushroom smoke; banner + siren warn first |
+| `pigeon` | Targeted instant: instant-fire, flies dead-straight at 260 px/s ignoring terrain (`SFX.coo`), explodes r 40 dmg 70 on water/contact/fuse, duds into a bomb after ~6 s |
+| `skunk` | `curDet` two-stage: released it walks/hops and collects crates (fuse 5 s); FIRE or the fuse calls `skunkGas(p)` (stage 1, fuse 2.6 s) spraying a wind-drifted `gas[]` cloud that poisons on contact; FIRE again (or the fuse) detonates r 32 dmg 15 |
 
 Ammo: `ammo[team]` object; missing keys = unlimited (`ammoOf()` returns
 `Infinity`). Always spend ammo via `useAmmo(id)` — it only decrements keys that
@@ -324,24 +368,26 @@ never steers an AI worm.
 
 Single `draw()` per frame, painter's order: shake → background → parallax
 clouds (`(cam.x-W/2)*.45` offset) → terrain → graves → crates → barrels →
-worms (with jet
-flame) → aim aids (barrel, reticle/target, guide arc, charge dots, arrow, fuel
+fires → worms (jet
+flame + poison ☠) → gas → aim aids (barrel, reticle/target, guide arc, charge dots, arrow, fuel
 gauge) → projectiles → tracers/rings → particles → leaves →
-weather → animated water → floating texts → screen-space vignette (`vig`, rebuilt
+weather → animated water → floating texts → crate-radar edge arrows
+(`radar`) → screen-space vignette (`vig`, rebuilt
 on resize). `hud()` updates DOM bars, clock,
-wind meter (clamped to 50 % width so Storm reads correctly), and tips. Team
+wind meter (clamped to 50 % width so the 2.5× maximum reads correctly), and tips. Team
 chips are built once per game by `buildTeams()` (per-team name, HP bar, and
 `.act` highlight on the current team); `#teams` uses a `t2`/`t3`/`t4` class.
 Canvas text uses the `FONT` stack; the title/banner/clock use a condensed
-display stack via CSS. **Low graphics** (`low`) is cosmetic-only: `resize()`
-caps `dpr` at 1 (4× fewer pixels on most phones), and it draws no clouds,
-leaves, fireflies, rain, snow or vignette, coarsens the water mesh, thins
-scenery/particle counts and lowers the particle cap. It must never change
+display stack via CSS. **Low graphics** (`low`) is cosmetic-only:
+`resize()` caps `dpr` at 1 (4× fewer pixels on most phones), and it draws no
+clouds, leaves, fireflies, rain, snow or vignette, coarsens the water mesh,
+thins scenery/particle counts and lowers the particle cap. It must never change
 gameplay, damage, or terrain.
 
 ### Loop
 
-`frame()`: `requestAnimationFrame`, `dt=min(33 ms, elapsed)`, then
+`frame()`: `requestAnimationFrame`, `dt=min(33 ms, elapsed)` scaled by
+`slowT>0?0.35:1`, then
 `update(dt)` + `draw()` + `hud()`. `paused` freezes the simulation but keeps
 rendering.
 
@@ -370,7 +416,8 @@ rendering.
   when closing Help in portrait.
 - Keyboard: `KM` maps arrows/WASD; `keyOf()` lowercases single chars
   (CapsLock-proof); Space charge, Enter/Shift jump, J jetpack, `+`/`-` zoom,
-  1–7 weapon, P/Esc pause, H help.
+  1–7 weapon, P/Esc pause, H help, R replay (Esc/Enter close it, S slow-mo);
+  `keydown` also closes `#custom`/`#settings` on Esc.
 - Backflip: `jump()` checks `now-jumpT<350` while airborne and flips
   (`w.flip=1`, `w.lowFlip=0`, backwards `vx=-dir*120`, `vy=-330` — higher than a
   normal jump); a third tap within the window flattens it into the low backflip
@@ -381,7 +428,12 @@ rendering.
   Keep the flip cosmetic-only (it must not alter damage/terrain).
 - Help overlay (`#help`) is opened by `toggleHelp()`, which pauses the sim and
   restores the previous paused state on close. `keydown` swallows all keys while
-  it is open and closes it on Esc/P/H.
+  it is open and closes it on Esc/P/H. The `#settings` card mirrors this pause
+  dance (`toggleSettings`, Esc/P closes) and `#custom` closes on Esc; in-game
+  ⚙️ (`#gear`) opens Settings too.
+- Replay keys (only while `state==='replay'`): FIRE cycles play / 3× / pause,
+  S slow-mo, Esc/Enter/🎬 close; `R` re-opens the last movie from aim/settle/over.
+  Replay keys are checked after the help/custom/settings Escape guards.
 - Pause must gate every action entry point (`fire`/`startCharge`/`jump`/
   `setWpn`).
 
@@ -391,8 +443,8 @@ rendering.
 |---|---|---|
 | `gb_diff` | AI difficulty index 0–4 (Baby…Brutal); legacy 0–3 saves migrate +1 via `gb_dv` | 2 (Normal) |
 | `gb_per` | worms per team 2–8 | 3 |
-| `gb_hp` | HP index 0–2 (100/150/200) | 0 |
-| `gb_tt` | turn timer index 0–3 (20/30/45/60) | 1 (30 s) |
+| `gb_hp` | starting HP 50–200 (legacy 0–2 index saves migrate) | 100 |
+| `gb_tt` | turn timer seconds 10–60 (legacy 0–3 index saves migrate) | 30 s |
 | `gb_guide` | aim guide `'1'`/`'0'` | off |
 | `gb_mute` | mute `'1'`/`'0'` | off |
 | `gb_tn0`–`gb_tn3` | team names (≤12 chars) | RED / BLUE / GREEN / GOLD |
@@ -402,18 +454,23 @@ rendering.
 | `gb_low` | low graphics `'1'`/`'0'` | off |
 | `gb_teams` | team count 2–4 | 2 |
 | `gb_sch` | scheme index 0–3 (Normal/Greedy/Pro/Bazooka Only) | 0 |
-| `gb_wnd` | wind index 0–2 (light .5 / normal 1 / storm 1.75) | 1 |
+| `gb_wnd` | wind strength 0–2.5× (legacy 0–2 index saves migrate via `gb_wndv`) | 1 |
+| `gb_auto` | auto replay `'1'`/`'0'` | off |
+| `gb_ui` | interface theme `'modern'`/`'classic'`/`'gruvbox'`/`'tokyo'` | modern |
+| `gb_radar` | crate radar edge arrows `'1'`/`'0'` | on |
+| `gb_hap` | haptics/vibration `'1'`/`'0'` | on |
 | `gb_crate` | supply crates `'1'`/`'0'` | on |
 | `gb_map` | map size index 0–2 (1400/2000/2800 wide) | 0 |
 | `gb_isl` | floating islands 0–6 (0 = off) | 0 |
 | `gb_wsel` | Worm Select `'1'`/`'0'` (tap own worms to switch) | on |
-| `gb_barl` | explosive barrels `'1'`/`'0'` | on |
+| `gb_barl` | barrels `'1'` on / `'oil'` oil-only / `'drum'` drum-only / `'0'` off | on |
 | `gb_grav` | gravity index 0–2 (Low .6 / Normal 1 / High 1.5) | 1 |
 | `gb_sdv` | sudden death index 0–2 (Standard 16 / Late 25 / Off) | 0 |
 | `gb_ret` | retreat time index 0–2 (Off / 3s / 6s) | 1 |
 | `gb_fuel` | jetpack fuel index 0–2 (75/150/250) | 1 |
 | `gb_tc0`–`gb_tc3` | team color index 0–7 into `PAL` | 0/1/2/3 |
 | `gb_dv` | migration marker: `1` once `gb_diff` is Baby-shifted | unset |
+| `gb_wndv` | migration marker: `1` once `gb_wnd` index→value migration ran | unset |
 
 All reads are wrapped in try/catch (private-mode safe).
 
@@ -426,11 +483,13 @@ All reads are wrapped in try/catch (private-mode safe).
   `updateProj()` and a visual in `drawProj()`, starting ammo in `SCH[0]`'s
   loadout in `newGame()`, the crate pool in `pickCrate()`, and README tables.
   The shelf panel and `buildWeps()` update automatically via `wepList()`.
-- New settings: `<select>` in the `#custom` sub-menu (or HUD), load inside
-  the localStorage `try{}` block, handle in `selCh()` + add to the bind list
-  and `syncUI()`, document in README. The card is grouped into `.csec`
-  sections inside a `.cgrid` (two columns ≥620 px) with `<label class="crow">`
-  rows — presentation only, all ids stay unchanged.
+- New settings: `<select>` (or `<input type="range">`) in the `#custom`
+  sub-menu for match rules and `#settings` for quality-of-life toggles, load
+  inside the localStorage `try{}` block (migrating legacy index saves), handle
+  in `selCh()` + add to the bind list and `syncUI()`, document in README. The
+  cards are grouped into `.csec` sections inside a `.cgrid` (two columns
+  ≥620 px) with `<label class="crow">` rows — presentation only, all ids stay
+  unchanged.
 - No comments beyond the section dividers unless genuinely needed.
 - Commit messages: one imperative summary line, details after a colon
   (see `git log`).
@@ -457,7 +516,7 @@ There are no automated tests; the game must be checked by hand:
 - Wind on Storm: meter stays within the HUD and rockets bend hard.
 - Targeted flow: airstrike / teleport / homing / magic — tap map, reticle appears, FIRE works.
 - Sheep: release, detonate via FIRE; confirm enemy-touch detonation.
-- Mad Cow: release the herd (bottom of the dropdown) — three cows appear one after another and blow up on the first worm (friend or foe!) or wall; they splash in water.
+- Mad Cows: release the herd (bottom of the dropdown) — three cows appear one after another and blow up on the first worm (friend or foe!) or wall; they splash in water.
 - Mine: drop, walk away, arming delay, proximity trigger, chain reaction;
   walk into an armed one and it still trips before the solid block stops you.
 - Kill and drown worms: HUD bars drop to 0 (no ghost HP); graves appear and
@@ -517,8 +576,8 @@ There are no automated tests; the game must be checked by hand:
   `selCh()` and all persist across reloads. The Rules selects change the match
   itself: Low gravity floats shells and softens falls, Sudden death Off never
   raises the sea, and Retreat time / Jetpack fuel are felt from the first turn.
-  Low graphics visibly drops
-  resolution and removes weather/decor while gameplay stays identical.
+  Graphics (High / Low) visibly drops resolution and removes
+  weather/decor while gameplay stays identical.
 - Worm Select: with it On, tap another of your own worms to hand the turn to it
   (cyan fuel bar follows); with it Off, taps only aim. Toggle persists.
 - Jetpack: hold 🚀 (or J) to climb; the fuel bar above the worm drains, stops
@@ -545,6 +604,39 @@ There are no automated tests; the game must be checked by hand:
 - Sudden death: turn 16 sea rise + wither; meteors arrive shortly after.
 - Win a match: confetti, score summary, menu returns, wins shown in HUD.
 - Resize/rotate: HUD respects safe areas; fullscreen toggles.
+- 2.0.0 explosions: fire a bazooka — layered boom, fireball, smoke, sparks and
+  debris with a screen shake that grows with the blast; blow up two worms at
+  once for DOUBLE KILL, and land the match-winning hit to see the slow-mo
+  killcam and camera punch.
+- Replay: after a shot the 🎬 button appears (or press R) — the turn replays
+  from a copy of the terrain; FIRE toggles 3×/pause, S slow-mo, Esc/Enter
+  closes; Auto Replay (⚙️ Settings) plays it automatically after every turn,
+  and a late shot (e.g. a dud pigeon) still ends the turn correctly after the
+  movie.
+- Oil barrels: one in roughly three barrels is an oil drum — its blast
+  leaves burning ground.
+- Napalm: charged lob that bursts into fires; worms standing in flames take
+  ticking damage (silent numbers), and the ground fire eventually burns out.
+- Dyn. Bundle: the bundle pops open and three dynamite sticks bounce out and
+  detonate in sequence. Carpet Bomb: mark a spot — five bombers walk the
+  target left to right. Nuke: the siren sounds, a huge shaped triple blast
+  leaves a mushroom cloud; double-check the target.
+- Pigeon: mark a spot, fire — the bird flies dead-straight through hills and
+  blows on arrival; Skunk: release it, it hops and vacuums up crates, FIRE
+  sprays a wind-drifted gas cloud — walk a worm into it to get ☠ poisoned
+  (5 HP per turn, never fatal), then a health crate cures it.
+- Sliders: HP, turn time and wind are sliders now (50–200, 10–60 s, 0–2.5×);
+  old saves migrate (100/150/200, 20–60 s, light/normal/storm).
+- ⚙️ Settings (menu, or the gear in the HUD): interface theme (Modern / Classic /
+  Gruvbox / Tokyo Night), sound, vibration, auto replay, Worm Select, crate radar,
+  graphics, fullscreen — the game pauses while it is open and resumes on close;
+  Classic swaps the whole UI back to the old look instantly.
+- Play an explosion that kills two enemies at once — DOUBLE KILL banner; a
+  suicide, drown or wither death must never show a combo banner.
+- Crate radar: drop a worm far from a crate — gold arrows on the screen edge
+  point at it; toggle in ⚙️ Settings.
+- Mole: the mole sprite now looks like a real mole (grey body, pink snout,
+  claws) and faces its digging direction when it burrows.
 
 ## Deployment
 
@@ -618,14 +710,23 @@ There are no automated tests; the game must be checked by hand:
   misbehaves.
 - Rockets skip their own shooter only for 0.25 s (`p.age>.25`); sheep/mines
   exclude `e!==p.shooter`. Keep shooter exclusion when adding projectiles.
-- `retreat=(wpn==='sheep'||wpn==='dragon'||wpn==='kamikaze'||aiOn[turnTeam])?0:3` —
-  AI, sheep, the dragon ball and kamikaze get no retreat window.
+- `retreat=(wpn==='sheep'||wpn==='skunk'||wpn==='dragon'||wpn==='kamikaze'||aiOn[turnTeam])?0:3` —
+  AI, sheep, the skunk, the dragon ball and kamikaze get no retreat window.
+- Replay safety: early-return `fire()` branches (saucer, xdmg) intentionally
+  skip `startRec()`, and restart/quit null `rec`/`rep`/`repC`/`lastMovie` — a
+  stale movie must never replay against a fresh match. The replay movie copies
+  the terrain canvas and re-stamps `rec.ev` events; never re-record during
+  `state==='replay'`.
 - Don't rename DOM ids — `$()` lookups and the `el` HUD map depend on them:
   `c, banner, tip, fire, jump, jet, weps, teams, time, wf, wtxt, xd, sd, rst, pause,
-  snd, fs, quit, menu, msg, cnt, lvl, hp, tt, ag, tms, sch, wnd, crt, barl, map, isl, b2, b1`,
-  plus the customization ids `tn0, tn1, tn2, tn3, tc0, tc1, tc2, tc3, grav, sdx, ret, fuel, sky, ter, wx, gfx, smute, wsel, bhelp, hclose, bshare, shareWin`
+  gear, quit, menu, msg, cnt, lvl, hp, tt, ag, tms, sch, wnd, crt, barl, map, isl, b2, b1`,
+  plus the customization ids `tn0, tn1, tn2, tn3, tc0, tc1, tc2, tc3, grav, sdx, ret, fuel, sky, ter, wx, bhelp, hclose, bshare, shareWin`
   and `help`, plus `custom`/`bcustom`/`cclose` (Customize sub-card),
-  plus `rot` (portrait rotate overlay).
+  plus `settings`/`bsettings`/`sclose` (Settings sub-card), plus the moved
+  settings ids `fs, gfx, smute, wsel` and `hap, radar, aut, iface` (never `ui`
+  — that is the overlay container) and the slider
+  outputs `hpv, ttv, wndv`, plus `replay` (🎬 button) and
+  `rot` (portrait rotate overlay).
 - Team names feed `#msg` via `innerHTML` on the game-over screen — always pass
   them through `esc()`. Everywhere else they go through `textContent`.
 - Keep `index.html` a single file. If it grows, tighten code — don't split.
