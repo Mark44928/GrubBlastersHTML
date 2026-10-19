@@ -94,6 +94,8 @@ label.crow{cursor:pointer}
 @media(hover:hover){.crow select:hover{border-color:rgba(255,203,61,.55)}.nbtns button:hover{filter:brightness(1.12)}}
 body.pc .crow select,body.pc .nbtns button{cursor:pointer}
 .hint{font-size:13px!important;opacity:.65!important;max-width:420px;line-height:1.45}
+#soon{font-size:13px!important;color:#ffd166!important;opacity:1!important;margin:2px 0 12px!important;letter-spacing:.3px;animation:soonGlow 2.4s ease-in-out infinite}
+@keyframes soonGlow{0%,100%{text-shadow:0 0 6px rgba(255,209,102,.3)}50%{text-shadow:0 0 14px rgba(255,209,102,.9)}}
 #help,#custom{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(5,12,30,.8);backdrop-filter:blur(6px);z-index:9;padding:14px}
 #help.hide,#custom.hide{display:none}
 #help .card{text-align:left;width:min(560px,94vw)}
@@ -140,6 +142,7 @@ body.pc #c{cursor:crosshair}
   <button class="big alt" id="bcustom">🎨 Customize</button>
   <button class="big alt" id="bhelp">❓ Help & Controls</button>
   <button class="big alt" id="bshare">📣 Share this game</button>
+  <p id="soon">💥 <b>2.0.0 — The Exploding Feature Update</b> · coming next Wednesday!</p>
   <p class="hint">Tap or drag the map to aim · hold FIRE to charge · double-tap jump to backflip!</p>
 </div></div>
 <div id="help" class="hide"><div class="card">

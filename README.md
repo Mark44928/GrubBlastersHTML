@@ -11,6 +11,8 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 
 **Play it now:** https://mark44928.github.io/GrubBlastersHTML/
 
+**Coming soon:** 💥 **2.0.0 — The Exploding Feature Update** — landing next Wednesday!
+
 ## Features
 
 - Local hot-seat play for 2–4 teams, or fight the computer (Baby / Easy / Normal / Hard / Brutal) — your teams always face an equal number of CPU teams (4 teams = 2 vs 2)

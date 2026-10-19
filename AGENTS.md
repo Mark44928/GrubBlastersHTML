@@ -68,7 +68,9 @@ logical canvas, with a fuel-limited jetpack for mobility.
 
 1. `<style>` — all CSS (HUD, buttons, menu, safe-area insets).
 2. DOM UI: `#c` canvas, `#ui` overlay (`#top` team HUD, `#mid` timer + wind,
-   `#bottom` controls) plus `#banner`, `#tip`, the `#menu` start card, and the
+   `#bottom` controls) plus `#banner`, `#tip`, the `#menu` start card (carries
+   a temporary promotional `#soon` 2.0.0 teaser line — remove once 2.0.0
+   ships), and the
    `#help` / `#custom` overlays (Help, Customize sub-card).
 3. `<script>` — everything else, `'use strict'`.
 
