@@ -46,7 +46,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Optional aim guide dotting the predicted path of your bazooka while you charge
 - Configurable turn timer (20 / 30 / 45 / 60 s)
 - Red worm names when health runs low; victory confetti on the winner
-- Four random sky themes (day, sunset, night, dawn) and four terrain themes (grass, desert, snow, rock)
+- Four sky themes (day, sunset, night, dawn) — Auto rolls one per match, Real Time follows your device clock — and four terrain themes (grass, desert, snow, rock)
 - Native system fonts and parallax clouds for a clean, pretty look
 - Procedural sound effects synthesized with Web Audio — no audio files
 - Pause, mute (persisted), and fullscreen buttons; settings persist in localStorage
@@ -64,7 +64,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - After firing you get a short retreat window; press FIRE during it to skip it and end your turn early.
 - Airstrike, teleport, the homing missile, the magic bullet, and lightning arm a map target first — tap the map, then press FIRE.
 - Release the sheep and it wanders on its own, blowing up on the first worm it touches (or after 8 s); press FIRE again to detonate it on command. The dragon ball bounces on the same FIRE-to-detonate rule (it also blows after six bounces).
-- The banana bomb bursts into five bananas that go off one after another; the mole bomb tunnels through rock in a dead-straight line in the direction you fired it and detonates when it comes back out. It also blows after 5 seconds or at the water line.
+- The banana bomb bursts into five bananas that go off one after another; the mole bomb tunnels through rock in a dead-straight line in the direction you fired it and detonates the moment it finishes digging and pokes out of the rock. It also blows on a worm, after 5 seconds, or at the water line.
 - The hammer smacks a nearby enemy hard and sends them flying — knockback can drown a worm.
 - Drop a mine and walk away: it arms after 2 seconds, waits for any worm to come close, and survives between turns. Shoot one to set off a chain reaction. Armed mines are solid — but walking close or landing on one still trips the trigger first.
 - The weapon shelf opens as a panel listing every weapon with icon, name and ammo; it follows your selection, and keyboard 1–7 maps to the first seven entries.
@@ -116,11 +116,11 @@ Ammo below is for the Normal scheme. **Greedy** makes every weapon unlimited, **
 | Magic Bullet | 1 per team | Mark a target, then charge it like a bazooka — the bullet spirals a path to the mark and erupts with a Holy-Grenade-sized blast (~100 HP at center) |
 | Banana Bomb | 1 per team | 3 s fuse; erupts into five bananas that burst in sequence |
 | Dragon Ball | 1 per team | Bounces wildly with huge knockback; press FIRE to detonate it (or after six bounces) |
-| Mole Bomb | 2 per team | Tunnels in a dead-straight line along its firing direction; explodes when it emerges, on a worm, after 5 s, or at the water line |
+| Mole Bomb | 2 per team | Tunnels in a dead-straight line along its firing direction; explodes the moment it finishes digging and pokes out of the rock, on a worm, after 5 s, or at the water line |
 | Lightning | 2 per team | Pick a target; five bolts crash down and strike anything in their path |
 | Flying Saucer | 1 per team | Board it with FIRE for the turn — fuel-limited flight with stronger jets that even works underwater (🚀 to lift, walk pad to steer); FIRE again to land (Hedgewars-style) |
 | Minigun | 1 per team | A rapid 16-shot spray of instant hitscan bullets with spread |
-| Kamikaze | 2 per team | Your worm launches on a suicidal charge, digging in a dead-straight line through terrain; it detonates on the first worm it meets, at the water, or after ~2 s — the kamikaze worm never survives |
+| Kamikaze | 2 per team | Your worm launches a suicidal charge — aim the direction first and it drills a dead-straight tunnel that way (point it up to dig diagonally); it detonates on the first worm it meets, at a map border, at the water, or after ~2 s — the kamikaze worm never survives |
 | 1.5x Damage | 2 per team | Multiplies all damage you deal (and your explosion knockback) by 1.5 for the rest of the turn — stacks with nothing else, doesn't end your turn (Hedgewars-style) |
 
 Crates can refill dynamite, airstrike, teleport, homing missile, bunker buster, or magic bullet, or grant an extra sheep, mine, holy grenade, cluster bomb, uzi, blowtorch, minigun, kamikaze or 1.5x damage.
@@ -135,7 +135,7 @@ python -m http.server
 
 ## Tech
 
-Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 115 KB in total.
+Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 117 KB in total.
 
 ## License
 

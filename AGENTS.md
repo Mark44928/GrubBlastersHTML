@@ -104,8 +104,11 @@ logical canvas, with a fuel-limited jetpack for mobility.
 - A `Uint8Array mask` (W×H) is rebuilt from alpha>100; `solid(x,y)` reads it.
 - `crater(x,y,r)` cuts the canvas (dark rim + destination-out) and zeroes the
   mask — it is the ONLY explosion-style terrain change. `tunnel(x,y,r)` is the
-  rim-less variant (destination-out + mask only, no scorch ring) used by the
-  mole and blowtorch for clean continuous digs.
+  rim-less variant (destination-out + mask only, no scorch ring);
+  `tunnelSeg(x0,y0,x1,y1,r)` is its capsule form (one round-cap
+  destination-out stroke plus a capsule mask clear) used by the kamikaze,
+  mole and blowtorch so continuous digs are smooth tubes, never chains of
+  circles.
 - `hit(x,y)` tests a 14-point worm hitbox (`PTS`, a coffin silhouette ~9 px wide
   × 16 px tall — the real Worms mask, narrower than the drawn sprite) against
   terrain; `normalAt()` estimates bounce normals from the mask;
@@ -158,7 +161,9 @@ logical canvas, with a fuel-limited jetpack for mobility.
   (light .5 / normal 1 / storm 1.75).
 - `inp` = walk/aim booleans (+`jet`). `aimDrag` = map-drag aiming. `paused` (`helpWasPaused`
   remembers it while the Help overlay is open). `jumpT` = timestamp of the last
-  jump, used for the double-tap backflip. `jetSndT` throttles the thruster SFX.
+  jump, used for the double-tap backflip. `jetSndT` throttles the thruster SFX;
+  `walkSndT` throttles the footstep SFX (`walk()` plays `SFX.step` at most
+  every 170 ms and only when the worm actually moved).
 - `lastWpn[team]` = per-team weapon memory; `target` =
   chosen spot for targeted weapons; `wepList()` = active shelf (filtered to
   `bazooka` only in Bazooka Only scheme). `dmgBoost` = 1.5x Damage armed for
@@ -176,11 +181,13 @@ logical canvas, with a fuel-limited jetpack for mobility.
   drain `SAU_DRAIN=38`/s — and the drown check is skipped so the craft can fly
   underwater; running dry mid-water drowns the worm. Draws a saucer body
   (`w.sau>0`), a cyan thruster beam (`w.jet`) and a cyan fuel bar.
-- Kamikaze: `w.kam` (seconds left) + `w.kamDir` drive a suicidal charge inside
-  `stepWorm()` — vx `kamDir*380`, vy locked 0 (a dead-straight horizontal line,
-  as in real Worms), rim-less `tunnel()` trail,
-  stops on any worm (`wormHit` pad 3), bounds, `WATER-4` or timeout, then
-  `explode(r 52 dmg 45)` and `killWorm()` guarantees the kamikaze worm dies.
+- Kamikaze: `w.kam` (seconds left) + `w.kdx`/`w.kdy` (unit vector from the aim
+  angle — real Worms: "aim the worm in the direction you want to go") drive a
+  suicidal charge inside `stepWorm()` — vx/vy `kdx/kdy*380`, a dead-straight
+  gravity-free line along whatever direction you aimed, smooth rim-less
+  `tunnelSeg()` trail, stops on any worm (`wormHit` pad 3), bounds (including
+  off the top), `WATER-4` or timeout, then `explode(r 52 dmg 45)` and
+  `killWorm()` guarantees the kamikaze worm dies.
   No retreat (`retreat` expression includes `kamikaze`).
 - Explosive barrels: `barrels[]` = `{x,y,dead,vy}` (built by `buildBarrels()`,
   skipped when `barrelsOn` is off; count 5+W/700). Solid to worms
@@ -269,7 +276,7 @@ early-return trick for the damage buff.
 | `sheep` | Wanders (`dir` flips at walls), detonates on an enemy <18 px or 8 s fuse; FIRE detonates on command; ignores its shooter |
 | `cow` | Herd of 3 released one at a time (0.35 s apart, each moos as it appears) marching straight at 95 px/s; explodes on any worm except the shooter (own team included), a >6 px wall, the map edge, or its 10 s fuse; splashes in water; no manual detonation |
 | `xdmg` | Utility: spends ammo, sets `dmgBoost`, returns early — no settle, no turn end |
-| `kamikaze` | Sets `w.kam=2.2` / `kamDir`; the charge, digs and explosion live in `stepWorm()` (see Core state) |
+| `kamikaze` | Sets `w.kam=2.2` and the aim vector `w.kdx`/`w.kdy`; the charge, digging and explosion live in `stepWorm()` (see Core state) |
 | `minigun` | Rapid hitscan volley via the shared `shots/shotT/shotCfg` machinery: 16 shots, dmg 6, spread .09, 0.07 s spacing |
 | `hammer` | Melee check 42 px ahead, knockback vx 380 / vy −260, 30 dmg |
 | `mine` | Solid to worms once armed (pad 8 proximity always trips before the ±5/±6 block); arms after 2 s, trigger <17 px, persists across turns, bounces off worms and barrels, explodes when caught in another blast |
@@ -282,7 +289,7 @@ early-return trick for the damage buff.
 | `magic` | Superweapon (1/team): targeted + charged; accelerates 140→700 px/s, ~80 px straight launch then steers ≤4.5 rad/s at the mark with no gravity/wind and flies under water; detonates within 20 px of the mark, on contact, or after 9 s with a holy-sized blast (r 88 dmg 85, ~100 HP at center) |
 | `banana` | 3 s fuse lob; `splitBanana()` fires an r 64 dmg 66 blast then 5 staggered `bomblet`s (`ban:true`, fuses .45–1.6 s) |
 | `dragon` | Very bouncy (`bn .82`/`fr .94`), no retreat; `curDet` + FIRE detonates it (`detonateProj`), 6 bounce `taps` also blow it; `kb 1.6` knockback multiplier (explode's 6th arg) |
-| `mole` | On its first ground contact it locks its impact direction (`p.dux`/`p.duy`) and drills in a dead-straight line at a constant 150 px/s with gravity disabled — tunneling through rock (`p.did`/`p.burrow`); the burrow block stamps rim-less r 9 `tunnel()` discs every 4 px — trailing ≥10 px behind the head so the mole's own `solid()` emerge check stays valid — and kicks up dirt particles; emerges when solid-free for 2 px (carving its exit hole), then the next contact explodes it; any worm contact explodes it, as does a 5 s fuse or crossing the water line (explosion r 52 dmg 62) |
+| `mole` | On its first ground contact it locks its impact direction (`p.dux`/`p.duy`) and drills in a dead-straight line at a constant 150 px/s with gravity disabled — tunneling through rock (`p.did`/`p.burrow`); the burrow block stamps smooth rim-less r 9 `tunnelSeg()` capsules — trailing ≥10 px behind the head so the mole's own `solid()` emerge check stays valid — and kicks up dirt particles; explodes the moment it finishes digging and pokes out (solid-free for 2 px); any worm contact explodes it, as does a 5 s fuse or crossing the water line (explosion r 52 dmg 62) |
 | `lightning` | Targeted; `doLightning` queues 5 `pend` entries with `lit:true`; `strikeLit` scans down for a worm (`wormHit` pad 2) or solid and explodes r 30 dmg 40, drawing a `bolts` jagged bolt with thunder SFX |
 | `saucer` | Movement utility, not a projectile: FIRE boards it (spends ammo, `w.sau=SAU_F`, early `return` — never sets `settle`, never ends the turn); FIRE again lands. Flight physics are in `stepWorm` (SAU_T thrust, SAU_DRAIN, rise cap −430, lateral 460/±260); the drown check is skipped while `w.sau>0` so it can fly underwater (running dry there drowns), and `startTurn()` zeroes `sau` |
 
@@ -365,7 +372,9 @@ rendering.
 - Backflip: `jump()` checks `now-jumpT<350` while airborne and flips
   (`w.flip=1`, `w.lowFlip=0`, backwards `vx=-dir*120`, `vy=-330` — higher than a
   normal jump); a third tap within the window flattens it into the low backflip
-  (`w.lowFlip=1`, `vy≥-200`). `stepWorm` decays `w.flip` (faster when low),
+  (`w.lowFlip=1`, `vy≥-200`). A jump plays `SFX.jump` (springy boing); both
+  flip variants play the distinct `SFX.backflip` flourish. `stepWorm` decays
+  `w.flip` (faster when low),
   `drawWorm` rotates by `(1-w.flip)*-6.283*w.dir` (true backward somersault).
   Keep the flip cosmetic-only (it must not alter damage/terrain).
 - Help overlay (`#help`) is opened by `toggleHelp()`, which pauses the sim and
@@ -385,7 +394,7 @@ rendering.
 | `gb_guide` | aim guide `'1'`/`'0'` | off |
 | `gb_mute` | mute `'1'`/`'0'` | off |
 | `gb_tn0`–`gb_tn3` | team names (≤12 chars) | RED / BLUE / GREEN / GOLD |
-| `gb_sky` | sky theme index, −1 = random | −1 |
+| `gb_sky` | sky theme index, −1 = random, 4 = Real Time (device clock) | −1 |
 | `gb_ter` | terrain theme index, −1 = random | −1 |
 | `gb_wx` | weather 0 clear / 1 rain / 2 snow, −1 = random | −1 |
 | `gb_low` | low graphics `'1'`/`'0'` | off |
@@ -478,11 +487,13 @@ There are no automated tests; the game must be checked by hand:
   five bananas that burst in sequence; the dragon ball bounces wildly and
   blows on FIRE (or after six bounces) with extra knockback; the mole bomb
   tunnels through rock in a dead-straight line along its firing direction,
-  exploding when it emerges
-  and hits something, on a worm, after 5 s, or at the water line; lightning strikes five
+  exploding the moment it finishes digging and pokes out of the rock, on a
+  worm, after 5 s, or at the water line; lightning strikes five
   jagged bolts at the target, hitting worms above cover; minigun sprays 16
-  hitscan bullets; kamikaze digs straight through terrain, detonating on the
-  first worm and always killing the kamikaze worm; 1.5x Damage arms for the
+  hitscan bullets; kamikaze charges dead-straight along the direction you
+  aimed (point it up to drill diagonally through a hill), detonating on the
+  first worm, a map border or timeout, and always killing the kamikaze worm
+  with a smooth tube behind it; 1.5x Damage arms for the
   turn without ending it (HUD shows 💪 and damages read 1.5×).
 - Barrels: shoot one — it erupts and chains into mines and nearby barrels;
   jump onto one (solid platform, 22 px tall — too high to walk up) and blast
@@ -543,11 +554,13 @@ There are no automated tests; the game must be checked by hand:
 
 ## Pitfalls (things that have bitten us)
 
-- Digs (mole, blowtorch) must stamp `tunnel()`, never `crater()`: each crater
-  disc paints a dark scorch ring, so a chain of them reads as a "path of
-  circles" through the rock instead of a clean tunnel. The mole's trail loop
-  must also start at `Math.min(4,lim)` — a fixed `s=4` start carves nothing
-  once slow digging drops the mole below ~4 px per frame.
+- Digs (mole, blowtorch, kamikaze) must stamp `tunnelSeg()`/`tunnel()`, never
+  `crater()`: each crater disc paints a dark scorch ring, so a chain of them
+  reads as a "path of circles" through the rock instead of a clean tunnel.
+  Stamp one `tunnelSeg()` capsule per frame between the old and new position —
+  never per-sample discs — and keep the mole's trail ≥10 px behind the head
+  (`lim=md-10`): carving up to the head itself makes the `solid()` emerge
+  check fail and the mole never surfaces.
 - `killWorm` must set `w.hp=0` — drowned / wither-killed worms otherwise show
   ghost HP in the team HUD bars.
 - The worm mask is a deliberately narrow 9×16 coffin (real Worms fidelity):
