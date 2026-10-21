@@ -415,6 +415,8 @@ const WEP=[{id:'bazooka',ico:'🚀',n:'Bazooka'},{id:'grenade',ico:'💣',n:'Gre
 const WEPID=new Set(WEP.map(w=>w.id));
 const VALS=[-1,0,1,2,3,4,5,6,8,10];
 const TARGETED=['airstrike','teleport','homing','magic','lightning','carpet','nuke','pigeon','donkey'];
+const GUIDE_V={bazooka:p=>120+p*700,bunker:p=>80+p*600,grenade:p=>80+p*620,holy:p=>80+p*620,cluster:p=>80+p*640,banana:p=>70+p*600,dragon:p=>60+p*380,mole:p=>80+p*600,napalm:p=>70+p*560,bundle:p=>60+p*520,magic:p=>140+p*560,homing:p=>90+p*430,sticky:p=>70+p*260,rubber:p=>80+p*280};
+const GUIDE_WIND={bazooka:1,bunker:1};
 const AIMLESS=['dynamite','mine','sheep','cow','firepunch','skunk','saucer','xdmg','invuln','parachute','prod','suicide','skip','shield','earthquake','vampire','girder','vacuum'];
 const CHARGE=['bazooka','grenade','holy','cluster','bunker','homing','magic','banana','dragon','mole','napalm','bundle','sticky','rubber'];
 const DIFF=[{n:'Baby',an:.3,pn:.32,thr:180},{n:'Easy',an:.16,pn:.16,thr:130},{n:'Normal',an:.06,pn:.07,thr:70},{n:'Hard',an:.015,pn:.02,thr:40},{n:'Brutal',an:.005,pn:.008,thr:25}];
@@ -1519,9 +1521,9 @@ function simBaz(sx,sy,vx,vy){
   }
   return{x,y};
 }
-function arcPoints(w,dx,dy,v){
+function arcPoints(w,dx,dy,v,wn){
   let x=w.x+dx*14,y=w.y-2+dy*14,vx=dx*v,vy=dy*v;const pts=[],dt=1/60;
-  for(let i=0;i<420;i++){vx+=wind*4*dt;vy+=GV*dt;x+=vx*dt;y+=vy*dt;if(x<-50||x>W+50||y>WATER||solid(x,y))break;if(i%4===0)pts.push([x,y])}
+  for(let i=0;i<420;i++){if(wn)vx+=wind*4*dt;vy+=GV*dt;x+=vx*dt;y+=vy*dt;if(x<-50||x>W+50||y>WATER||solid(x,y))break;if(i%4===0)pts.push([x,y])}
   return pts;
 }
 function planShot(w,tg,dir){
@@ -2012,8 +2014,8 @@ function draw(){
       ctx.strokeStyle='#ffe14a';ctx.lineWidth=2;const cx=w.x+dx*70,cy=w.y-2+dy*70;
       ctx.beginPath();ctx.arc(cx,cy,8,0,6.283);ctx.moveTo(cx-13,cy);ctx.lineTo(cx+13,cy);ctx.moveTo(cx,cy-13);ctx.lineTo(cx,cy+13);ctx.stroke();
     }
-    if(guide&&wpn==='bazooka'){
-      const pts=arcPoints(w,dx,dy,120+Math.max(power,.05)*700);
+    if(guide&&GUIDE_V[wpn]){
+      const pts=arcPoints(w,dx,dy,GUIDE_V[wpn](Math.max(power,.05)),GUIDE_WIND[wpn]);
       for(let k=0;k<pts.length;k++){ctx.globalAlpha=Math.max(.06,.55-k/pts.length*.45);ctx.fillStyle='#ffe14a';ctx.beginPath();ctx.arc(pts[k][0],pts[k][1],2.2,0,6.283);ctx.fill()}
       ctx.globalAlpha=1;
     }
