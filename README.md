@@ -135,7 +135,7 @@ Ammo below is for the Normal scheme. **Greedy** makes every weapon unlimited, **
 | Dragon Ball | 1 per team | Bounces wildly with huge knockback; press FIRE to detonate it (or after six bounces) |
 | Mole Bomb | 2 per team | Tunnels in a dead-straight line along its firing direction; explodes the moment it finishes digging and pokes out of the rock, on a worm, after 5 s, or at the water line |
 | Lightning | 2 per team | Pick a target; five bolts crash down and strike anything in their path |
-| Flying Saucer | 1 per team | Board it with FIRE for the turn — fuel-limited flight with stronger jets that even works underwater (🚀 to lift, walk pad to steer); FIRE again to land (Hedgewars-style) |
+| Flying Saucer | 1 per team | Board it with FIRE for the turn — fuel-limited flight with stronger jets that even works underwater (🚀 to lift, walk pad to steer); FIRE again to land — you glide down and take no fall damage (Hedgewars-style) |
 | Minigun | 1 per team | A rapid 16-shot spray of instant hitscan bullets with spread |
 | Kamikaze | 2 per team | Your worm launches a suicidal charge — aim the direction first and it drills a dead-straight tunnel that way (point it up to dig diagonally); it detonates on the first worm it meets, at a map border, at the water, or after ~2 s — the kamikaze worm never survives |
 | 1.5x Damage | 2 per team | Multiplies all damage you deal (and your explosion knockback) by 1.5 for the rest of the turn — stacks with nothing else, doesn't end your turn (Hedgewars-style) |
@@ -154,7 +154,7 @@ Ammo below is for the Normal scheme. **Greedy** makes every weapon unlimited, **
 | Vampire | 2 per team | Melee strike that drains 35 HP from a nearby enemy and heals you by the same amount |
 | Sticky Bomb | 2 per team | Lobbed bomb that sticks on first contact and detonates after 3.5 s |
 | Rubber Grenade | 2 per team | Bouncy grenade with near-perfect restitution — ricochets wildly before blowing (4 s fuse, countdown shown) |
-| Girder | 2 per team | Places a solid 80×8 wooden platform — worms standing in the way are never trapped inside it |
+| Girder | 2 per team | Places a solid 80×8 wooden platform where you are aiming, lifted clear of the ground — worms standing in the way are never trapped inside it |
 | Concrete Donkey | 1 per team | Tap the map to drop a concrete donkey from the sky — it smashes down to the waterline, carving one clean straight shaft, hammering every worm in the column, shaking nearby worms loose and setting off crates and barrels on the way (your own team is spared) |
 | Crate Vacuum | 2 per team | Pulls every live supply crate toward your worm — great for denying the enemy |
 
@@ -170,7 +170,7 @@ python -m http.server
 
 ## Tech
 
-Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 201 KB in total.
+Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 202 KB in total.
 
 ## License
 

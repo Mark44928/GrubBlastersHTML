@@ -493,7 +493,7 @@ All reads wrapped in try/catch (private-mode safe). 30+ keys. See full table in 
 13. **Jetpack gated in `stepWorm()`** — human: `inp.jet && !aiOn[turnTeam]`, AI: `w.aiJet>0`. Fuel refilled per team in `startTurn()`.
 14. **`startTurn()` re-clamps `wpn`** from `lastWpn` — schemes can remove weapons.
 15. **`lastTick` must reset to 99** in `startTurn()` or countdown ticker misbehaves.
-16. **Rockets skip shooter for 0.25s** (`p.age>.25`); sheep/mines exclude `e!==p.shooter`.
+16. **Rockets skip shooter for 0.25s** (`p.age>.25`); sheep and cows exclude `e!==p.shooter`. **Mines do NOT** — WA lets you blow yourself up on your own mine, so the mine trigger tests every worm, yours included.
 17. **`retreat` expression** — AI, sheep, skunk, dragon, kamikaze, suicide get no retreat. Parachute returns before this line.
 18. **Replay safety** — early-return `fire()` branches skip `startRec()`. Restart/quit null `rec`/`rep`/`repC`/`lastMovie`.
 19. **Digs must use `tunnelSeg()`/`tunnel()`**, never `crater()` — crater discs paint scorch rings. Keep mole trail ≥10px behind head (`lim=md-10`).
@@ -535,6 +535,13 @@ All reads wrapped in try/catch (private-mode safe). 30+ keys. See full table in 
 51. **The death feed must show every death** — `killWorm()` only pushed a feed entry when `by!=null&&by!==w.team`, so drowned worms (and suicides) never appeared in the ☠ feed. Unattributed deaths get their own entry (drowned / went out with a bang) without touching the kill stats.
 52. **Utilities that need a spot must be in `TARGETED`** — the concrete donkey is dropped from the sky at the marked spot, not at the shooter's feet; `AIMLESS` weapons ignore the tap, so a targeted weapon left in `AIMLESS` can never be aimed.
 53. **Worm HP has no upper cap** — health crates and the vampire can push `w.hp` ABOVE `maxHP` (start HP), like Worms Armageddon's health-beyond-base healing. Never clamp `w.hp` to `maxHP`; the team HUD bar must clamp its width (`Math.min(100, s/(perTeam*maxHP)*100)`). The HP slider spans 50–500 and stored values are floored at 50 only — no `Math.min(200,...)`.
+55. **A charge belongs to whoever started it** — `startCharge(src)` records `chargeHuman`/`chargeSrc`; `releaseFire(src)` refuses when the charge is the AI's (`chargeHuman` false) or the release comes from the other device. Without this the player can hijack the CPU's charge and fire its shot at partial power.
+56. **Barrel and oil-drum blasts must carry the team** — `explode()` pushes `{x,y,oil,by}` into `barFx`; the drain explodes with `b.by`. A `null` team means no kill credit and no kill-feed entry for a 60-damage barrel kill.
+57. **The AI must solve with the weapon's own muzzle speed** — `planShot(w,tg,dir,wpn)` uses `GUIDE_V[wpn]`, never a hardcoded bazooka curve, or the AI's bunker shots solve for a shell it never fires.
+58. **Landing the saucer must not kill you** — on landing set `vy=0` and `para=true` so the worm glides down; otherwise a high flight ends in lethal fall damage.
+59. **A mine must not detonate twice** — `explode()` sets `p.struck` and queues the mine in `chainFx`, which drains after `updateProj`; the mine's own trigger must test `!p.struck` or it can fire again in the same frame.
+60. **`startTurn()` must always leave a playable state** — if the team has no living worm, call `endTurn()` instead of `return`; a bare `return` leaves `state='settle'` and the turn is consumed with nobody owning it.
+
 54. **Weapon damage is WA-fidelity, not balance** — grenade 50, holy 100, cluster 20 + 20×5, banana 75, shotgun 25×2, uzi 8×6, sheep/cow 75, dragon ball 30, mole 30, homing 50, pigeon 75, magic 100, dynamite/mine 75/50, kamikaze 30, suicide 30 + poison, blowtorch 15, donkey 100, airstrike/carpet 30 per bomb, barrel 60. See the Damage Baseline table. The aim-guide `GUIDE_V` map must mirror each weapon's real `fire()` speed — same source of truth, never a second hand-tuned table.
 
 ---
