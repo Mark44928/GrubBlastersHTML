@@ -415,7 +415,7 @@ const WEP=[{id:'bazooka',ico:'🚀',n:'Bazooka'},{id:'grenade',ico:'💣',n:'Gre
 const WEPID=new Set(WEP.map(w=>w.id));
 const VALS=[-1,0,1,2,3,4,5,6,8,10];
 const TARGETED=['airstrike','teleport','homing','magic','lightning','carpet','nuke','pigeon','donkey'];
-const GUIDE_V={bazooka:p=>120+p*700,bunker:p=>80+p*600,grenade:p=>80+p*620,holy:p=>80+p*620,cluster:p=>80+p*640,banana:p=>70+p*600,dragon:p=>60+p*380,mole:p=>80+p*600,napalm:p=>70+p*560,bundle:p=>60+p*520,magic:p=>140+p*560,homing:p=>90+p*430,sticky:p=>70+p*260,rubber:p=>80+p*280};
+const GUIDE_V={bazooka:p=>120+p*700,bunker:p=>80+p*600,grenade:p=>80+p*620,holy:p=>80+p*620,cluster:p=>80+p*620,banana:p=>80+p*620,dragon:p=>80+p*620,mole:p=>80+p*600,napalm:p=>80+p*620,bundle:p=>80+p*620,magic:p=>140+p*560,homing:p=>90+p*430,sticky:p=>80+p*620,rubber:p=>80+p*620};
 const GUIDE_WIND={bazooka:1,bunker:1};
 const AIMLESS=['dynamite','mine','sheep','cow','firepunch','skunk','saucer','xdmg','invuln','parachute','prod','suicide','skip','shield','earthquake','vampire','girder','vacuum'];
 const CHARGE=['bazooka','grenade','holy','cluster','bunker','homing','magic','banana','dragon','mole','napalm','bundle','sticky','rubber'];
@@ -1052,9 +1052,9 @@ function fire(){
   }
   else if(wpn==='mine'){useAmmo('mine');proj.push({type:'mine',x:w.x+w.dir*18,y:w.y-8,vx:w.dir*30,vy:-60,age:0,bn:.1,fr:.3,r:50,dmg:55,shooter:w});tip('🔴 Mine armed in 2s — stay clear!',2);SFX.thud()}
   else if(wpn==='holy'){useAmmo('holy');const v=80+power*620;proj.push({type:'holy',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:3,r:85,dmg:75,bn:.45,fr:.7,hr:8,shooter:w});SFX.launch()}
-  else if(wpn==='cluster'){useAmmo('cluster');const v=80+power*640;proj.push({type:'cluster',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:1.4,r:34,dmg:30,bn:.4,fr:.6,hr:6,shooter:w});SFX.shot()}
-  else if(wpn==='banana'){useAmmo('banana');const v=70+power*600;proj.push({type:'banana',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:3,r:64,dmg:66,bn:.35,fr:.6,hr:6,shooter:w});SFX.shot()}
-  else if(wpn==='dragon'){useAmmo('dragon');const v=60+power*380;const d={type:'dragon',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:12,r:70,dmg:55,kb:1.6,bn:.82,fr:.94,shooter:w};proj.push(d);curDet=d;SFX.launch()}
+  else if(wpn==='cluster'){useAmmo('cluster');const v=80+power*620;proj.push({type:'cluster',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:1.4,r:34,dmg:30,bn:.4,fr:.6,hr:6,shooter:w});SFX.shot()}
+  else if(wpn==='banana'){useAmmo('banana');const v=80+power*620;proj.push({type:'banana',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:3,r:64,dmg:66,bn:.35,fr:.6,hr:6,shooter:w});SFX.shot()}
+  else if(wpn==='dragon'){useAmmo('dragon');const v=80+power*620;const d={type:'dragon',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:12,r:70,dmg:55,kb:1.6,bn:.82,fr:.94,shooter:w};proj.push(d);curDet=d;SFX.launch()}
   else if(wpn==='mole'){useAmmo('mole');const v=80+power*600;proj.push({type:'mole',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:5,r:52,dmg:62,hr:6,shooter:w});SFX.launch()}
   else if(wpn==='uzi'){useAmmo('uzi');shots=6;shotT=0;shotD={dx,dy};shotCfg={r:10,dmg:12,spread:.07,delay:.12};SFX.shot()}
   else if(wpn==='torch'){useAmmo('torch');startRec();torchCut(w,dx,dy)}
@@ -1063,8 +1063,8 @@ function fire(){
   else if(wpn==='invuln'){useAmmo('invuln');cur.invuln=true;tip('🛡️ Invulnerable for the rest of this turn!',2.5);SFX.pick();updateWeps();charging=false;power=0;return}
   else if(wpn==='kamikaze'){useAmmo('kamikaze');w.kam=2.2;w.kdx=w.dir*Math.cos(w.aim);w.kdy=-Math.sin(w.aim);w.vx=w.kdx*380;w.vy=w.kdy*380;w.air=true;w.flip=0;tip('🎌 KAMIKAZE!',2);SFX.launch()}
   else if(wpn==='minigun'){useAmmo('minigun');shots=16;shotT=0;shotD={dx,dy};shotCfg={r:8,dmg:6,spread:.09,delay:.07};SFX.shot()}
-  else if(wpn==='napalm'){useAmmo('napalm');const v=70+power*560;proj.push({type:'napalm',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:2.2,r:46,dmg:34,bn:.35,fr:.55,hr:6,shooter:w});SFX.shot()}
-  else if(wpn==='bundle'){useAmmo('bundle');const v=60+power*520;proj.push({type:'bundle',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:2.6,r:30,dmg:20,bn:.22,fr:.4,hr:5,shooter:w});SFX.thud()}
+  else if(wpn==='napalm'){useAmmo('napalm');const v=80+power*620;proj.push({type:'napalm',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:2.2,r:46,dmg:34,bn:.35,fr:.55,hr:6,shooter:w});SFX.shot()}
+  else if(wpn==='bundle'){useAmmo('bundle');const v=80+power*620;proj.push({type:'bundle',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:2.6,r:30,dmg:20,bn:.22,fr:.4,hr:5,shooter:w});SFX.thud()}
   else if(wpn==='pigeon'){if(!target){tip('Tap the map to send the pigeon',2);return}useAmmo('pigeon');proj.push({type:'pigeon',x:w.x,y:w.y-14,vx:dx*260,vy:dy*260,age:0,r:40,dmg:70,shooter:w,tx:target.x,ty:target.y});SFX.coo()}
   else if(wpn==='carpet'){if(!target){tip('Tap the map to call the carpet bombers',2);return}doCarpet()}
   else if(wpn==='nuke'){if(!target){tip('Tap the map to target the nuke',2);return}doNuke()}
@@ -1075,8 +1075,8 @@ function fire(){
   else if(wpn==='shield'){useAmmo('shield');w.shield=true;tip('🛡️ '+w.name+' raises a shield',1.8);SFX.pick();charging=false;power=0;return}
   else if(wpn==='earthquake'){useAmmo('earthquake');for(const e of worms){if(!e.alive||e.team===w.team)continue;if(!e.air){damageWorm(e,30,w.team);e.vy=-220;e.air=true}}tip('🌍 Earthquake!',2);SFX.thud();rings.push({x:W/2,y:H-40,r0:40,r1:W*.6,t:0});shake=Math.max(shake,12);charging=false;power=0;state='settle';startRec();retreat=0;quiet=0;settleT=0;target=null;lastWpn[w.team]=wpn;updateWeps();return}
   else if(wpn==='vampire'){useAmmo('vampire');const hx=w.x+w.dir*18,hy=w.y-4;let hit=false;for(const e of worms){if(!e.alive||e.team===w.team||e.invuln)continue;if(Math.abs(e.x-hx)<22&&Math.abs(e.y-hy)<24){const hp0=e.hp,sh=e.shield;damageWorm(e,35,w.team);const dr=sh?0:Math.min(35,hp0);if(dr>0){w.hp+=dr;w.flash=.4;texts.push({x:w.x,y:w.y-40,t:1.6,txt:'🧛 +'+dr,c:'#d98bff'})}hit=true;break}}if(!hit)tip('🧛 Missed!',1.4);else SFX.hit();charging=false;power=0;state='settle';startRec();retreat=RETV[retIdx];quiet=0;settleT=0;target=null;lastWpn[w.team]=wpn;updateWeps();return}
-  else if(wpn==='sticky'){useAmmo('sticky');const dx=w.dir*Math.cos(w.aim),dy=-Math.sin(w.aim),sx=w.x+dx*14,sy=w.y-2+dy*14,v=70+power*260;const d={type:'sticky',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,r:34,dmg:40,bn:0,fr:0,fuse:3.5,shooter:w};proj.push(d);SFX.launch();charging=false;power=0;state='settle';startRec();retreat=0;quiet=0;settleT=0;target=null;lastWpn[w.team]=wpn;updateWeps();return}
-  else if(wpn==='rubber'){useAmmo('rubber');const v=80+power*280;const d={type:'rubber',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:4,r:30,dmg:28,bn:.92,fr:.96,shooter:w};proj.push(d);SFX.launch();charging=false;power=0;state='settle';startRec();retreat=0;quiet=0;settleT=0;target=null;lastWpn[w.team]=wpn;updateWeps();return}
+  else if(wpn==='sticky'){useAmmo('sticky');const dx=w.dir*Math.cos(w.aim),dy=-Math.sin(w.aim),sx=w.x+dx*14,sy=w.y-2+dy*14,v=80+power*620;const d={type:'sticky',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,r:34,dmg:40,bn:0,fr:0,fuse:3.5,shooter:w};proj.push(d);SFX.launch();charging=false;power=0;state='settle';startRec();retreat=0;quiet=0;settleT=0;target=null;lastWpn[w.team]=wpn;updateWeps();return}
+  else if(wpn==='rubber'){useAmmo('rubber');const v=80+power*620;const d={type:'rubber',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:4,r:30,dmg:28,bn:.92,fr:.96,shooter:w};proj.push(d);SFX.launch();charging=false;power=0;state='settle';startRec();retreat=0;quiet=0;settleT=0;target=null;lastWpn[w.team]=wpn;updateWeps();return}
   else if(wpn==='girder'){useAmmo('girder');startRec();const gx=Math.round((w.x+w.dir*60)/4)*4,gy=Math.round(w.y/4)*4+8;
     tctx.globalCompositeOperation='source-over';tctx.fillStyle='#6b4423';tctx.fillRect(gx-40,gy-4,80,8);tctx.fillStyle='#8b6433';tctx.fillRect(gx-40,gy,80,4);
     for(let j=gy-4;j<gy+4;j++)for(let i=gx-40;i<gx+40;i++){if(i<0||i>=W||j<0||j>=H)continue;if(worms.some(w=>w.alive&&i>w.x-5&&i<w.x+5&&j>w.y-9&&j<w.y+9))continue;mask[j*W+i]=1}
