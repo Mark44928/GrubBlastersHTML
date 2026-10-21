@@ -125,12 +125,12 @@ Ammo below is for the Normal scheme. **Greedy** makes every weapon unlimited, **
 | Invulnerable | 2 per team | Shields the active worm in a bubble for the rest of the turn — immune to damage, fall damage and poison, but NOT drowning or knockback |
 | Mine | 1 per team | Solid object; arms after 2 s; proximity trigger; chain-reacts |
 | Holy Grenade | 1 per team | 3 s fuse; colossal blast with a white flash and choir tone |
-| Cluster Bomb | 1 per team | Splits mid-air into four scattering bomblets |
+| Cluster Bomb | 1 per team | Splits mid-air into five scattering bomblets (main bomb + clusters each deal 20, exactly like Worms Armageddon) |
 | Uzi | 2 per team | Six-shot burst with spread; instant hitscan |
 | Blowtorch | 1 per team | Instantly cuts a short tunnel through terrain (and anyone in it) |
 | Homing Missile | 1 per team | Tap the map to mark a spot, then charge it like a bazooka and fire — it locks on and homes in, crashing into anything in the way |
 | Bunker Buster | 1 per team | Drills into the ground with three stacked blasts — great against dug-in worms |
-| Magic Bullet | 1 per team | Mark a target, then charge it like a bazooka — the bullet spirals a path to the mark and erupts with a Holy-Grenade-sized blast (≈85 HP at center) |
+| Magic Bullet | 1 per team | Mark a target, then charge it like a bazooka — the bullet spirals a path to the mark and erupts with a 100 HP blast |
 | Banana Bomb | 1 per team | 3 s fuse; erupts into five bananas that burst in sequence |
 | Dragon Ball | 1 per team | Bounces wildly with huge knockback; press FIRE to detonate it (or after six bounces) |
 | Mole Bomb | 2 per team | Tunnels in a dead-straight line along its firing direction; explodes the moment it finishes digging and pokes out of the rock, on a worm, after 5 s, or at the water line |
@@ -147,7 +147,7 @@ Ammo below is for the Normal scheme. **Greedy** makes every weapon unlimited, **
 | Skunk | 1 per team | Release it, then press FIRE to spray tall poisoned gas (wind carries it) — worms in the cloud are poisoned; FIRE again to detonate. It happily picks up crates on the way |
 | Parachute | 2 per team | Leap and drift down under a canopy — steer left/right, slow the fall with ▲ or dive with ▼, and land without fall damage; the turn continues, so pick a weapon and fire after landing |
 | Prod | 3 per team | Harmless poke that shoves a worm sideways and slightly up — perfect for nudging one into water or a mine |
-| Suicide Bomber | 2 per team | Sacrifices your worm to release a lingering poison cloud (the burst itself deals no damage); no retreat |
+| Suicide Bomber | 2 per team | Sacrifices your worm with a 30 HP blast and a lingering poison cloud, like Worms Armageddon's Suicide Bomber; no retreat |
 | Skip | Unlimited | Ends your turn immediately — the enemy calls you a coward |
 | Shield | 2 per team | Raises a bubble that absorbs the next hit you take (damage, fall damage, poison) — shatters on impact |
 | Earthquake | 1 per team | Shakes the ground — damages every enemy worm standing on solid ground (no crater) |

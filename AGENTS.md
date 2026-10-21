@@ -282,6 +282,25 @@ endTurn() → next living team → gameOver() if ≤1 team remains
 
 **Ammo:** `ammo[team]` object; missing keys = unlimited. Always use `useAmmo(id)`.
 
+### Damage Baseline (Worms Armageddon, 3-star power)
+
+Weapon damage follows WA's published default values (WA manual + Neoseeker W:A Weapon Guide tables). Do not "balance" these silently — a change here is a fidelity change.
+
+| Weapon | WA dmg | Weapon | WA dmg |
+|---|---|---|---|
+| Bazooka | 50 | Homing missile | 50 |
+| Grenade | 50 | Homing pigeon | 75 |
+| Cluster bomb | 20 + 20 × 5 clusters | Holy grenade | 100 |
+| Banana bomb | 75 (main + each banana) | Magic bullet | 100 |
+| Shotgun | 25 × 2 | Dynamite | 75 |
+| Uzi | ~8 × 6 | Mine | 50 |
+| Minigun | 6 × 16 | Sheep / Mad cow | 75 |
+| Fire punch | 30 | Dragon ball | 30 |
+| Kamikaze | 30 | Mole bomb | 30 |
+| Suicide bomber | 30 + poison 5/turn | Blowtorch | 15 per worm |
+| Airstrike | 30 per bomb (×5) | Carpet bomb | 30 per bomb |
+| Concrete donkey | 100 per worm hammered | Barrel | 60 |
+
 **Custom schemes:** `customs[]` in `gb_csch`, max 24 on load. `schAll()` = `SCH` + customs.
 
 ---
@@ -516,6 +535,7 @@ All reads wrapped in try/catch (private-mode safe). 30+ keys. See full table in 
 51. **The death feed must show every death** — `killWorm()` only pushed a feed entry when `by!=null&&by!==w.team`, so drowned worms (and suicides) never appeared in the ☠ feed. Unattributed deaths get their own entry (drowned / went out with a bang) without touching the kill stats.
 52. **Utilities that need a spot must be in `TARGETED`** — the concrete donkey is dropped from the sky at the marked spot, not at the shooter's feet; `AIMLESS` weapons ignore the tap, so a targeted weapon left in `AIMLESS` can never be aimed.
 53. **Worm HP has no upper cap** — health crates and the vampire can push `w.hp` ABOVE `maxHP` (start HP), like Worms Armageddon's health-beyond-base healing. Never clamp `w.hp` to `maxHP`; the team HUD bar must clamp its width (`Math.min(100, s/(perTeam*maxHP)*100)`). The HP slider spans 50–500 and stored values are floored at 50 only — no `Math.min(200,...)`.
+54. **Weapon damage is WA-fidelity, not balance** — grenade 50, holy 100, cluster 20 + 20×5, banana 75, shotgun 25×2, uzi 8×6, sheep/cow 75, dragon ball 30, mole 30, homing 50, pigeon 75, magic 100, dynamite/mine 75/50, kamikaze 30, suicide 30 + poison, blowtorch 15, donkey 100, airstrike/carpet 30 per bomb, barrel 60. See the Damage Baseline table. The aim-guide `GUIDE_V` map must mirror each weapon's real `fire()` speed — same source of truth, never a second hand-tuned table.
 
 ---
 
