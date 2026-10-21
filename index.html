@@ -1526,6 +1526,27 @@ function arcPoints(w,dx,dy,v,wn){
   for(let i=0;i<420;i++){if(wn)vx+=wind*4*dt;vy+=GV*dt;x+=vx*dt;y+=vy*dt;if(x<-50||x>W+50||y>WATER||solid(x,y))break;if(i%4===0)pts.push([x,y])}
   return pts;
 }
+function guideHoming(w,dx,dy,v,wpn,tx,ty){
+  let x=w.x+dx*14,y=w.y-2+dy*14,vx=dx*v,vy=dy*v,fly=0,t=0;const pts=[],dt=1/60;
+  const rate=wpn==='magic'?4.5:3,flyn=wpn==='magic'?80:150,tmax=wpn==='magic'?9:5.5,hr=wpn==='magic'?20:14;
+  for(let i=0;i<900;i++){
+    t+=dt;
+    if(Math.hypot(ty-y,tx-x)<hr)break;
+    if(t>=tmax)break;
+    const sp=Math.hypot(vx,vy)||1;
+    if(wpn==='homing'&&t>5.5)vy+=GV*dt;
+    fly+=sp*dt;
+    if(t<=5.5&&fly>flyn){
+      const ca=Math.atan2(vy,vx),wa=Math.atan2(ty-y,tx-x);
+      let da=wa-ca;while(da>3.1416)da-=6.2832;while(da<-3.1416)da+=6.2832;
+      const na=ca+Math.max(-rate*dt,Math.min(rate*dt,da));vx=Math.cos(na)*sp;vy=Math.sin(na)*sp;
+    }
+    x+=vx*dt;y+=vy*dt;
+    if(solid(x,y)||x<-50||x>W+50||y>WATER)break;
+    if(i%4===0)pts.push([x,y]);
+  }
+  return pts;
+}
 function planShot(w,tg,dir){
   let best={err:1e9,a:.7,p:.7};
   for(let a=.12;a<=1.4;a+=.04){
@@ -2014,8 +2035,9 @@ function draw(){
       ctx.strokeStyle='#ffe14a';ctx.lineWidth=2;const cx=w.x+dx*70,cy=w.y-2+dy*70;
       ctx.beginPath();ctx.arc(cx,cy,8,0,6.283);ctx.moveTo(cx-13,cy);ctx.lineTo(cx+13,cy);ctx.moveTo(cx,cy-13);ctx.lineTo(cx,cy+13);ctx.stroke();
     }
-    if(guide&&GUIDE_V[wpn]){
-      const pts=arcPoints(w,dx,dy,GUIDE_V[wpn](Math.max(power,.05)),GUIDE_WIND[wpn]);
+    if(guide&&GUIDE_V[wpn]&&((wpn!=='homing'&&wpn!=='magic')||target)){
+      const pw=Math.max(power,.05);
+      const pts=(wpn==='homing'||wpn==='magic')?guideHoming(w,dx,dy,GUIDE_V[wpn](pw),wpn,target.x,target.y):arcPoints(w,dx,dy,GUIDE_V[wpn](pw),GUIDE_WIND[wpn]);
       for(let k=0;k<pts.length;k++){ctx.globalAlpha=Math.max(.06,.55-k/pts.length*.45);ctx.fillStyle='#ffe14a';ctx.beginPath();ctx.arc(pts[k][0],pts[k][1],2.2,0,6.283);ctx.fill()}
       ctx.globalAlpha=1;
     }

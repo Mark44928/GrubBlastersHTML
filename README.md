@@ -53,7 +53,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Worms have opinions — they taunt during battle
 - Sudden death — Standard raises the sea from turn 16, Late from turn 25 (Off disables it), worms wither, and meteors start falling
 - Session scoreboard: wins shown live in the HUD, kills and damage in the game-over summary
-- Optional aim guide dotting the predicted path of every ballistic weapon you charge — bazooka, bunker buster, grenade, holy, cluster, banana, dragon, mole, napalm, bundle, magic and homing missiles, sticky and rubber bombs (wind bends the two rockets, like in the game itself)
+- Optional aim guide dotting the predicted path of every ballistic weapon you charge — bazooka, bunker buster, grenade, holy, cluster, banana, dragon, mole, napalm, bundle, magic and homing missiles, sticky and rubber bombs. Wind bends the two rockets like in the game itself, and the magic bullet and homing missile draw their actual curved homing path to your marked spot (no arc until a spot is marked — they can't be fired without one)
 - Configurable turn timer (10–60 s slider)
 - Red worm names when health runs low; victory confetti on the winner
 - Four sky themes (day, sunset, night, dawn) — Auto rolls one per match, Real Time follows your device clock — and four terrain themes (grass, desert, snow, rock)
@@ -170,7 +170,7 @@ python -m http.server
 
 ## Tech
 
-Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 200 KB in total.
+Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 201 KB in total.
 
 ## License
 
