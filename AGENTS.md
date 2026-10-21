@@ -44,7 +44,7 @@
 - **Version:** 2.0.0 (The Exploding Feature Update)
 - **File size:** ~182 KB (single file, no dependencies)
 - **Language:** Vanilla JavaScript (ES6+), HTML5, CSS3
-- **Target:** Mobile browsers (Android/iOS) + Desktop
+- **Target:** Mobile browsers (Android/iOS) + Desktop. Installable PWA: the manifest ships as an inline `data:application/manifest+json;base64` `<link>` (keeps Rule 1 intact); because a data URI has no base URL, `start_url`/`scope` are absolute (`https://mark44928.github.io/GrubBlastersHTML/`) — regenerate the data URI if the site URL ever changes.
 - **Canvas:** 2D context, logical pixels, DPR-capped at 2
 - **Audio:** Web Audio API (synthesized, no audio files)
 

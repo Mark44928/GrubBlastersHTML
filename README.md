@@ -15,6 +15,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 ## Features
 
 - Local hot-seat play for 2–4 teams, or fight the computer (Baby / Easy / Normal / Hard / Brutal) — your teams always face an equal number of CPU teams (4 teams = 2 vs 2)
+- Installable as an Android app: open the site in Chrome and tap "Add to Home screen" — it runs fullscreen and landscape like a native app
 - 2–8 worms per team with a starting-HP slider (50–500); health crates and the vampire can heal a worm above its starting HP, like Worms Armageddon
 - Weapon schemes: Normal, Greedy (every weapon unlimited), Pro Mode (scarce specials, no airstrike), and Bazooka Only — or build your own loadout with the 🔨 scheme editor, saved on the device and exportable / importable as JSON
 - Three map sizes — Standard, Wide, and Epic — so big armies never clutter
@@ -169,7 +170,7 @@ python -m http.server
 
 ## Tech
 
-Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 187 KB in total.
+Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 196 KB in total.
 
 ## License
 
