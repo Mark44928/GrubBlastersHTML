@@ -180,7 +180,7 @@ Grub Blasters was created by Mark44928 and launched in October 2026 as a single-
 
 The project grew through a series of tagged releases:
 
-- *Initial commit (Oct 2026)* — core engine: hot-seat, wind-blown destructible terrain, 13 weapons, aim guide, sudden death, procedural Web-Audio SFX.
+- **v1.0.0** — Initial release: local hot-seat, wind-blown destructible terrain, 13 weapons (including the Mad Cow herd), an aim guide, sudden death, and procedural Web-Audio SFX.
 - **v1.0.1** — Solid hitboxes on throwable weapons, optional Gemini AI (API key), left/right weapon navigation.
 - **v1.0.2** — Full customization suite (gravity, sudden-death timing, retreat time, jetpack fuel, team colors), straight kamikaze/mole digging.
 - **v1.0.3** — Aimable kamikaze, mole exit explosions, jump/backflip + footstep SFX, "Real Time" sky theme.

@@ -692,7 +692,7 @@ Add `console.log()` temporarily (remove before commit). Check browser DevTools.
 
 Grub Blasters was created by Mark44928 and launched October 2026 (repo created 2026-10-17) as a deliberately single, dependency-free HTML file — Worms-style artillery with procedural Web-Audio SFX, destructible terrain, and wind. It ships on GitHub Pages (https://mark44928.github.io/GrubBlastersHTML/) under MIT, and every release since was a tagged commit:
 
-- *Initial commit (Oct 2026)* — hot-seat, wind-blown destructible terrain, 13 weapons, aim guide, sudden death, procedural SFX.
+- v1.0.0 — Initial release: hot-seat, wind-blown destructible terrain, 13 weapons (incl. Mad Cow herd), aim guide, sudden death, procedural SFX.
 - v1.0.1 — Solid hitboxes, optional Gemini AI (API key), L/R weapon nav.
 - v1.0.2 — Full customization (gravity, sudden death, retreat, fuel, team colors), straight kamikaze/mole digging.
 - v1.0.3 — Aimable kamikaze, mole exit explosions, jump/backflip + footstep SFX, Real Time sky.
