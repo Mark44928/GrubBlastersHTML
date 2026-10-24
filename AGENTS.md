@@ -41,8 +41,8 @@
 
 - **Live:** https://mark44928.github.io/GrubBlastersHTML/
 - **Repo:** https://github.com/Mark44928/GrubBlastersHTML
-- **Version:** 2.0.0 (The Exploding Feature Update)
-- **File size:** ~182 KB (single file, no dependencies)
+- **Version:** 2.5.0 (The Evergreen Update)
+- **File size:** ~224 KB (single file, no dependencies)
 - **Language:** Vanilla JavaScript (ES6+), HTML5, CSS3
 - **Target:** Mobile browsers (Android/iOS) + Desktop. Installable PWA: the manifest ships as an inline `data:application/manifest+json;base64` `<link>` (keeps Rule 1 intact); because a data URI has no base URL, `start_url`/`scope` are absolute (`https://mark44928.github.io/GrubBlastersHTML/`) — regenerate the data URI if the site URL ever changes.
 - **Canvas:** 2D context, logical pixels, DPR-capped at 2
@@ -324,6 +324,8 @@ Painter's order per frame:
 
 - `hud()` updates DOM bars, clock, wind meter (clamped 50% width), tips.
 - Team chips built once per game by `buildTeams()`.
+- **High graphics (default):** detailed worm sprite (`drawWormHi`), high-detail terrain (grass fringes, strata, pebbles), layered sky + cached cloud sprite, gradient water with shimmer, `drawProjHi` glow/trails, richer fire/gas/props and a filmic vignette. Every upgrade gated on `!low` (glow/trails on `!low&&!med`).
+- **Medium graphics:** keeps detailed terrain, cloud sprites, fire/gas and the vignette (DPR still 2) but trims particle counts, glow halos, tracer glow, rain/snow density and the ground-splash debris count — `!med&&!low` gates the expensive extras.
 - **Low graphics:** caps DPR at 1, no clouds/leaves/fireflies/rain/snow/vignette, coarsens water mesh. Cosmetic only — must never change gameplay.
 
 ---
@@ -461,8 +463,8 @@ All reads wrapped in try/catch (private-mode safe). 30+ keys. See full table in 
 - [ ] 3-4 teams with dead teams → endTurn skips correctly.
 - [ ] Scheme deletion leaves empty editor (no ghost).
 - [ ] Import schemes round-trips.
-- [ ] Low graphics: resolution drops, weather/decor removed, gameplay identical.
-- [ ] Theme switch: all 7 themes render correctly.
+- [ ] Graphics toggle: High / Medium / Low — Low strips weather/decor, High keeps everything, Medium trims particle counts/glow for mid-range phones.
+- [ ] Theme switch: all 8 themes render correctly.
 - [ ] Resize/rotate: HUD safe areas, fullscreen toggle.
 
 ---
@@ -571,11 +573,21 @@ All reads wrapped in try/catch (private-mode safe). 30+ keys. See full table in 
 
 ### Projectiles
 - `updateProj(dt)` — projectile physics.
-- `drawProj(p)` — projectile rendering.
+- `drawProj(p)` — projectile rendering (calls `drawProjHi` in high mode first).
+- `drawProjHi(p)` — high-graphics overlay: additive muzzle flash, speed trail and type-specific glow (`PGLOW`).
+- `drawWater(t,lv)` — water rendering, gradient/shimmer in high mode.
 - `explode(x,y,r,dmg,by,kb)` — explosion.
 - `fire()` — weapon dispatch.
 - `startCharge()` — charge or fire.
 - `releaseFire()` — release charge.
+
+### Rendering
+- `draw()` — main draw loop: background, terrain, worms, props, projectiles, particles, weather, water, effects. High mode branches gated on `!low`.
+- `drawWorm(w)` — worm rendering; delegates to `drawWormHi` in high mode.
+- `drawWormHi(w,d)` — detailed worm sprite (team-tinted body, gradient, eyes, jet/saucer).
+- `drawFire(f)` / `drawGas(g)` — high-mode flames with shared gradient / gradient-free gas blobs.
+- `drawBarrel(b)` / `drawCrate(c)` / `drawGrave(g)` / `drawCloud(c)` — high-mode gradient/shaded versions.
+- `mkVig()` — filmic vignette (light leak + grain), recreated on resize/theme in high mode.
 
 ### Game Flow
 - `newGame(mode)` — new match.
@@ -655,11 +667,12 @@ Add `console.log()` temporarily (remove before commit). Check browser DevTools.
 - **Target:** 60 FPS on mid-range Android phones.
 - **Canvas pixels:** `innerWidth*dpr × innerHeight*dpr`, DPR capped at 2 (or 1 in low graphics).
 - **Particle cap:** 400 (200 in low). Prune at limit.
-- **Scenery:** clouds 4, leaves 12, rain 50, snow 50, fireflies 12 (0 in low).
+- **Scenery:** clouds 4, leaves 12, rain 50, snow 50, fireflies 12 (0 in low). Cloud sprites are cached to a single `cloudSprite` canvas in high mode.
 - **Terrain mask:** W×H Uint8Array (2.24 MB for 2800×800).
 - **Replay buffer:** 500 frames max (~25s at 20 Hz).
 - **No more than one heavy job at a time** (builds, dev server, tests).
 - **Memory:** ~1.5-1.8 GB available on target device. OOM killer will terminate.
+- **High-graphics cost:** `!low` adds per-frame gradients for water, fires, large particles, rings and projectiles, plus a cached cloud sprite and detailed terrain texture baked once into the terrain canvas; `!med` gates the highest-cost extras (projectile glow, tracer glow, particle glow halos, full particle counts). The fire renderer shares one flame gradient across all tongues and the gas renderer uses flat circles instead of per-blob gradients to keep frame time low; toggle to Medium for 60 FPS on mid-range phones, Low for older devices.
 
 ---
 
@@ -683,5 +696,5 @@ This AGENTS.md is the **single source of truth** for working on Grub Blasters. I
 
 ---
 
-*Last updated: 2026-10-20*
-*Grub Blasters v2.0.0 — The Exploding Feature Update*
+*Last updated: 2026-10-24*
+*Grub Blasters v2.5.0 — The Evergreen Update*
