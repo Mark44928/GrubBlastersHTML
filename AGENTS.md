@@ -684,11 +684,26 @@ Add `console.log()` temporarily (remove before commit). Check browser DevTools.
 - No external resources (fonts, images, scripts, audio files).
 - All rendering via Canvas 2D (no innerHTML with untrusted data except team names via `esc()`).
 - Share uses Web Share API or clipboard (no third-party services).
-- No eval, no Function constructor, no dynamic code execution.
+ - No eval, no Function constructor, no dynamic code execution.
 
 ---
 
+## History
+
+Grub Blasters was created by Mark44928 and launched October 2026 (repo created 2026-10-17) as a deliberately single, dependency-free HTML file — Worms-style artillery with procedural Web-Audio SFX, destructible terrain, and wind. It ships on GitHub Pages (https://mark44928.github.io/GrubBlastersHTML/) under MIT, and every release since was a tagged commit:
+
+- *Initial commit (Oct 2026)* — hot-seat, wind-blown destructible terrain, 13 weapons, aim guide, sudden death, procedural SFX.
+- v1.0.1 — Solid hitboxes, optional Gemini AI (API key), L/R weapon nav.
+- v1.0.2 — Full customization (gravity, sudden death, retreat, fuel, team colors), straight kamikaze/mole digging.
+- v1.0.3 — Aimable kamikaze, mole exit explosions, jump/backflip + footstep SFX, Real Time sky.
+- v2.0.0 — The Exploding Feature Update: smooth donkey shafts, uncapped HP, installable PWA + manifest, native share.
+- v2.0.1 — Aim guide for charged ballistics + per-weapon launch speeds.
+- v2.0.2 — Worms Armageddon damage-fidelity sweep + unified lob physics.
+- v2.0.3 — Bug sweep (mine double-detonation, barrel kill credit, saucer landing, charge ownership, AI aim solver, girder placement, AI stall, turn-time migration).
+- v2.5.0 — The Evergreen Update: Medium graphics tier + Everforest theme.
+
 ## Final Notes
+
 
 This AGENTS.md is the **single source of truth** for working on Grub Blasters. If you find a discrepancy between this file and the code, the code wins — but update this file to match. If you find a bug not documented here, add it to the Pitfalls section. If you add a feature, document it in the appropriate section. Keep this file current. Keep it accurate. Keep it brutal.
 

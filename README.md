@@ -174,6 +174,22 @@ python -m http.server
 
 Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 224 KB in total.
 
+## History
+
+Grub Blasters was created by Mark44928 and launched in October 2026 as a single-file, dependency-free HTML5 take on the Worms artillery formula. The entire game is one `index.html` with zero dependencies, runs in any modern browser, and is published to GitHub Pages at https://mark44928.github.io/GrubBlastersHTML/ under the MIT License.
+
+The project grew through a series of tagged releases:
+
+- *Initial commit (Oct 2026)* — core engine: hot-seat, wind-blown destructible terrain, 13 weapons, aim guide, sudden death, procedural Web-Audio SFX.
+- **v1.0.1** — Solid hitboxes on throwable weapons, optional Gemini AI (API key), left/right weapon navigation.
+- **v1.0.2** — Full customization suite (gravity, sudden-death timing, retreat time, jetpack fuel, team colors), straight kamikaze/mole digging.
+- **v1.0.3** — Aimable kamikaze, mole exit explosions, jump/backflip + footstep SFX, "Real Time" sky theme.
+- **v2.0.0 — The Exploding Feature Update** — Smooth concrete-donkey shafts, uncapped Worms-style HP, installable PWA (inline manifest) and native Add-to-Home-Screen/share.
+- **v2.0.1** — Aim guide for every charged ballistic weapon, per-weapon launch speeds.
+- **v2.0.2 — Fidelity Update** — Worms Armageddon damage sweep (grenade 50, holy 100, cluster 20×5, banana 75…) and unified lob-throw physics.
+- **v2.0.3** — Bug sweep: mine double-detonation, barrel kill credit, saucer landing safety, charge ownership, AI aim solver, girder placement, AI stall on empty ammo, legacy turn-time migration.
+- **v2.5.0 — The Evergreen Update** — A new Medium graphics tier between High and Low, and the Everforest interface theme.
+
 ## License
 
 MIT — free to use, modify, and share. See [LICENSE](LICENSE).
