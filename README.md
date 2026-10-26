@@ -6,11 +6,22 @@
 [![Single file HTML](https://img.shields.io/badge/single_file-HTML-5fd0ff?style=flat-square)](https://github.com/Mark44928/GrubBlastersHTML)
 [![Dependencies: 0](https://img.shields.io/badge/dependencies-0-brightgreen?style=flat-square)](https://github.com/Mark44928/GrubBlastersHTML)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
+[![CI](https://github.com/Mark44928/GrubBlastersHTML/actions/workflows/ci.yml/badge.svg)](https://github.com/Mark44928/GrubBlastersHTML/actions/workflows/ci.yml)
 
 Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built entirely as a single, dependency-free HTML file. Two to four teams of worms hurl explosives across procedurally generated, fully destructible terrain while the wind shifts every turn. Last team standing wins.
 
 **Play it now:** https://mark44928.github.io/GrubBlastersHTML/
 
+## Contents
+
+- [Features](#features)
+- [How to play](#how-to-play)
+- [Keyboard](#keyboard)
+- [Weapons](#weapons)
+- [Running locally](#running-locally)
+- [Tech](#tech)
+- [History](#history)
+- [License](#license)
 
 ## Features
 
@@ -167,8 +178,19 @@ Crates can refill dynamite, airstrike, teleport, homing missile, bunker buster, 
 No build step. Open `index.html` in any modern browser, or serve the folder:
 
 ```sh
-python -m http.server
+python -m http.server 8080
+# open http://localhost:8080
 ```
+
+Developer checks (Termux-first, no dependencies):
+
+```sh
+make check    # JS syntax + README size sync
+make serve    # local preview on :8080
+```
+
+`make check` extracts the inline game script and runs `node --check` on it, then
+verifies the "About N KB" line in this README matches `index.html`.
 
 ## Tech
 
