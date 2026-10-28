@@ -425,19 +425,19 @@ const PAL=['#ff5252','#3fa9ff','#7dff7d','#ffd54a','#d98bff','#3fe8c9','#ff9b3d'
 const SKYN=['Auto','Day','Sunset','Night','Dawn','Real Time'],GROUNDN=['Auto','Grass','Desert','Snow','Rock'],WXN=['Auto','Clear','Rain','Snow'],ISLN=['Off','1','2','3','4','5','6'];
 const NAMES=['Wiggles','Squirm','Slimer','Noodle','Inch','Gus','Wormy','Slick','Dirt','Pip','Bob','Mudge','Zig','Zag','Nibbles','Grub','Chomp','Digger','Slink','Roly','Mo','Curly','Fuzz','Spud','Tater','Critter','Squiggle','Doodle','Bugsy','Mort','Wrigley','Loopy'];
 const TAUNTS=['Take that!','Boom!','Nice one!','Ouch!','Whoops!','Eat dirt!','Lucky shot!','Ha!','Gotcha!','Watch out!','Incoming!'];
-const WEP=[{id:'bazooka',ico:'🚀',n:'Bazooka'},{id:'grenade',ico:'💣',n:'Grenade'},{id:'dynamite',ico:'🧨',n:'Dynamite'},{id:'shotgun',ico:'🔫',n:'Shotgun'},{id:'airstrike',ico:'✈️',n:'Airstrike'},{id:'teleport',ico:'🌀',n:'Teleport'},{id:'sheep',ico:'🐑',n:'Sheep'},{id:'firepunch',ico:'🔥',n:'Fire Punch'},{id:'mine',ico:'🔴',n:'Mine'},{id:'holy',ico:'😇',n:'Holy'},{id:'cluster',ico:'🛢️',n:'Cluster'},{id:'uzi',ico:'⚡',n:'Uzi'},{id:'torch',ico:'🔥',n:'Torch'},{id:'homing',ico:'🛰️',n:'Homing'},{id:'bunker',ico:'⛏️',n:'Bunker'},{id:'magic',ico:'🪄',n:'Magic'},{id:'banana',ico:'🍌',n:'Banana'},{id:'dragon',ico:'🐉',n:'Dragon'},{id:'mole',ico:'🦫',n:'Mole'},{id:'lightning',ico:'🌩️',n:'Lightning'},{id:'saucer',ico:'🛸',n:'Saucer'},{id:'cow',ico:'🐄',n:'Mad Cows'},{id:'xdmg',ico:'💪',n:'1.5x Damage'},{id:'invuln',ico:'🛡️',n:'Invulnerable'},{id:'kamikaze',ico:'🎌',n:'Kamikaze'},{id:'minigun',ico:'⚙️',n:'Minigun'},{id:'napalm',ico:'🔥',n:'Napalm'},{id:'bundle',ico:'💥',n:'Dyn. Bundle'},{id:'carpet',ico:'🛩️',n:'Carpet Bomb'},{id:'nuke',ico:'☢️',n:'Nuke'},{id:'pigeon',ico:'🕊️',n:'Pigeon'},{id:'skunk',ico:'🦨',n:'Skunk'},{id:'parachute',ico:'🪂',n:'Parachute'},{id:'prod',ico:'👉',n:'Prod'},{id:'suicide',ico:'💀',n:'Suicide Bomber'},{id:'skip',ico:'⏭️',n:'Skip'},{id:'shield',ico:'🛡️',n:'Shield'},{id:'earthquake',ico:'🌍',n:'Earthquake'},{id:'vampire',ico:'🧛',n:'Vampire'},{id:'sticky',ico:'🟢',n:'Sticky Bomb'},{id:'rubber',ico:'🟡',n:'Rubber Nade'},{id:'girder',ico:'🪵',n:'Girder'},{id:'donkey',ico:'🫏',n:'Concrete Donkey'},{id:'vacuum',ico:'🧲',n:'Crate Vacuum'}];
+const WEP=[{id:'bazooka',ico:'🚀',n:'Bazooka'},{id:'grenade',ico:'💣',n:'Grenade'},{id:'dynamite',ico:'🧨',n:'Dynamite'},{id:'shotgun',ico:'🔫',n:'Shotgun'},{id:'airstrike',ico:'✈️',n:'Airstrike'},{id:'teleport',ico:'🌀',n:'Teleport'},{id:'sheep',ico:'🐑',n:'Sheep'},{id:'firepunch',ico:'🔥',n:'Fire Punch'},{id:'mine',ico:'🔴',n:'Mine'},{id:'holy',ico:'😇',n:'Holy'},{id:'cluster',ico:'🛢️',n:'Cluster'},{id:'uzi',ico:'⚡',n:'Uzi'},{id:'torch',ico:'🔥',n:'Torch'},{id:'homing',ico:'🛰️',n:'Homing'},{id:'bunker',ico:'⛏️',n:'Bunker'},{id:'magic',ico:'🪄',n:'Magic'},{id:'banana',ico:'🍌',n:'Banana'},{id:'dragon',ico:'🐉',n:'Dragon'},{id:'mole',ico:'🦫',n:'Mole'},{id:'lightning',ico:'🌩️',n:'Lightning'},{id:'saucer',ico:'🛸',n:'Saucer'},{id:'cow',ico:'🐄',n:'Mad Cows'},{id:'xdmg',ico:'💪',n:'1.5x Damage'},{id:'invuln',ico:'🛡️',n:'Invulnerable'},{id:'kamikaze',ico:'🎌',n:'Kamikaze'},{id:'minigun',ico:'⚙️',n:'Minigun'},{id:'napalm',ico:'🔥',n:'Napalm'},{id:'bundle',ico:'💥',n:'Dyn. Bundle'},{id:'carpet',ico:'🛩️',n:'Carpet Bomb'},{id:'nuke',ico:'☢️',n:'Nuke'},{id:'pigeon',ico:'🕊️',n:'Pigeon'},{id:'skunk',ico:'🦨',n:'Skunk'},{id:'parachute',ico:'🪂',n:'Parachute'},{id:'prod',ico:'👉',n:'Prod'},{id:'suicide',ico:'💀',n:'Suicide Bomber'},{id:'skip',ico:'⏭️',n:'Skip'},{id:'shield',ico:'🛡️',n:'Shield'},{id:'earthquake',ico:'🌍',n:'Earthquake'},{id:'vampire',ico:'🧛',n:'Vampire'},{id:'sticky',ico:'🟢',n:'Sticky Bomb'},{id:'rubber',ico:'🟡',n:'Rubber Nade'},{id:'girder',ico:'🪵',n:'Girder'},{id:'donkey',ico:'🫏',n:'Concrete Donkey'},{id:'vacuum',ico:'🧲',n:'Crate Vacuum'},{id:'splitter',ico:'💫',n:'Splitter'}];
 const WEPID=new Set(WEP.map(w=>w.id));
 const VALS=[-1,0,1,2,3,4,5,6,8,10];
 const TARGETED=['airstrike','teleport','homing','magic','lightning','carpet','nuke','pigeon','donkey'];
 const GUIDE_V={bazooka:p=>120+p*700,bunker:p=>80+p*600,grenade:p=>80+p*620,holy:p=>80+p*620,cluster:p=>80+p*620,banana:p=>80+p*620,dragon:p=>80+p*620,mole:p=>80+p*600,napalm:p=>80+p*620,bundle:p=>80+p*620,magic:p=>140+p*560,homing:p=>90+p*430,sticky:p=>80+p*620,rubber:p=>80+p*620};
 const GUIDE_WIND={bazooka:1,bunker:1};
 const AIMLESS=['dynamite','mine','sheep','cow','firepunch','skunk','saucer','xdmg','invuln','parachute','prod','suicide','skip','shield','earthquake','vampire','girder','vacuum'];
-const CHARGE=['bazooka','grenade','holy','cluster','bunker','homing','magic','banana','dragon','mole','napalm','bundle','sticky','rubber'];
+const CHARGE=['bazooka','grenade','holy','cluster','bunker','homing','magic','banana','dragon','mole','napalm','bundle','sticky','rubber','splitter'];
 const DIFF=[{n:'Baby',an:.3,pn:.32,thr:180},{n:'Easy',an:.16,pn:.16,thr:130},{n:'Normal',an:.06,pn:.07,thr:70},{n:'Hard',an:.015,pn:.02,thr:40},{n:'Brutal',an:.005,pn:.008,thr:25}];
 const SCH=[
-  {n:'Normal',ammo:()=>({dynamite:2,airstrike:1,teleport:2,sheep:1,cow:1,mine:1,holy:1,cluster:1,uzi:2,torch:1,homing:1,bunker:1,magic:1,banana:1,dragon:1,mole:2,lightning:2,saucer:1,xdmg:2,kamikaze:2,minigun:1,napalm:1,bundle:1,carpet:1,nuke:1,pigeon:1,skunk:1,invuln:2,parachute:2,prod:3,suicide:2,shield:2,earthquake:1,vampire:2,sticky:2,rubber:2,girder:2,donkey:1,vacuum:2})},
+  {n:'Normal',ammo:()=>({dynamite:2,airstrike:1,teleport:2,sheep:1,cow:1,mine:1,holy:1,cluster:1,uzi:2,torch:1,homing:1,bunker:1,magic:1,banana:1,dragon:1,mole:2,lightning:2,saucer:1,xdmg:2,kamikaze:2,minigun:1,napalm:1,bundle:1,carpet:1,nuke:1,pigeon:1,skunk:1,invuln:2,parachute:2,prod:3,suicide:2,shield:2,earthquake:1,vampire:2,sticky:2,rubber:2,girder:2,donkey:1,vacuum:2,splitter:2})},
   {n:'Greedy',ammo:()=>({})},
-  {n:'Pro Mode',ammo:()=>({dynamite:1,airstrike:0,teleport:1,sheep:1,cow:1,mine:1,holy:1,cluster:1,uzi:1,torch:1,homing:1,bunker:1,magic:1,banana:1,dragon:1,mole:1,lightning:1,saucer:1,xdmg:1,kamikaze:1,minigun:1,napalm:1,bundle:1,carpet:1,nuke:1,pigeon:1,skunk:1,invuln:1,parachute:1,prod:1,suicide:1,shield:1,earthquake:1,vampire:1,sticky:1,rubber:1,girder:1,donkey:1,vacuum:1})},
+  {n:'Pro Mode',ammo:()=>({dynamite:1,airstrike:0,teleport:1,sheep:1,cow:1,mine:1,holy:1,cluster:1,uzi:1,torch:1,homing:1,bunker:1,magic:1,banana:1,dragon:1,mole:1,lightning:1,saucer:1,xdmg:1,kamikaze:1,minigun:1,napalm:1,bundle:1,carpet:1,nuke:1,pigeon:1,skunk:1,invuln:1,parachute:1,prod:1,suicide:1,shield:1,earthquake:1,vampire:1,sticky:1,rubber:1,girder:1,donkey:1,vacuum:1,splitter:1})},
   {n:'Bazooka Only',ammo:()=>({})}
 ];
 const SKY=[
@@ -1184,6 +1184,7 @@ function fire(){
   else if(wpn==='vampire'){useAmmo('vampire');const hx=w.x+w.dir*18,hy=w.y-4;let hit=false;for(const e of worms){if(!e.alive||e.team===w.team||e.invuln)continue;if(Math.abs(e.x-hx)<22&&Math.abs(e.y-hy)<24){const hp0=e.hp,sh=e.shield;damageWorm(e,35,w.team);const dr=sh?0:Math.min(35,hp0);if(dr>0){w.hp+=dr;w.flash=.4;texts.push({x:w.x,y:w.y-40,t:1.6,txt:'🧛 +'+dr,c:'#d98bff'})}hit=true;break}}if(!hit)tip('🧛 Missed!',1.4);else SFX.hit();charging=false;power=0;state='settle';startRec();retreat=aiOn[w.team]?0:RETV[retIdx];quiet=0;settleT=0;target=null;lastWpn[w.team]=wpn;updateWeps();return}
   else if(wpn==='sticky'){useAmmo('sticky');const dx=w.dir*Math.cos(w.aim),dy=-Math.sin(w.aim),sx=w.x+dx*14,sy=w.y-2+dy*14,v=80+power*620;const d={type:'sticky',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,r:34,dmg:40,bn:0,fr:0,fuse:3.5,shooter:w};proj.push(d);SFX.launch();charging=false;power=0;state='settle';startRec();retreat=0;quiet=0;settleT=0;target=null;lastWpn[w.team]=wpn;updateWeps();return}
   else if(wpn==='rubber'){useAmmo('rubber');const v=80+power*620;const d={type:'rubber',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:4,r:30,dmg:28,bn:.92,fr:.96,shooter:w};proj.push(d);SFX.launch();charging=false;power=0;state='settle';startRec();retreat=0;quiet=0;settleT=0;target=null;lastWpn[w.team]=wpn;updateWeps();return}
+  else if(wpn==='splitter'){useAmmo('splitter');const v=80+power*620;const d={type:'splitter',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:1.6,r:32,dmg:18,bn:.55,fr:.7,hr:6,shooter:w,split:false};proj.push(d);SFX.launch();charging=false;power=0;state='settle';startRec();retreat=0;quiet=0;settleT=0;target=null;lastWpn[w.team]=wpn;updateWeps();return}
   else if(wpn==='girder'){useAmmo('girder');startRec();
     const gdx=w.dir*Math.cos(w.aim),gdy=-Math.sin(w.aim);
     let gx=Math.round((w.x+gdx*90)/4)*4,gy=Math.round((w.y-8+gdy*70)/4)*4;
@@ -1486,7 +1487,7 @@ function updateProj(dt){
       if(!dead&&p.y>WATER){splash(p.x,WATER);SFX.splash();dead=true}
     }
     if(rocket&&!dead&&!(p.type==='mole'&&p.burrow)&&Math.random()<(low?.3:med?.6:.9)){const met=p.meteor===true;parts.push({x:p.x,y:p.y,vx:(Math.random()-.5)*30,vy:(Math.random()-.5)*30,life:met?.7:.6,max:met?.9:.6,c:met?'rgba(255,150,40,.95)':p.type==='magic'?'rgba(255,224,110,.95)':'rgba(230,230,230,1)',s:met?4.5+Math.random()*3.5:3+Math.random()*3,g:met?-40:-20,d:1})}
-    if(p.fuse!==undefined&&!dead){p.fuse-=dt;if(p.fuse<=0){dead=true;if(p.type==='cluster')splitCluster(p);else if(p.type==='banana')splitBanana(p);else if(p.type==='napalm'){explode(p.x,p.y,p.r,p.dmg,p.shooter?p.shooter.team:null);ignite(p.x,p.y,p.r,p.shooter?p.shooter.team:null)}else if(p.type==='bundle')splitBundle(p);else explode(p.x,p.y,p.r,p.dmg,p.shooter?p.shooter.team:null,p.kb)}}
+    if(p.fuse!==undefined&&!dead){p.fuse-=dt;if(p.fuse<=0){dead=true;if(p.type==='cluster')splitCluster(p);else if(p.type==='banana')splitBanana(p);else if(p.type==='napalm'){explode(p.x,p.y,p.r,p.dmg,p.shooter?p.shooter.team:null);ignite(p.x,p.y,p.r,p.shooter?p.shooter.team:null)}else if(p.type==='bundle')splitBundle(p);else if(p.type==='splitter')splitSplitter(p);else explode(p.x,p.y,p.r,p.dmg,p.shooter?p.shooter.team:null,p.kb)}}
     if(dead){if(curDet===p)curDet=null;proj.splice(i,1)}
   }
 }
@@ -1568,6 +1569,12 @@ function ignite(x,y,r,by){
     if(!solid(fx,fy+2)||fy>=WATER-8)continue;
     fires.push({x:fx,y:fy+2,r:11+Math.random()*11,life:4+Math.random()*2.5,t:0,by});
   }
+}
+function splitSplitter(p){
+  explode(p.x,p.y,18,10,p.shooter?p.shooter.team:null);
+  for(let i=0;i<3;i++){const a=-Math.PI/2+i*2.094+(Math.random()-.5)*.28,v=110+Math.random()*160;
+    proj.push({type:'splitlet',x:p.x,y:p.y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,age:0,r:22,dmg:18,bn:.4,fr:.6,fuse:.7+Math.random()*.4,shooter:p.shooter})}
+  SFX.small();tip('💫 Splitter splits!',1.2);
 }
 function splitBundle(p){
   explode(p.x,p.y,26,16,p.shooter?p.shooter.team:null);
@@ -2141,6 +2148,14 @@ function drawProj(p){
     ctx.fillStyle='#f9d423';ctx.strokeStyle='#b8960b';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,7,0,6.283);ctx.fill();ctx.stroke();
     ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(-2,-2,2,0,6.283);ctx.fill();
     ctx.fillStyle='#fff';ctx.font='bold 13px system-ui';ctx.textAlign='center';ctx.fillText(Math.ceil(p.fuse),0,-11);
+  }else if(p.type==='splitter'){
+    ctx.fillStyle='#e0b9ff';ctx.strokeStyle='#a880d8';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,7,0,6.283);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(-2,-2,2,0,6.283);ctx.fill();
+    ctx.fillStyle='#fff';ctx.font='bold 13px system-ui';ctx.textAlign='center';ctx.fillText(Math.ceil(p.fuse),0,-11);
+  }else if(p.type==='splitlet'){
+    ctx.rotate(p.age*6);
+    ctx.fillStyle='#e0b9ff';ctx.strokeStyle='#a880d8';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,5,0,6.283);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(-1,-1,1.5,0,6.283);ctx.fill();
   }else{
     ctx.rotate(.3);ctx.fillStyle='#d32f2f';ctx.strokeStyle='#7f1010';ctx.lineWidth=1.5;ctx.fillRect(-3.5,-8,7,16);ctx.strokeRect(-3.5,-8,7,16);
     ctx.fillStyle='#ffd54a';ctx.beginPath();ctx.arc(0,-11+Math.random()*2,2.5,0,6.283);ctx.fill();
