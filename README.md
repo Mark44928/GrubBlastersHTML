@@ -50,7 +50,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Built-in Help & Controls screen (menu button or the H key)
 - Fully destructible terrain — craters stay, worms fall
 - Shifting wind that bends rockets mid-flight
-- Forty-four weapons in one tap-to-open shelf menu: bazooka, grenade, dynamite, shotgun, fire punch, mine, sheep, airstrike, teleport, holy grenade, cluster bomb, uzi, blowtorch, homing missile, bunker buster, magic bullet, banana bomb, dragon ball, mole bomb, lightning, flying saucer, mad cows, minigun, kamikaze, 1.5x damage, invulnerable, napalm strike, dynamite bundle, carpet bombing, nuke, homing pigeon, skunk, parachute, prod, suicide bomber, skip, shield, earthquake, vampire, sticky bomb, rubber grenade, girder, concrete donkey, crate vacuum
+- Forty-five weapons in one tap-to-open shelf menu: bazooka, grenade, dynamite, shotgun, fire punch, mine, sheep, airstrike, teleport, holy grenade, cluster bomb, uzi, blowtorch, homing missile, bunker buster, magic bullet, banana bomb, dragon ball, mole bomb, lightning, flying saucer, mad cows, minigun, kamikaze, 1.5x damage, invulnerable, napalm strike, dynamite bundle, carpet bombing, nuke, homing pigeon, skunk, parachute, prod, suicide bomber, skip, shield, earthquake, vampire, sticky bomb, rubber grenade, girder, concrete donkey, crate vacuum, splitter
 - The shelf panel shows each weapon's icon, name and remaining ammo
 - Explosive barrels scattered across the map are solid — stand on them, or shoot one to erupt it, chaining into mines and other barrels. Some are oil drums that ignite the ground when they blow. Blow the ground out from under one and it drops (toggle in 🎨 Customize)
 - Napalm and oil drums set the ground on fire — flames keep damaging anything standing in them while they burn; the skunk's gas cloud poisons worms, and a health crate cures them
@@ -66,7 +66,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Worms have opinions — they taunt during battle
 - Sudden death — Standard raises the sea from turn 16, Late from turn 25 (Off disables it), worms wither, and meteors start falling
 - Session scoreboard: wins shown live in the HUD, kills and damage in the game-over summary
-- Optional aim guide dotting the predicted path of every ballistic weapon you charge — bazooka, bunker buster, grenade, holy, cluster, banana, dragon, mole, napalm, bundle, magic and homing missiles, sticky and rubber bombs. Wind bends the two rockets like in the game itself, and the magic bullet and homing missile draw their actual curved homing path to your marked spot (no arc until a spot is marked — they can't be fired without one)
+- Optional aim guide dotting the predicted path of every ballistic weapon you charge — bazooka, bunker buster, grenade, holy, cluster, banana, dragon, mole, napalm, bundle, magic and homing missiles, sticky and rubber bombs, splitter. Wind bends the two rockets like in the game itself, and the magic bullet and homing missile draw their actual curved homing path to your marked spot (no arc until a spot is marked — they can't be fired without one)
 - Configurable turn timer (10–60 s slider)
 - Red worm names when health runs low; victory confetti on the winner
 - Four sky themes (day, sunset, night, dawn) — Auto rolls one per match, Real Time follows your device clock — and four terrain themes (grass, desert, snow, rock)
@@ -194,7 +194,7 @@ verifies the "About N KB" line in this README matches `index.html`.
 
 ## Tech
 
-Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 224 KB in total.
+Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 226 KB in total.
 
 ## History
 
