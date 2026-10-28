@@ -187,9 +187,9 @@ endTurn() → next living team → gameOver() if ≤1 team remains
 | **TARGETED** (tap map, then FIRE) | airstrike, teleport, homing, magic, lightning, carpet, nuke, pigeon, donkey |
 | **CHARGE** (hold to charge) | bazooka, grenade, holy, cluster, bunker, homing, magic, banana, dragon, mole, napalm, bundle, sticky, rubber |
 
-**Key behaviors:** Bazooka ∞ammo, wind-affected, 0.25s grace. Sheep/Cow wander/detonate. Homing: 150px straight then track ≤3rad/s, duds after 5s. Magic bullet: r88, 9s timeout. Banana: 5 burst. Kamikaze: suicidal dig. Mine: 2s arm, <17px trigger, persists turns. Sticky: sticks on contact, 3.5s detonate. Donkey: targeted, vertical shaft, 100 dmg. **Always use `useAmmo(id)`** — direct decrement makes `NaN`.
+**Key behaviors:** Bazooka ∞ammo, wind-affected, 0.25s grace. Sheep/Cow wander/detonate. Homing: 150px straight then track ≤3rad/s, duds after 5s. Magic bullet: r88, 9s timeout. Banana: 5 burst (30 HP minis + 10 HP core). Kamikaze: suicidal dig. Mine: 2s arm, <17px trigger, persists turns. Sticky: sticks on contact, 3.5s detonate. Donkey: targeted, vertical shaft, 100 dmg. **Always use `useAmmo(id)`** — direct decrement makes `NaN`.
 
-**Damage Baseline (WA 3-star):** Bazooka/Grenade/Homing/Sheep-Cow 50/50/50/75 · Cluster 20+20×5 · Banana 75 · Holy/Magic 100 · Shotgun 25×2 · Dynamite/Mine 75/50 · Minigun 6×16 · Firepunch/Kamikaze/Dragon/Mole 30 · Suicide 30+poison · Blowtorch 15 · Airstrike/Carpet 30×5 · Donkey 100 · Barrel 60.
+**Damage Baseline (WA 3-star):** Bazooka/Grenade/Homing/Sheep-Cow 50/50/50/75 · Cluster 10+30×5 · Banana 10+30×5 · Holy/Magic 100 · Shotgun 25×2 · Dynamite/Mine 75/50 · Minigun 6×16 · Firepunch/Kamikaze/Dragon/Mole 30 · Suicide 30+poison · Blowtorch 15 · Airstrike/Carpet 30×5 · Donkey 100 · Barrel 60.
 
 ---
 
@@ -332,6 +332,7 @@ All reads guarded try/catch. Key entries:
 52. `explode()` barrel blast carries `by` team for kill credit.
 53. Mines detonate once — `chainFx` drains after `updateProj`.
 54. `cycleAmmo()` imported values snapped to `VALS` (7→6, 9→8).
+55. Every new projectile type MUST set `bn`/`fr` (or `rest`/`stuck`/`rocket` handling) — undefined fields NaN the physics on contact.
 
 ---
 
