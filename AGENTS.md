@@ -17,7 +17,7 @@
 9. [Core State](#core-state)
 10. [Turn Flow](#turn-flow)
 11. [Gravity & Damage](#gravity--damage)
-12. [Weapons System (44 weapons)](#weapons-system-44-weapons)
+12. [Weapons System (60 weapons)](#weapons-system-44-weapons)
 13. [AI System](#ai-system)
 14. [Rendering Pipeline](#rendering-pipeline)
 15. [Game Loop](#game-loop)
@@ -41,7 +41,7 @@
 - **Live:** https://mark44928.github.io/GrubBlastersHTML/
 - **Repo:** https://github.com/Mark44928/GrubBlastersHTML
 - **Version:** 2.5.0 (The Evergreen Update)
-- **File size:** ~224 KB (single file, no dependencies)
+- **File size:** ~247 KB (single file, no dependencies)
 - **Language:** Vanilla JavaScript (ES6+), HTML5, CSS3
 - **Target:** Mobile browsers (Android/iOS) + Desktop. PWA via inline `data:application/manifest+json` manifest.
 - **Canvas:** 2D context, logical pixels, DPR-capped at 2
@@ -82,7 +82,7 @@ Run `make check`. Run `make sync-size`. Verify manually. Never say "it works" wi
 
 | Path | Purpose | Edit? |
 |---|---|---|
-| `index.html` | The entire game (style, DOM, script). ~182 KB. | Yes — this is where all work happens |
+| `index.html` | The entire game (style, DOM, script). ~247 KB. | Yes — this is where all work happens |
 | `README.md` | Player-facing docs. | Yes — keep in sync with gameplay changes |
 | `Makefile` | Dev tasks: check, serve, publish, verify. | Rarely |
 | `AGENTS.md` | This file. | Yes — keep current |
@@ -153,7 +153,7 @@ Run `make check`. Run `make sync-size`. Verify manually. Never say "it works" wi
 ## Core State (Module-Level Globals)
 - **Entity arrays:** `worms, proj, parts, texts, tracers, crates, graves, rings, leaves, clouds, pend, rain, snow, fireflies, bolts, barrels, barFx, fires, gas`
 - **`state`:** `'menu' | 'aim' | 'settle' | 'over'` · **Turn:** `turnTeam` (0–3), `cur`, `retreat`, `quiet`/`settleT` · **Teams:** `teamCount`, `TC[4]`/`TN[4]`, `aiOn[4]`, `wins[4]`, `ammo[4]`, `lastWpn[4]`
-- **Settings:** `diff, maxHP, turnSec, guide, muted, hap, radar, low, uiTheme, songOn, customs[]`, etc. (`manager.sh:16-25` defaults)
+- **Settings:** `diff, maxHP, turnSec, guide, muted, hap, radar, low, uiTheme, songOn, customs[]`, etc. (defaults live in index.html)
 - **`inp`** — walk/aim booleans (+`jet`); **`paused`** — sim paused; **`dmgBoost`** — 1.5x Damage armed
 - **Jetpack:** `fuel` (0–`FUEL`), `JET_T=1000`, `JET_DRAIN=55`/s · **Saucer:** `sau` (0–`SAU_F=240`), `SAU_T=1500` · **Kamikaze:** `w.kam` + charge speed 380px/s, gravity-free
 - **Replay:** `rec` (20 Hz), `lastMovie`
@@ -179,7 +179,7 @@ endTurn() → next living team → gameOver() if ≤1 team remains
 
 ---
 
-## Weapons System (44 weapons)
+## Weapons System (60 weapons)
 
 | Type | Weapons |
 |---|---|

@@ -16,7 +16,7 @@ endif
 
 help:
 	@echo "Grub Blasters targets:"
-	@echo "  make check                syntax check + README size sync"
+	@echo "  make check                syntax check + README size/weapon-table sync"
 	@echo "  make syntax               JS syntax check only"
 	@echo "  make size                 report file size vs README"
 	@echo "  make sync-size            update README 'About N KB'"
@@ -41,6 +41,10 @@ size:
 
 check: syntax
 	@sz=$$(wc -c < index.html | awk '{printf "%.0f", $$1/1024}'); rm=$$(grep -o 'About [0-9]* KB' README.md | grep -o '[0-9]*'); if [ "$$sz" != "$$rm" ]; then echo "SIZE MISMATCH: index.html is ~$$sz KB, README says ~$$rm KB - run 'make sync-size'"; exit 1; fi; echo "SIZE SYNC OK (~$$sz KB)"
+	@wep=$$(sed -n "s/^const WEP=\(.*\);$$/\1/p" index.html | grep -oE "id:'[a-z]+'" | wc -l | tr -d ' '); rows=$$(awk '/^\| --- \| --- \| --- \|$$/{inw=1;next} inw&&/^\| /{c++} inw&&/^$$/{inw=0} END{print c}' README.md); if [ "$$wep" != "$$rows" ]; then echo "WEAPON TABLE DRIFT: index.html has $$wep weapons, README table has $$rows rows"; exit 1; fi; echo "WEAPONS OK ($$wep)"
+
+weapons:
+	@wep=$$(sed -n "s/^const WEP=\(.*\);$$/\1/p" index.html | grep -oE "id:'[a-z]+'" | wc -l | tr -d ' '); rows=$$(awk '/^\| --- \| --- \| --- \|$$/{inw=1;next} inw&&/^\| /{c++} inw&&/^$$/{inw=0} END{print c}' README.md); echo "index.html weapons: $$wep / README table rows: $$rows"
 
 sync-size:
 	@sz=$$(wc -c < index.html | awk '{printf "%.0f", $$1/1024}'); awk -v kb="$$sz" '{sub(/About [0-9]+ KB/, "About " kb " KB")}1' README.md > "$(TMPDIR)/README.tmp" && mv "$(TMPDIR)/README.tmp" README.md; echo "README updated: About $$sz KB"

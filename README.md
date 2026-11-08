@@ -172,8 +172,24 @@ Ammo below is for the Normal scheme. **Greedy** makes every weapon unlimited, **
 | Girder | 2 per team | Places a solid 80×8 wooden platform where you are aiming, lifted clear of the ground — worms standing in the way are never trapped inside it |
 | Concrete Donkey | 1 per team | Tap the map to drop a concrete donkey from the sky — it smashes down to the waterline, carving one clean straight shaft, hammering every worm in the column, shaking nearby worms loose and setting off crates and barrels on the way (your own team is spared) |
 | Crate Vacuum | 2 per team | Pulls every live supply crate toward your worm — great for denying the enemy |
+| Splitter | 2 per team | Grenade that bursts in mid-air into two scattering bomblets |
+| Mortar | 2 per team | High-arcing shell with a 55 HP blast and heavy bounce |
+| Frost Bomb | 2 per team | Freezes every worm in the blast on impact |
+| Drone Strike | 1 per team | Mark a spot, then launch a drone that flies there and detonates |
+| Grapple Hook | 2 per team | Hook a surface up to 300 px away and swing your worm onto it |
+| Freeze Ray | 2 per team | Fast beam projectile that chills whatever it touches |
+| Meteor Swarm | 1 per team | Mark the sky — five meteors rain down in sequence |
+| Portal Gun | 2 per team | Mark a landing spot to blink your worm across the map |
+| Black Hole | 1 per team | Mark a spot — it drags projectiles and crates in before collapsing |
+| Laser Cannon | 2 per team | Instant hitscan beam that tunnels terrain and hits every worm along the line |
+| Seismic Charge | 1 per team | Mark the ground — the charge drills straight down, cratering all the way to the waterline |
+| Phoenix | 1 per team | Firebird that rebirths twice from its own blast, each arc flying lower |
+| Tesla Coil | 2 per team | Deployed coil that stands still for 6 s and arcs lightning at nearby foes |
+| Acid Spray | 2 per team | Melee spray that poisons worms it touches (+2 poison) |
+| Time Bomb | 2 per team | Placed at your feet with a long 10 s fuse and an 80 HP blast |
+| Magnet Mine | 2 per team | Mark a spot — the floating mine attracts projectile toward it |
 
-Crates can refill dynamite, airstrike, teleport, homing missile, bunker buster, magic bullet, napalm strike, dynamite bundle, carpet bombing, nuke, homing pigeon or skunk, or grant an extra sheep, mine, holy grenade, cluster bomb, uzi, blowtorch, minigun, kamikaze or 1.5x damage.
+Crates can refill **any weapon that has limited ammo in the active scheme** (the scheme editor decides which weapons that is), or grant 35 HP / cure poison.
 
 ## Running locally
 
