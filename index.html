@@ -2116,9 +2116,9 @@ function drawWorm(w){
   ctx.restore();
   ctx.save();ctx.font='bold 14px system-ui,sans-serif';ctx.textAlign='center';
   const lab=w.name+'  '+Math.ceil(w.dh),tw=ctx.measureText(lab).width+12;
-  ctx.fillStyle='rgba(10,20,45,.72)';ctx.beginPath();ctx.roundRect(w.x-tw/2,w.y-34,tw,19,9);ctx.fill();
-  ctx.fillStyle=TC[w.team];ctx.fillRect(w.x-tw/2+5,w.y-17,tw-10,2);
-  ctx.fillStyle=w.hp<=25?'#ff8a80':'#fff';ctx.fillText(lab,w.x,w.y-20);
+  ctx.fillStyle='rgba(10,20,45,.72)';ctx.beginPath();ctx.roundRect(w.x-tw/2,w.y-47,tw,19,9);ctx.fill();
+  ctx.fillStyle=TC[w.team];ctx.fillRect(w.x-tw/2+5,w.y-30,tw-10,2);
+  ctx.fillStyle=w.hp<=25?'#ff8a80':'#fff';ctx.fillText(lab,w.x,w.y-33);
   ctx.restore();
 }
 const PGLOW={bazooka:'255,170,70',homing:'90,200,255',magic:'255,220,110',bunker:'255,150,70',bomb:'255,170,80',dragon:'255,90,60',banana:'255,225,70',grenade:'150,220,90',holy:'255,240,180',cluster:'150,225,110',mine:'255,90,90',napalm:'255,130,40',bundle:'255,100,70',rubber:'255,225,90',sticky:'130,230,130',carpet:'255,160,90',pigeon:'210,230,255',mole:'210,180,130',donkey:'210,215,220',sheep:'255,255,255',cow:'255,255,255',skunk:'210,240,130',bomblet:'255,120,80',mortar:'255,140,40',frost:'153,205,255',drone:'79,172,207',freeze:'179,230,255',phoenix:'255,112,67',tesla:'156,255,44',timebomb:'101,31,255',magnet:'135,206,250',granny:'230,220,255',cake:'255,160,200',ballgun:'255,150,70',ball:'255,220,90',flamer:'255,130,40',piano:'255,230,150',melon:'120,255,120',molotov:'255,160,60'};

@@ -40,7 +40,7 @@
 
 - **Live:** https://mark44928.github.io/GrubBlastersHTML/
 - **Repo:** https://github.com/Mark44928/GrubBlastersHTML
-- **Version:** 2.6.3 (The Armageddon Update, fixes)
+- **Version:** 2.6.4 (The Armageddon Update, fixes)
 - **File size:** ~247 KB (single file, no dependencies)
 - **Language:** Vanilla JavaScript (ES6+), HTML5, CSS3
 - **Target:** Mobile browsers (Android/iOS) + Desktop. PWA via inline `data:application/manifest+json` manifest.
@@ -388,7 +388,8 @@ This AGENTS.md is the **single source of truth**. If you find a discrepancy betw
 - v2.6.1 — The Armageddon Update (fixes): fixed a frame error by relocating the new-weapon projectile art from drawCrate into drawProj (crash on any non-health crate), PGLOW glows for the new projectile types, upgraded vector art for all ten, axe-slash rings + Scales flash, sniper muzzle flash.
 - v2.6.2 — Tip fix: hud() prioritizes manual-detonate hints over timed toasts; setWpn() clears stale tipT; dragon gets an armed-state hint line.
 - v2.6.3 — hud() detonate prompt now keyed off curDet.type (skunk/granny/cake/dragon each show their own hint; other weapons no longer claim dragon ball).
+- v2.6.4 — Name/HP tag moved to y-47 (was y-34) so team hats are no longer covered.
 
 *The game is one file. The rules are absolute. The quality is non-negotiable.*
 
-*Last updated: 2026-11-12 — Grub Blasters v2.6.3*
+*Last updated: 2026-11-12 — Grub Blasters v2.6.4*
