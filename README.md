@@ -241,6 +241,7 @@ The project grew through a series of tagged releases:
 - **v2.5.0 — The Evergreen Update** — A new Medium graphics tier between High and Low, and the Everforest interface theme.
 - **v2.6.0 — The Armageddon Update** — Ten new weapons straight from *Worms Armageddon* and *Hedgewars* (Old Woman, Battle Axe, Sniper Rifle, Ballgun, Flamethrower, Cake, Piano Strike, Watermelon, Molotov, Scales of Justice) with authentic behaviors, and team hats in the spirit of Hedgewars.
 - **v2.6.1 — The Armageddon Update (fixes)** — Fixed a frame error ("p is not defined") where the new-weapon projectile art was accidentally placed inside the crate renderer, crashing every frame a non-health crate was drawn; the new projectile art now lives in `drawProj` and renders properly. New-weapon glow pass (high/medium graphics), richer W:A/Hedgewars-styled vector art for all ten new weapons, battle-axe slash burst and Scales of Justice flash, sniper muzzle flash, and Hedgewars Melon slices.
+- **v2.6.2 — Tip fix** — The bottom hint bar no longer shows a stale timed toast over weapon setup; weapon selection clears the toast, manual-detonate prompts (dragon ball, sheep, skunk) take precedence, and Dragon Ball shows its own hold-FIRE/detonate hint while armed.
 
 ## License
 
