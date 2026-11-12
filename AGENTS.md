@@ -17,7 +17,7 @@
 9. [Core State](#core-state)
 10. [Turn Flow](#turn-flow)
 11. [Gravity & Damage](#gravity--damage)
-12. [Weapons System (60 weapons)](#weapons-system-44-weapons)
+12. [Weapons System (70 weapons)](#weapons-system-44-weapons)
 13. [AI System](#ai-system)
 14. [Rendering Pipeline](#rendering-pipeline)
 15. [Game Loop](#game-loop)
@@ -40,7 +40,7 @@
 
 - **Live:** https://mark44928.github.io/GrubBlastersHTML/
 - **Repo:** https://github.com/Mark44928/GrubBlastersHTML
-- **Version:** 2.5.0 (The Evergreen Update)
+- **Version:** 2.6.0 (The Armageddon Update)
 - **File size:** ~247 KB (single file, no dependencies)
 - **Language:** Vanilla JavaScript (ES6+), HTML5, CSS3
 - **Target:** Mobile browsers (Android/iOS) + Desktop. PWA via inline `data:application/manifest+json` manifest.
@@ -179,17 +179,17 @@ endTurn() → next living team → gameOver() if ≤1 team remains
 
 ---
 
-## Weapons System (60 weapons)
+## Weapons System (70 weapons)
 
 | Type | Weapons |
 |---|---|
-| **AIMLESS** (no aim tap) | dynamite, mine, sheep, cow, firepunch, skunk, saucer, xdmg, invuln, parachute, prod, suicide, skip, shield, earthquake, vampire, girder, vacuum |
-| **TARGETED** (tap map, then FIRE) | airstrike, teleport, homing, magic, lightning, carpet, nuke, pigeon, donkey |
-| **CHARGE** (hold to charge) | bazooka, grenade, holy, cluster, bunker, homing, magic, banana, dragon, mole, napalm, bundle, sticky, rubber |
+| **AIMLESS** (no aim tap) | dynamite, mine, sheep, cow, firepunch, skunk, saucer, xdmg, invuln, parachute, prod, suicide, skip, shield, earthquake, vampire, girder, vacuum, frost, tesla, timebomb, granny, battleaxe, ballgun, flamer, cake, scales |
+| **TARGETED** (tap map, then FIRE) | airstrike, teleport, homing, magic, lightning, carpet, nuke, pigeon, donkey, drone, portal, magnet, meteor, blackhole, seismic, sniper, piano |
+| **CHARGE** (hold to charge) | bazooka, grenade, holy, cluster, bunker, homing, magic, banana, dragon, mole, napalm, bundle, sticky, rubber, splitter, mortar, drone, melon, molotov |
 
 **Key behaviors:** Bazooka ∞ammo, wind-affected, 0.25s grace. Sheep/Cow wander/detonate. Homing: 150px straight then track ≤3rad/s, duds after 5s. Magic bullet: r88, 9s timeout. Banana: 5 burst (30 HP minis + 10 HP core). Kamikaze: suicidal dig. Mine: 2s arm, <17px trigger, persists turns. Sticky: sticks on contact, 3.5s detonate. Donkey: targeted, vertical shaft, 100 dmg. **Always use `useAmmo(id)`** — direct decrement makes `NaN`.
 
-**Damage Baseline (WA 3-star):** Bazooka/Grenade/Homing/Sheep-Cow 50/50/50/75 · Cluster 10+30×5 · Banana 10+30×5 · Holy/Magic 100 · Shotgun 25×2 · Dynamite/Mine 75/50 · Minigun 6×16 · Firepunch/Kamikaze/Dragon/Mole 30 · Suicide 30+poison · Blowtorch 15 · Airstrike/Carpet 30×5 · Donkey 100 · Barrel 60.
+**Damage Baseline (WA 3-star):** Bazooka/Grenade/Homing/Sheep-Cow 50/50/50/75 · Cluster 10+30×5 · Banana 10+30×5 · Holy/Magic 100 · Shotgun 25×2 · Dynamite/Mine 75/50 · Minigun 6×16 · Firepunch/Kamikaze/Dragon/Mole 30 · Suicide 30+poison · Blowtorch 15 · Airstrike/Carpet 30×5 · Donkey 100 · Barrel 60 · **v2.6.0 (authentic W:A/Hedgewars):** Granny 75 · Battleaxe ½ victim HP · Sniper 60 · Ballgun 8×~18 balls · Flamer 4/0.12s stream ~50 · Cake 75 (FIRE stops it) · Piano 80×3 bounces · Melon 30+35×5 slices · Molotov 25+fire pool · Scales evens all HP.
 
 ---
 
@@ -384,7 +384,8 @@ This AGENTS.md is the **single source of truth**. If you find a discrepancy betw
 - v2.0.2 — W:A damage-fidelity sweep + unified lob physics.
 - v2.0.3 — Bug sweep (mine double-detonation, barrel kill credit, saucer landing, charge ownership, AI aim solver, girder placement, AI stall, turn-time migration).
 - v2.5.0 — The Evergreen Update: Medium graphics tier + Everforest theme.
+- v2.6.0 — The Armageddon Update: 10 new W:A/Hedgewars-authentic weapons (Old Woman, Battle Axe, Sniper Rifle, Ballgun, Flamethrower, Cake, Piano Strike, Watermelon, Molotov, Scales of Justice) + Hedgewars-style team hats. Suite of fire()/updateProj/drawProj branches follows the established patterns.
 
 *The game is one file. The rules are absolute. The quality is non-negotiable.*
 
-*Last updated: 2026-10-26 — Grub Blasters v2.5.0*
+*Last updated: 2026-11-12 — Grub Blasters v2.6.0*
