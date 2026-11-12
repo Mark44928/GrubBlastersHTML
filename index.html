@@ -2790,7 +2790,7 @@ function hud(){
   let m='';
   if(paused)m='⏸ PAUSED';
   else if(curSheep&&humanTurn())m='🐑 Press FIRE to detonate the sheep!';
-  else if(curDet&&humanTurn())m=curDet.type==='skunk'?(curDet.stage===0?'🦨 Press FIRE to spray the gas!':'🦨 Press FIRE to blow it up!'):'🐉 Press FIRE to detonate the dragon ball!';
+  else if(curDet&&humanTurn())m=curDet.type==='skunk'?(curDet.stage===0?'🦨 Press FIRE to spray the gas!':'🦨 Press FIRE to blow it up!'):curDet.type==='granny'?'👵 Press FIRE to detonate the old woman!':curDet.type==='cake'?'🎂 Press FIRE to blow up the cake!':'🐉 Press FIRE to detonate the dragon ball!';
   else if(state==='aim'&&humanTurn()&&wpn==='dragon')m='🐉 Hold FIRE to charge — release to throw the Dragon Ball; tap FIRE mid-air to detonate';
   else if(tipT>0)m=tipMsg;
   else if(state==='aim'&&humanTurn()&&TARGETED.includes(wpn)&&!target)m=(wpn==='homing'||wpn==='magic')?'Tap the map to mark a target, then hold FIRE':'Tap the map to pick a spot, then press FIRE';
