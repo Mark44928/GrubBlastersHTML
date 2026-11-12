@@ -222,7 +222,7 @@ verifies the "About N KB" line in this README matches `index.html`.
 
 ## Tech
 
-Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 258 KB in total.
+Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 263 KB in total.
 
 ## History
 
@@ -240,6 +240,7 @@ The project grew through a series of tagged releases:
 - **v2.0.3** — Bug sweep: mine double-detonation, barrel kill credit, saucer landing safety, charge ownership, AI aim solver, girder placement, AI stall on empty ammo, legacy turn-time migration.
 - **v2.5.0 — The Evergreen Update** — A new Medium graphics tier between High and Low, and the Everforest interface theme.
 - **v2.6.0 — The Armageddon Update** — Ten new weapons straight from *Worms Armageddon* and *Hedgewars* (Old Woman, Battle Axe, Sniper Rifle, Ballgun, Flamethrower, Cake, Piano Strike, Watermelon, Molotov, Scales of Justice) with authentic behaviors, and team hats in the spirit of Hedgewars.
+- **v2.6.1 — The Armageddon Update (fixes)** — Fixed a frame error ("p is not defined") where the new-weapon projectile art was accidentally placed inside the crate renderer, crashing every frame a non-health crate was drawn; the new projectile art now lives in `drawProj` and renders properly. New-weapon glow pass (high/medium graphics), richer W:A/Hedgewars-styled vector art for all ten new weapons, battle-axe slash burst and Scales of Justice flash, sniper muzzle flash, and Hedgewars Melon slices.
 
 ## License
 

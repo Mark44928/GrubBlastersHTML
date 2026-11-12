@@ -40,7 +40,7 @@
 
 - **Live:** https://mark44928.github.io/GrubBlastersHTML/
 - **Repo:** https://github.com/Mark44928/GrubBlastersHTML
-- **Version:** 2.6.0 (The Armageddon Update)
+- **Version:** 2.6.1 (The Armageddon Update, fixes)
 - **File size:** ~247 KB (single file, no dependencies)
 - **Language:** Vanilla JavaScript (ES6+), HTML5, CSS3
 - **Target:** Mobile browsers (Android/iOS) + Desktop. PWA via inline `data:application/manifest+json` manifest.
@@ -385,7 +385,8 @@ This AGENTS.md is the **single source of truth**. If you find a discrepancy betw
 - v2.0.3 — Bug sweep (mine double-detonation, barrel kill credit, saucer landing, charge ownership, AI aim solver, girder placement, AI stall, turn-time migration).
 - v2.5.0 — The Evergreen Update: Medium graphics tier + Everforest theme.
 - v2.6.0 — The Armageddon Update: 10 new W:A/Hedgewars-authentic weapons (Old Woman, Battle Axe, Sniper Rifle, Ballgun, Flamethrower, Cake, Piano Strike, Watermelon, Molotov, Scales of Justice) + Hedgewars-style team hats. Suite of fire()/updateProj/drawProj branches follows the established patterns.
+- v2.6.1 — The Armageddon Update (fixes): fixed a frame error by relocating the new-weapon projectile art from drawCrate into drawProj (crash on any non-health crate), PGLOW glows for the new projectile types, upgraded vector art for all ten, axe-slash rings + Scales flash, sniper muzzle flash.
 
 *The game is one file. The rules are absolute. The quality is non-negotiable.*
 
-*Last updated: 2026-11-12 — Grub Blasters v2.6.0*
+*Last updated: 2026-11-12 — Grub Blasters v2.6.1*
