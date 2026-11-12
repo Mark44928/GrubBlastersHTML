@@ -1775,7 +1775,7 @@ function setWpn(i){
   const L=wepList();if(i<0||i>=L.length)return false;
   const w=L[i];if(!w)return false;
   if(ammoOf(w.id)===0){tip('Out of ammo',1.5);return false}
-  wpn=w.id;target=null;lastWpn[turnTeam]=wpn;updateWeps();return true;
+  wpn=w.id;target=null;lastWpn[turnTeam]=wpn;tipT=0;updateWeps();return true;
 }
 /* ---------- custom schemes ---------- */
 let sed={idx:0};
@@ -2789,9 +2789,10 @@ function hud(){
   el.fire.style.setProperty('--p',(power*100)+'%');
   let m='';
   if(paused)m='⏸ PAUSED';
-  else if(tipT>0)m=tipMsg;
   else if(curSheep&&humanTurn())m='🐑 Press FIRE to detonate the sheep!';
   else if(curDet&&humanTurn())m=curDet.type==='skunk'?(curDet.stage===0?'🦨 Press FIRE to spray the gas!':'🦨 Press FIRE to blow it up!'):'🐉 Press FIRE to detonate the dragon ball!';
+  else if(state==='aim'&&humanTurn()&&wpn==='dragon')m='🐉 Hold FIRE to charge — release to throw the Dragon Ball; tap FIRE mid-air to detonate';
+  else if(tipT>0)m=tipMsg;
   else if(state==='aim'&&humanTurn()&&TARGETED.includes(wpn)&&!target)m=(wpn==='homing'||wpn==='magic')?'Tap the map to mark a target, then hold FIRE':'Tap the map to pick a spot, then press FIRE';
   else if(state==='aim'&&humanTurn()&&TARGETED.includes(wpn)&&target)m='Press FIRE';
   if(m!==el.tip.textContent)el.tip.textContent=m;
