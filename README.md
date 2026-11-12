@@ -52,7 +52,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Built-in Help & Controls screen (menu button or the H key)
 - Fully destructible terrain — craters stay, worms fall
 - Shifting wind that bends rockets mid-flight
-- Sixty weapons in one tap-to-open shelf menu: bazooka, grenade, dynamite, shotgun, fire punch, mine, sheep, airstrike, teleport, holy grenade, cluster bomb, uzi, blowtorch, homing missile, bunker buster, magic bullet, banana bomb, dragon ball, mole bomb, lightning, flying saucer, mad cows, minigun, kamikaze, 1.5x damage, invulnerable, napalm strike, dynamite bundle, carpet bombing, nuke, homing pigeon, skunk, parachute, prod, suicide bomber, skip, shield, earthquake, vampire, sticky bomb, rubber grenade, girder, concrete donkey, crate vacuum, splitter, mortar, frost bomb, drone strike, grapple hook, freeze ray, meteor swarm, portal gun, black hole, laser cannon, seismic charge, phoenix, tesla coil, acid spray, time bomb, magnet mine
+- Seventy weapons in one tap-to-open shelf menu: bazooka, grenade, dynamite, shotgun, fire punch, mine, sheep, airstrike, teleport, holy grenade, cluster bomb, uzi, blowtorch, homing missile, bunker buster, magic bullet, banana bomb, dragon ball, mole bomb, lightning, flying saucer, mad cows, minigun, kamikaze, 1.5x damage, invulnerable, napalm strike, dynamite bundle, carpet bombing, nuke, homing pigeon, skunk, parachute, prod, suicide bomber, skip, shield, earthquake, vampire, sticky bomb, rubber grenade, girder, concrete donkey, crate vacuum, splitter, mortar, frost bomb, drone strike, grapple hook, freeze ray, meteor swarm, portal gun, black hole, laser cannon, seismic charge, phoenix, tesla coil, acid spray, time bomb, magnet mine, old woman, battle axe, sniper rifle, ballgun, flamethrower, cake, piano strike, watermelon, molotov, scales of justice
 - The shelf panel shows each weapon's icon, name and remaining ammo
 - Explosive barrels scattered across the map are solid — stand on them, or shoot one to erupt it, chaining into mines and other barrels. Some are oil drums that ignite the ground when they blow. Blow the ground out from under one and it drops (toggle in 🎨 Customize)
 - Napalm and oil drums set the ground on fire — flames keep damaging anything standing in them while they burn; the skunk's gas cloud poisons worms, and a health crate cures them
@@ -188,6 +188,16 @@ Ammo below is for the Normal scheme. **Greedy** makes every weapon unlimited, **
 | Acid Spray | 2 per team | Melee spray that poisons worms it touches (+2 poison) |
 | Time Bomb | 2 per team | Placed at your feet with a long 10 s fuse and an 80 HP blast |
 | Magnet Mine | 2 per team | Mark a spot — the floating mine attracts projectile toward it |
+| Old Woman | 1 per team | Walks with her umbrella and detonates near the enemy (75) — or press FIRE to blow her up early |
+| Battle Axe | 2 per team | Melee swing that halves the victim's remaining HP, Worms Armageddon style |
+| Sniper Rifle | 1 per team | Tap a spot — an instant precise shot (60) punches a hole in terrain or worm |
+| Ballgun | 1 per team | Sprays a stream of bouncing paint balls (8 each) for ~2 s |
+| Flamethrower | 1 per team | A 2 s cone of fire that scorches anything in front of you and leaves burning ground |
+| Cake | 1 per team | Hedgewars birthday cake — a fast walker (75) you detonate by pressing FIRE again |
+| Piano Strike | 1 per team | A grand piano falls from the sky and bounces up to 3 times, 80 per smash |
+| Watermelon | 1 per team | Throw it; on detonation five juicy slices (35 each) spray the area |
+| Molotov | 2 per team | Shatters on impact for 25 and leaves a pool of burning ground |
+| Scales of Justice | 1 per team | Evens out every living worm's HP across all teams |
 
 Crates can refill **any weapon that has limited ammo in the active scheme** (the scheme editor decides which weapons that is), or grant 35 HP / cure poison.
 
@@ -212,7 +222,7 @@ verifies the "About N KB" line in this README matches `index.html`.
 
 ## Tech
 
-Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 247 KB in total.
+Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 258 KB in total.
 
 ## History
 
@@ -229,6 +239,7 @@ The project grew through a series of tagged releases:
 - **v2.0.2 — Fidelity Update** — Worms Armageddon damage sweep (grenade 50, holy 100, cluster 20×5, banana 75…) and unified lob-throw physics.
 - **v2.0.3** — Bug sweep: mine double-detonation, barrel kill credit, saucer landing safety, charge ownership, AI aim solver, girder placement, AI stall on empty ammo, legacy turn-time migration.
 - **v2.5.0 — The Evergreen Update** — A new Medium graphics tier between High and Low, and the Everforest interface theme.
+- **v2.6.0 — The Armageddon Update** — Ten new weapons straight from *Worms Armageddon* and *Hedgewars* (Old Woman, Battle Axe, Sniper Rifle, Ballgun, Flamethrower, Cake, Piano Strike, Watermelon, Molotov, Scales of Justice) with authentic behaviors, and team hats in the spirit of Hedgewars.
 
 ## License
 
