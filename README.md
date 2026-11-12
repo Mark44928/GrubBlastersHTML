@@ -244,6 +244,7 @@ The project grew through a series of tagged releases:
 - **v2.6.2 — Tip fix** — The bottom hint bar no longer shows a stale timed toast over weapon setup; weapon selection clears the toast, manual-detonate prompts (dragon ball, sheep, skunk) take precedence, and Dragon Ball shows its own hold-FIRE/detonate hint while armed.
 - **v2.6.3 — Tip fix (correct)** — The manual-detonate hint now names the actual weapon: Old Woman and Cake no longer say "🐉 detonate the dragon ball!" — every manual-detonate weapon shows its own prompt (Skunk / Old Woman / Cake / Dragon Ball).
 - **v2.6.4 — Hat clearance** — Worm name/HP tag moved up so the team hats are no longer half-covered by it.
+- **v2.6.5 — Hat seating** — Team hats now rest directly on a worm's head (no gap).
 
 ## License
 

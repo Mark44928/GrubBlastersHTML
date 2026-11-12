@@ -2064,7 +2064,7 @@ function drawWorm(w){
     if(w.flash>0)ctx.arc(d*3.5,6.5,2.5,3.4,6.0);else ctx.arc(d*3.5,4.5,2.5,.2,2.9);
     ctx.stroke();
   }else drawWormHi(w,d);
-  if(teamHat[w.team]&&!w.sau){ctx.font='10px system-ui';ctx.textAlign='center';ctx.fillText(teamHat[w.team],0,-14)}
+  if(teamHat[w.team]&&!w.sau){ctx.font='10px system-ui';ctx.textAlign='center';ctx.fillText(teamHat[w.team],0,-9.5)}
   if(w.jet){
     if(w.sau>0){
       ctx.fillStyle='rgba(140,240,255,.85)';ctx.beginPath();ctx.moveTo(-4,9);ctx.lineTo(0,16+Math.random()*6);ctx.lineTo(4,9);ctx.closePath();ctx.fill();
