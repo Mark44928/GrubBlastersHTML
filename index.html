@@ -44,10 +44,11 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:
 #banner{position:absolute;top:22%;left:0;right:0;text-align:center;font-size:clamp(28px,6vmin,56px);font-weight:900;text-shadow:0 3px 0 rgba(0,0,0,.5);opacity:0}
 #banner.show{animation:pop 2s ease both}
 @keyframes pop{0%{opacity:0;transform:scale(.6)}12%{opacity:1;transform:scale(1.08)}20%{transform:scale(1)}75%{opacity:1}100%{opacity:0}}
-#tip{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(var(--s) + 26px);background:rgba(10,20,45,.75);padding:6px 16px;border-radius:14px;font-weight:700;font-size:14px;opacity:0;transition:opacity .2s;white-space:nowrap;border:1px solid rgba(255,255,255,.2)}
+#tip{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(var(--s) + 26px);background:rgba(10,20,45,.78);padding:7px 16px;border-radius:14px;font-weight:700;font-size:14px;line-height:1.35;text-align:center;opacity:0;transition:opacity .2s;white-space:normal;max-width:min(92vw,520px);border:1px solid rgba(255,255,255,.25)}
 #tip.on{opacity:1}
 #bottom{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:flex-end;gap:10px;padding:0 calc(14px + env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) calc(14px + env(safe-area-inset-left))}
 .grp{display:flex;gap:10px;align-items:flex-end}
+.btn:focus-visible,.mini:focus-visible,.big:focus-visible,.wep-btn:focus-visible,.wcell:focus-visible,.nbtns button:focus-visible,.team:focus-visible{outline:2px solid #ffd54a;outline-offset:2px}
 .btn{pointer-events:auto;position:relative;width:var(--s);height:var(--s);border-radius:20px;border:2px solid rgba(255,255,255,.28);background:rgba(15,28,60,.62);color:#fff;font-size:calc(var(--s)*.4);font-weight:800;display:flex;align-items:center;justify-content:center;touch-action:none;backdrop-filter:blur(3px);padding:0}
 .btn.on,.btn:active{background:rgba(255,200,60,.9);color:#222}
 .btn.sel{outline:3px solid #ffd54a;background:rgba(255,213,74,.35)}
@@ -150,7 +151,7 @@ body.modern #replay{border-color:rgba(255,209,102,.7);background:linear-gradient
 body.modern #menu{background:radial-gradient(120% 100% at 50% 0%,rgba(30,50,100,.5),rgba(4,8,20,.74));backdrop-filter:blur(7px)}
 body.modern #help,body.modern #custom,body.modern #settings{background:radial-gradient(120% 100% at 50% 0%,rgba(24,40,84,.78),rgba(4,8,20,.85))}
 /* ---------- gruvbox theme ---------- */
-body.gruvbox{--bg:#282828;--bg2:#3c3836;--fg:#fbf1c7;--acc:#fabd2f;--red:#fb4934;--orange:#fe8019;--green:#b8bb26;--blue:#83a598;--purple:#d3869b;--gray:#928374;background:#282828}
+body.gruvbox{--bg:#282828;--bg2:#3c3836;--fg:#ebdbb2;--acc:#fabd2f;--red:#fb4934;--orange:#fe8019;--green:#b8bb26;--blue:#83a598;--purple:#d3869b;--gray:#928374;background:#282828}
 body.gruvbox .team,body.gruvbox #mid,body.gruvbox .mini,body.gruvbox .btn,body.gruvbox .wep-btn,body.gruvbox .wcell,body.gruvbox .card,body.gruvbox .big,body.gruvbox .wep-pan,body.gruvbox #tip,body.gruvbox #replay,body.gruvbox #menu,body.gruvbox #help,body.gruvbox #custom,body.gruvbox #settings{background:var(--bg2);color:var(--fg);border-color:var(--gray)}
 body.gruvbox .crow select{background-color:var(--bg2)}body.gruvbox .crow select option{background:var(--bg2);color:var(--fg)}body.gruvbox .card{background:var(--bg)}
 body.gruvbox .team,body.gruvbox #mid,body.gruvbox .mini,body.gruvbox .btn,body.gruvbox .wep-btn,body.gruvbox .wep-pan,body.gruvbox .card,body.gruvbox #tip,body.gruvbox #menu,body.gruvbox #help,body.gruvbox #custom,body.gruvbox #settings{border-color:var(--gray)}
