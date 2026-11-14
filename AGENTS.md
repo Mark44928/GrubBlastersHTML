@@ -17,7 +17,7 @@
 9. [Core State](#core-state)
 10. [Turn Flow](#turn-flow)
 11. [Gravity & Damage](#gravity--damage)
-12. [Weapons System (70 weapons)](#weapons-system-44-weapons)
+12. [Weapons System (70 weapons)](#weapons-system-70-weapons)
 13. [AI System](#ai-system)
 14. [Rendering Pipeline](#rendering-pipeline)
 15. [Game Loop](#game-loop)
@@ -41,7 +41,7 @@
 - **Live:** https://mark44928.github.io/GrubBlastersHTML/
 - **Repo:** https://github.com/Mark44928/GrubBlastersHTML
 - **Version:** 2.6.5 (The Armageddon Update, fixes)
-- **File size:** ~247 KB (single file, no dependencies)
+- **File size:** ~268 KB (single file, no dependencies)
 - **Language:** Vanilla JavaScript (ES6+), HTML5, CSS3
 - **Target:** Mobile browsers (Android/iOS) + Desktop. PWA via inline `data:application/manifest+json` manifest.
 - **Canvas:** 2D context, logical pixels, DPR-capped at 2
@@ -82,7 +82,7 @@ Run `make check`. Run `make sync-size`. Verify manually. Never say "it works" wi
 
 | Path | Purpose | Edit? |
 |---|---|---|
-| `index.html` | The entire game (style, DOM, script). ~247 KB. | Yes — this is where all work happens |
+| `index.html` | The entire game (style, DOM, script). ~268 KB. | Yes — this is where all work happens |
 | `README.md` | Player-facing docs. | Yes — keep in sync with gameplay changes |
 | `Makefile` | Dev tasks: check, serve, publish, verify. | Rarely |
 | `AGENTS.md` | This file. | Yes — keep current |
