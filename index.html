@@ -1215,7 +1215,7 @@ function damageWorm(w,d,by,silent){
 }
 function killWorm(w,drown,by){
   w.alive=false;w.hp=0;
-  if(drown){splash(w.x,WATER);SFX.splash()}else{boomFx(w.x,w.y,22);SFX.small();graves.push({x:w.x,y:w.y,vy:0,team:w.team})}
+  if(drown){splash(w.x,WATER);SFX.splash()}else{boomFx(w.x,w.y,22);SFX.small();if(graves.length>=80)graves.shift();graves.push({x:w.x,y:w.y,vy:0,team:w.team})}
   texts.push({x:w.x,y:w.y-40,t:1.8,txt:w.name+(drown?' swims with the fishes':' is toast'),c:'#fff'});
   if(by!=null&&by!==w.team){kills[by]++;const nw=performance.now();comboN=nw-comboT<1500?comboN+1:1;comboT=nw;
     if(comboN>=2){banner(comboN===2?'DOUBLE KILL!':comboN===3?'TRIPLE KILL!':comboN===4?'QUAD KILL!':'CHAIN x'+comboN,'#ffd166');slowT=Math.max(slowT,.55);buzz(30)}
@@ -2045,7 +2045,9 @@ function update(dt){
     const p=parts[i];p.life-=dt;if(p.life<=0){parts.splice(i,1);continue}
     p.vy+=p.g*dt;const dr=Math.max(0,1-p.d*dt);p.vx*=dr;p.vy*=dr;p.x+=p.vx*dt;p.y+=p.vy*dt;
   }
+  if(parts.length>450)parts.splice(0,parts.length-450);
   for(let i=texts.length-1;i>=0;i--){const t=texts[i];t.t-=dt;t.y-=28*dt;if(t.t<=0)texts.splice(i,1)}
+  if(texts.length>60)texts.splice(0,texts.length-60);
   for(let i=tracers.length-1;i>=0;i--){tracers[i].t-=dt;if(tracers[i].t<=0)tracers.splice(i,1)}
   shake=Math.max(0,shake-dt*20);tipT=Math.max(0,tipT-dt);flashFx=Math.max(0,flashFx-dt*3.2);
   for(let i=muzzles.length-1;i>=0;i--){muzzles[i].t-=dt;if(muzzles[i].t<=0)muzzles.splice(i,1)}
