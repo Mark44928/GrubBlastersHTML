@@ -850,7 +850,7 @@ function newGame(mode){
   W=MAPS[mapIdx].w;resize();
   aiOn=[false,false,false,false];if(mode==='cpu'){const h=Math.ceil(teamCount/2);for(let t=h;t<teamCount;t++)aiOn[t]=true}
   pickTheme();weather=wxIdx<0?(Math.random()<.3?1:Math.random()<.44?2:0):wxIdx;genTerrain();mkBg();initScenery();
-  worms=[];proj=[];parts=[];texts=[];tracers=[];crates=[];graves=[];rings=[];pend=[];shots=0;target=null;turnNo=0;curSheep=null;curDet=null;bolts=[];chainFx=[];fires=[];gas=[];muzzles=[];flashFx=0;rec=null;rep=null;repC=null;lastMovie=null;lastWpn=['bazooka','bazooka','bazooka','bazooka'];jumpT=0;comboN=0;comboT=0;dryTurns=0;slowT=0;shake=0;tipMsg='';tipT=0;fireT=0;killFeed=[];camManual=false;charging=false;power=0;inp.left=inp.right=inp.up=inp.down=inp.jet=false;
+  worms=[];proj=[];parts=[];texts=[];tracers=[];crates=[];graves=[];rings=[];pend=[];shots=0;target=null;turnNo=0;curSheep=null;curDet=null;bolts=[];chainFx=[];fires=[];gas=[];muzzles=[];boggyHelos.length=0;flashFx=0;rec=null;rep=null;repC=null;lastMovie=null;lastWpn=['bazooka','bazooka','bazooka','bazooka'];jumpT=0;comboN=0;comboT=0;dryTurns=0;slowT=0;shake=0;tipMsg='';tipT=0;fireT=0;killFeed=[];camManual=false;charging=false;power=0;inp.left=inp.right=inp.up=inp.down=inp.jet=false;
   WATER=WATER0;waterTarget=WATER0;paused=false;$('#pause').textContent='⏸';
   ammo=[0,1,2,3].map(()=>(schAll()[schIdx]||SCH[0]).ammo());
   const n=perTeam*teamCount,slots=[];
@@ -976,7 +976,7 @@ function restartMatch(){
   clouds=matchSnap.clouds.map(o=>({...o}));leaves=matchSnap.leaves.map(o=>({...o}));fireflies=matchSnap.fireflies.map(o=>({...o}));rain=matchSnap.rain.map(o=>({...o}));snow=matchSnap.snow.map(o=>({...o}));
   worms=matchSnap.worms.map(o=>({...o}));
   barrels=matchSnap.barrels.map(o=>({...o}));
-  proj=[];parts=[];texts=[];tracers=[];crates=[];graves=[];rings=[];pend=[];bolts=[];barFx=[];chainFx=[];fires=[];gas=[];muzzles=[];flashFx=0;fireT=0;shots=0;shotT=0;target=null;curSheep=null;curDet=null;dmgBoost=false;shake=0;slowT=0;tipMsg='';tipT=0;killFeed=[];comboN=0;comboT=0;dryTurns=0;ai=null;jumpT=0;jetSndT=0;walkSndT=0;inp.left=inp.right=inp.up=inp.down=inp.jet=false;camManual=false;charging=false;power=0;
+  proj=[];parts=[];texts=[];tracers=[];crates=[];graves=[];rings=[];pend=[];bolts=[];barFx=[];chainFx=[];fires=[];gas=[];muzzles=[];boggyHelos.length=0;flashFx=0;fireT=0;shots=0;shotT=0;target=null;curSheep=null;curDet=null;dmgBoost=false;shake=0;slowT=0;tipMsg='';tipT=0;killFeed=[];comboN=0;comboT=0;dryTurns=0;ai=null;jumpT=0;jetSndT=0;walkSndT=0;inp.left=inp.right=inp.up=inp.down=inp.jet=false;camManual=false;charging=false;power=0;
   WATER=WATER0;waterTarget=WATER0;
   turnNo=0;turnTeam=matchSnap.turnTeam;cursor=[-1,-1,-1,-1];lastWpn=['bazooka','bazooka','bazooka','bazooka'];wpn='bazooka';
   ammo=[0,1,2,3].map(()=>(schAll()[schIdx]||SCH[0]).ammo());

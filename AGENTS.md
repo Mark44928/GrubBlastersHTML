@@ -17,7 +17,7 @@
 9. [Core State](#core-state)
 10. [Turn Flow](#turn-flow)
 11. [Gravity & Damage](#gravity--damage)
-12. [Weapons System (70 weapons)](#weapons-system-70-weapons)
+12. [Weapons System (71 weapons)](#weapons-system-71-weapons)
 13. [AI System](#ai-system)
 14. [Rendering Pipeline](#rendering-pipeline)
 15. [Game Loop](#game-loop)
@@ -40,8 +40,8 @@
 
 - **Live:** https://mark44928.github.io/GrubBlastersHTML/
 - **Repo:** https://github.com/Mark44928/GrubBlastersHTML
-- **Version:** 2.6.5 (The Armageddon Update, fixes)
-- **File size:** ~268 KB (single file, no dependencies)
+- **Version:** 2.6.6 (Grubsong ’26)
+- **File size:** ~281 KB (single file, no dependencies)
 - **Language:** Vanilla JavaScript (ES6+), HTML5, CSS3
 - **Target:** Mobile browsers (Android/iOS) + Desktop. PWA via inline `data:application/manifest+json` manifest.
 - **Canvas:** 2D context, logical pixels, DPR-capped at 2
@@ -82,7 +82,7 @@ Run `make check`. Run `make sync-size`. Verify manually. Never say "it works" wi
 
 | Path | Purpose | Edit? |
 |---|---|---|
-| `index.html` | The entire game (style, DOM, script). ~268 KB. | Yes — this is where all work happens |
+| `index.html` | The entire game (style, DOM, script). ~281 KB. | Yes — this is where all work happens |
 | `README.md` | Player-facing docs. | Yes — keep in sync with gameplay changes |
 | `Makefile` | Dev tasks: check, serve, publish, verify. | Rarely |
 | `AGENTS.md` | This file. | Yes — keep current |
@@ -179,12 +179,12 @@ endTurn() → next living team → gameOver() if ≤1 team remains
 
 ---
 
-## Weapons System (70 weapons)
+## Weapons System (71 weapons)
 
 | Type | Weapons |
 |---|---|
 | **AIMLESS** (no aim tap) | dynamite, mine, sheep, cow, firepunch, skunk, saucer, xdmg, invuln, parachute, prod, suicide, skip, shield, earthquake, vampire, girder, vacuum, frost, tesla, timebomb, granny, battleaxe, ballgun, flamer, cake, scales |
-| **TARGETED** (tap map, then FIRE) | airstrike, teleport, homing, magic, lightning, carpet, nuke, pigeon, donkey, drone, portal, magnet, meteor, blackhole, seismic, sniper, piano |
+| **TARGETED** (tap map, then FIRE) | airstrike, boggy, teleport, homing, magic, lightning, carpet, nuke, pigeon, donkey, drone, portal, magnet, meteor, blackhole, seismic, sniper, piano |
 | **CHARGE** (hold to charge) | bazooka, grenade, holy, cluster, bunker, homing, magic, banana, dragon, mole, napalm, bundle, sticky, rubber, splitter, mortar, drone, melon, molotov |
 
 **Key behaviors:** Bazooka ∞ammo, wind-affected, 0.25s grace. Sheep/Cow wander/detonate. Homing: 150px straight then track ≤3rad/s, duds after 5s. Magic bullet: r88, 9s timeout. Banana: 5 burst (30 HP minis + 10 HP core). Kamikaze: suicidal dig. Mine: 2s arm, <17px trigger, persists turns. Sticky: sticks on contact, 3.5s detonate. Donkey: targeted, vertical shaft, 100 dmg. **Always use `useAmmo(id)`** — direct decrement makes `NaN`.
@@ -392,6 +392,8 @@ This AGENTS.md is the **single source of truth**. If you find a discrepancy betw
 - v2.6.4 — Name/HP tag moved to y-47 (was y-34) so team hats are no longer covered.
 - v2.6.5 — Team hat baseline y-14 → y-9.5 (rests on head top y-8.7).
 
+- v2.6.6 — Grubsong ’26: new weapon **🚁 Boggy B** (mark a spot, FIRE — the Grubheli flies over and drops one crew Grenade on the mark, then flies off; one per team per match), menu rebuilt as the Grubsong ’26 hero banner with scrolling anthem marquee, original E-minor anthem honoring Wormsong ’95, **Major Munch** SVG mascot, Story modal (📖 book button). The weapon-type table above now lists Boggy B under TARGETED; counts updated to 71.
+
 *The game is one file. The rules are absolute. The quality is non-negotiable.*
 
-*Last updated: 2026-11-13 — Grub Blasters v2.6.5*
+*Last updated: 2026-11-14 — Grub Blasters v2.6.6*
