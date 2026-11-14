@@ -23,6 +23,7 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:
 .team{background:rgba(10,20,45,.6);border-radius:12px;padding:5px 9px;font-weight:800;font-size:13px;letter-spacing:.5px;min-width:0}
 .team span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .team.act{outline:2px solid rgba(255,255,255,.55)}
+#fpsBadge{position:fixed;top:8px;left:8px;z-index:12;font:700 11px ui-monospace,monospace;padding:2px 7px;border-radius:6px;background:rgba(0,0,0,.45);color:#9fe8ff;pointer-events:none;letter-spacing:.5px}
 .hide{display:none}
 .bar{height:12px;border-radius:6px;background:rgba(255,255,255,.18);margin-top:4px;overflow:hidden}
 .bar i{display:block;height:100%;width:100%;border-radius:6px;transition:width .3s}
@@ -247,6 +248,9 @@ body.everforest #replay{border-color:var(--acc);background:linear-gradient(180de
 #sweapons .sbtns button{width:30px;height:30px;padding:0;border-radius:8px;border:1px solid rgba(255,255,255,.22);background:#0b1530;color:#e8eefc;font-weight:800;font-size:15px;line-height:1;font-family:inherit}
 #sweapons .sv{min-width:30px;text-align:center;font-weight:800;color:#ffd54a;font-size:13px}
 
+/* ---------- accessibility ---------- */
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
+@media (forced-colors: active){.btn,.mini,.big,.wep-btn,.wcell,.nbtns button,.team,.crow select{border:1px solid ButtonText}}
 </style>
 </head>
 <body>
@@ -327,7 +331,7 @@ body.everforest #replay{border-color:var(--acc);background:linear-gradient(180de
     <li><b>Normal</b>: standard ammo. <b>Greedy</b>: every weapon, unlimited ammo. <b>Pro Mode</b>: scarce ammo, no airstrike. <b>Bazooka Only</b>: just rockets.</li>
     <li>Tap 🔨 next to <b>Weapon Scheme</b> to build a custom loadout — press ＋ for a new scheme, set each weapon to ∞ or 0–10, then Save; schemes are saved on the device and can be downloaded/imported as JSON. Deleting the last scheme leaves the editor empty until you press ＋ again.</li>
     <li>🎨 Customize sets the match: teams, worms per team, HP, turn time, computer level, scheme, gravity, sudden death, retreat time, jetpack fuel, wind, crates, barrels, map size, islands, aim guide, team names/colors, sky, terrain and weather.</li>
-    <li>⚙️ Settings (menu, or the gear in the HUD) covers interface theme (Modern / Classic / Gruvbox / Tokyo Night / Dark / Nord / OLED Dark / Everforest), sound, menu song, vibration, auto replay, Worm Select, crate radar, graphics and fullscreen.</li>
+    <li>⚙️ Settings (menu, or the gear in the HUD) covers interface theme (Modern / Classic / Gruvbox / Tokyo Night / Dark / Nord / OLED Dark / Everforest), sound, menu song, vibration, motion (Full / Low / Off — screen-shake intensity), auto replay, Worm Select, crate radar, graphics and fullscreen.</li>
     <li><b>Map size</b>: Standard, Wide, or Epic — bigger maps keep large armies from cluttering. <b>Islands</b> splits the map into up to six floating sky islands.</li>
   </ul>
   <h2>Tips</h2>
@@ -392,6 +396,9 @@ body.everforest #replay{border-color:var(--acc);background:linear-gradient(180de
       <label class="crow"><span>Sound</span><select id="smute"><option>On</option><option>Off</option></select></label>
       <label class="crow"><span>Menu song</span><select id="msong"><option>On</option><option>Off</option></select></label>
       <label class="crow"><span>Vibration</span><select id="hap"><option>On</option><option>Off</option></select></label>
+      <label class="crow"><span>Motion</span><select id="motion"><option>Full</option><option>Low</option><option>Off</option></select></label>
+      <label class="crow"><span>Team labels</span><select id="tlabels"><option>Off</option><option>On</option></select></label>
+      <label class="crow"><span>FPS counter</span><select id="fps"><option>Off</option><option>On</option></select></label>
       <label class="crow"><span>Auto replay</span><select id="aut"><option>Off</option><option>On</option></select></label>
     </section>
     <section class="csec"><h2>Game</h2>
@@ -422,6 +429,7 @@ body.everforest #replay{border-color:var(--acc);background:linear-gradient(180de
 
 <script>
 'use strict';
+const REDUCE_MOTION=window.matchMedia?window.matchMedia('(prefers-reduced-motion: reduce)').matches:false;
 let W=1400,H=800;const WATER0=725,G=620;const TT0=[20,30,45,60];
 let GV=G,sdTurn=16,gravIdx=1,sdIdx=0,retIdx=1,fuelIdx=1;
 const GRAVN=['Low','Normal','High'],GRAVK=[.6,1,1.5],SDN=['Standard','Late','Off'],SDT=[16,25,9999],RETN=['Off','3s','6s'],RETV=[0,3,6],FUELN=['Low','Normal','High'],FUELV=[75,150,250];
@@ -680,6 +688,8 @@ let target=null,tipMsg='',tipT=0,ammo=[{},{},{},{}],curSheep=null,curDet=null,ch
 let rec=null,lastMovie=null,rep=null,repC=null,repCtx=null,autoRep=false;
 const inp={left:false,right:false,up:false,down:false,jet:false};
 let turnSec=30,guide=false,maxHP=100,lastWpn=['bazooka','bazooka','bazooka','bazooka'],skyIdx=-1,terIdx=-1,wxIdx=-1,jumpT=0,teamCount=2,schIdx=0,windK=1,cratesOn=true,mapIdx=0,jetSndT=0,walkSndT=0,isl=0,wsel=true,barrelsOn=true,barrelOil=false,barrelDrum=false,radar=true,uiTheme='modern',customs=[],songOn=true;
+let motion=2; // 0 Off · 1 Low · 2 Full — screen-shake and particle intensity
+let teamLabels=false, fpsOn=false, fpsVal=0, fpsAcc=0, fpsN=0;
 let barEls=[],nameEls=[],chipEls=[];
 const numV=(v,d)=>{const x=parseInt(v,10);return isNaN(x)?d:x};
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
@@ -687,7 +697,7 @@ const lsSet=(k,v)=>{try{localStorage.setItem(k,String(v))}catch(e){}};
 const snapIdx=v=>{let i=1;for(let k=2;k<VALS.length;k++)if(Math.abs(VALS[k]-v)<Math.abs(VALS[i]-v))i=k;return i};
 const snapVal=v=>VALS[snapIdx(v)];
 function sanitizeAmmo(a){const o={};for(const k in a){if(!WEPID.has(k))continue;const v=a[k];if(typeof v==='number'&&v>=0)o[k]=snapVal(Math.min(10,v))}return o}
-try{const a=lsGet('gb_diff'),b=lsGet('gb_per'),c=lsGet('gb_tt'),g=lsGet('gb_guide'),m=lsGet('gb_mute'),h=lsGet('gb_hp'),sk=lsGet('gb_sky'),te=lsGet('gb_ter'),wx=lsGet('gb_wx'),lo=lsGet('gb_low'),tm=lsGet('gb_teams'),sc=lsGet('gb_sch'),wn=lsGet('gb_wnd'),cr=lsGet('gb_crate'),bv=lsGet('gb_barl'),mp=lsGet('gb_map'),il=lsGet('gb_isl'),wsv=lsGet('gb_wsel'),dv=lsGet('gb_dv'),grv=lsGet('gb_grav'),sdd=lsGet('gb_sdv'),rtv=lsGet('gb_ret'),flv=lsGet('gb_fuel'),au=lsGet('gb_auto'),rd=lsGet('gb_radar'),uv=lsGet('gb_ui');const wndOld=lsGet('gb_wndv')===null;lsSet('gb_wndv','1');if(a!==null){const n=+a||0;diff=Math.max(0,Math.min(DIFF.length-1,dv===null&&n<=3?n+1:n))}if(dv===null&&a!==null)try{lsSet('gb_dv','1')}catch(e){}if(b!==null)perTeam=Math.max(2,Math.min(8,+b||3));if(c!==null){const tv=numV(c,1);turnSec=tv<10?(TT0[Math.max(0,Math.min(3,tv))]||30):Math.max(10,Math.min(60,tv))}if(g!==null)guide=g==='1';if(m!==null)muted=m==='1';if(lsGet('gb_hap')==='0')hap=false;if(h!==null){const hv=+h||0;maxHP=hv<50?[100,150,200][Math.max(0,Math.min(2,hv))]:Math.max(50,hv)}for(let t=0;t<4;t++){const v=lsGet('gb_tn'+t);if(v!==null&&v.trim())TN[t]=v.trim().slice(0,12);const cv=lsGet('gb_tc'+t);if(cv!==null){colIdx[t]=Math.max(0,Math.min(PAL.length-1,isNaN(+cv)?t:+cv));TC[t]=PAL[colIdx[t]]}}skyIdx=Math.max(-1,Math.min(4,numV(sk,-1)));terIdx=Math.max(-1,Math.min(3,numV(te,-1)));wxIdx=Math.max(-1,Math.min(2,numV(wx,-1)));if(lo!==null){low=lo==='1';med=lo==='2'};if(tm!==null)teamCount=Math.max(2,Math.min(4,+tm||2));{const csl=lsGet('gb_csch');if(csl!==null)try{const ca=JSON.parse(csl);if(Array.isArray(ca))customs=ca.filter(x=>x&&typeof x.n==='string'&&x.a&&typeof x.a==='object').slice(0,24).map(x=>({n:String(x.n).slice(0,14),a:sanitizeAmmo(x.a)}))}catch(e){}}if(sc!==null)schIdx=Math.max(0,Math.min(SCH.length+customs.length-1,+sc||0));if(wn!==null){let wv=+wn||0;if(wndOld&&(wv===0||wv===1||wv===2)){wv=[.5,1,1.75][wv];lsSet('gb_wnd',wv)}windK=Math.max(0,Math.min(2.5,wv))}if(cr!==null)cratesOn=cr==='1';if(bv!==null){barrelOil=bv==='oil';barrelDrum=bv==='drum';barrelsOn=bv!=='Off'&&bv!=='0'}if(mp!==null)mapIdx=Math.max(0,Math.min(MAPS.length-1,+mp||0));if(il!==null)isl=Math.max(0,Math.min(6,+il||0));if(wsv!==null)wsel=wsv==='1';if(grv!==null){gravIdx=Math.max(0,Math.min(2,isNaN(+grv)?1:+grv));GV=G*GRAVK[gravIdx]}if(sdd!==null){sdIdx=Math.max(0,Math.min(2,isNaN(+sdd)?0:+sdd));sdTurn=SDT[sdIdx]}if(rtv!==null)retIdx=Math.max(0,Math.min(2,isNaN(+rtv)?1:+rtv));if(flv!==null){fuelIdx=Math.max(0,Math.min(2,isNaN(+flv)?1:+flv));FUEL=FUELV[fuelIdx]}if(au!==null)autoRep=au==='1';if(rd!==null)radar=rd==='1';if(uv!==null)uiTheme=uv==='classic'?'classic':uv==='gruvbox'?'gruvbox':uv==='tokyo'?'tokyo':uv==='dark'?'dark':uv==='nord'?'nord':uv==='oled'?'oled':uv==='everforest'?'everforest':'modern';if(lsGet('gb_song')==='0')songOn=false}catch(e){}
+try{const a=lsGet('gb_diff'),b=lsGet('gb_per'),c=lsGet('gb_tt'),g=lsGet('gb_guide'),m=lsGet('gb_mute'),h=lsGet('gb_hp'),sk=lsGet('gb_sky'),te=lsGet('gb_ter'),wx=lsGet('gb_wx'),lo=lsGet('gb_low'),tm=lsGet('gb_teams'),sc=lsGet('gb_sch'),wn=lsGet('gb_wnd'),cr=lsGet('gb_crate'),bv=lsGet('gb_barl'),mp=lsGet('gb_map'),il=lsGet('gb_isl'),wsv=lsGet('gb_wsel'),dv=lsGet('gb_dv'),grv=lsGet('gb_grav'),sdd=lsGet('gb_sdv'),rtv=lsGet('gb_ret'),flv=lsGet('gb_fuel'),au=lsGet('gb_auto'),rd=lsGet('gb_radar'),uv=lsGet('gb_ui');const wndOld=lsGet('gb_wndv')===null;lsSet('gb_wndv','1');if(a!==null){const n=+a||0;diff=Math.max(0,Math.min(DIFF.length-1,dv===null&&n<=3?n+1:n))}if(dv===null&&a!==null)try{lsSet('gb_dv','1')}catch(e){}if(b!==null)perTeam=Math.max(2,Math.min(8,+b||3));if(c!==null){const tv=numV(c,1);turnSec=tv<10?(TT0[Math.max(0,Math.min(3,tv))]||30):Math.max(10,Math.min(60,tv))}if(g!==null)guide=g==='1';if(m!==null)muted=m==='1';if(lsGet('gb_hap')==='0')hap=false;if(h!==null){const hv=+h||0;maxHP=hv<50?[100,150,200][Math.max(0,Math.min(2,hv))]:Math.max(50,hv)}for(let t=0;t<4;t++){const v=lsGet('gb_tn'+t);if(v!==null&&v.trim())TN[t]=v.trim().slice(0,12);const cv=lsGet('gb_tc'+t);if(cv!==null){colIdx[t]=Math.max(0,Math.min(PAL.length-1,isNaN(+cv)?t:+cv));TC[t]=PAL[colIdx[t]]}}skyIdx=Math.max(-1,Math.min(4,numV(sk,-1)));terIdx=Math.max(-1,Math.min(3,numV(te,-1)));wxIdx=Math.max(-1,Math.min(2,numV(wx,-1)));if(lo!==null){low=lo==='1';med=lo==='2'};if(tm!==null)teamCount=Math.max(2,Math.min(4,+tm||2));{const csl=lsGet('gb_csch');if(csl!==null)try{const ca=JSON.parse(csl);if(Array.isArray(ca))customs=ca.filter(x=>x&&typeof x.n==='string'&&x.a&&typeof x.a==='object').slice(0,24).map(x=>({n:String(x.n).slice(0,14),a:sanitizeAmmo(x.a)}))}catch(e){}}if(sc!==null)schIdx=Math.max(0,Math.min(SCH.length+customs.length-1,+sc||0));if(wn!==null){let wv=+wn||0;if(wndOld&&(wv===0||wv===1||wv===2)){wv=[.5,1,1.75][wv];lsSet('gb_wnd',wv)}windK=Math.max(0,Math.min(2.5,wv))}if(cr!==null)cratesOn=cr==='1';if(bv!==null){barrelOil=bv==='oil';barrelDrum=bv==='drum';barrelsOn=bv!=='Off'&&bv!=='0'}if(mp!==null)mapIdx=Math.max(0,Math.min(MAPS.length-1,+mp||0));if(il!==null)isl=Math.max(0,Math.min(6,+il||0));if(wsv!==null)wsel=wsv==='1';if(grv!==null){gravIdx=Math.max(0,Math.min(2,isNaN(+grv)?1:+grv));GV=G*GRAVK[gravIdx]}if(sdd!==null){sdIdx=Math.max(0,Math.min(2,isNaN(+sdd)?0:+sdd));sdTurn=SDT[sdIdx]}if(rtv!==null)retIdx=Math.max(0,Math.min(2,isNaN(+rtv)?1:+rtv));if(flv!==null){fuelIdx=Math.max(0,Math.min(2,isNaN(+flv)?1:+flv));FUEL=FUELV[fuelIdx]}if(au!==null)autoRep=au==='1';if(rd!==null)radar=rd==='1';if(uv!==null)uiTheme=uv==='classic'?'classic':uv==='gruvbox'?'gruvbox':uv==='tokyo'?'tokyo':uv==='dark'?'dark':uv==='nord'?'nord':uv==='oled'?'oled':uv==='everforest'?'everforest':'modern';if(lsGet('gb_song')==='0')songOn=false;{const mo=lsGet('gb_motion');if(mo!==null)motion=Math.max(0,Math.min(2,isNaN(+mo)?2:+mo));}{const tl=lsGet('gb_tlabels');if(tl!==null)teamLabels=tl==='1'}{const fp=lsGet('gb_fps');if(fp!==null)fpsOn=fp==='1'}}catch(e){}
 document.body.classList.toggle('modern',uiTheme==='modern'||uiTheme==='dark'||uiTheme==='oled'||uiTheme==='everforest');document.body.classList.toggle('classic',uiTheme==='classic');document.body.classList.toggle('gruvbox',uiTheme==='gruvbox');document.body.classList.toggle('tokyo',uiTheme==='tokyo');document.body.classList.toggle('dark',uiTheme==='dark');document.body.classList.toggle('nord',uiTheme==='nord');document.body.classList.toggle('oled',uiTheme==='oled');document.body.classList.toggle('everforest',uiTheme==='everforest');resize();
 
 
@@ -2075,6 +2085,7 @@ function drawWorm(w){
     ctx.stroke();
   }else drawWormHi(w,d);
   if(teamHat[w.team]&&!w.sau){ctx.font='10px system-ui';ctx.textAlign='center';ctx.fillText(teamHat[w.team],0,-9.5)}
+  if(teamLabels&&!w.sau){const code=String.fromCharCode(65+w.team);ctx.font='bold 10px system-ui';ctx.textAlign='center';ctx.lineWidth=2.5;ctx.strokeStyle='rgba(0,0,0,.6)';ctx.strokeText(code,0,-20);ctx.fillStyle=TC[w.team];ctx.fillText(code,0,-20)}
   if(w.jet){
     if(w.sau>0){
       ctx.fillStyle='rgba(140,240,255,.85)';ctx.beginPath();ctx.moveTo(-4,9);ctx.lineTo(0,16+Math.random()*6);ctx.lineTo(4,9);ctx.closePath();ctx.fill();
@@ -2666,7 +2677,7 @@ function draw(){
   ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='#0b1530';ctx.fillRect(0,0,cv.width,cv.height);
   const s=S();ctx.setTransform(dpr*s,0,0,dpr*s,dpr*(innerWidth/2-cam.x*s),dpr*(innerHeight/2-cam.y*s));
   ctx.save();ctx.beginPath();ctx.rect(0,0,W,H);ctx.clip();
-  if(shake>0)ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);
+  if(shake>0&&!REDUCE_MOTION){const mk=motion===0?0:motion===1?.45:1;if(mk>0)ctx.translate((Math.random()-.5)*shake*mk,(Math.random()-.5)*shake*mk);}
   if(bg)ctx.drawImage(bg,0,0);
   if(!low){ctx.save();ctx.translate((cam.x-W/2)*.45,(cam.y-H/2)*.45);for(const c of clouds)drawCloud(c);ctx.restore()}
   if(terrain)ctx.drawImage(terrain,0,0);
@@ -2936,7 +2947,7 @@ function syncUI(){
   $('#map').value=MAPS[mapIdx].n;$('#isl').value=ISLN[isl];$('#ag').value=guide?'On':'Off';
   $('#sky').value=SKYN[skyIdx+1];$('#ter').value=GROUNDN[terIdx+1];$('#wx').value=WXN[wxIdx+1];
   $('#gfx').value=low?'Low':med?'Medium':'High';$('#smute').value=muted?'Off':'On';$('#msong').value=songOn?'On':'Off';$('#wsel').value=wsel?'On':'Off';$('#iface').value=uiTheme==='classic'?'Classic':uiTheme==='gruvbox'?'Gruvbox':uiTheme==='tokyo'?'Tokyo Night':uiTheme==='dark'?'Dark':uiTheme==='nord'?'Nord':uiTheme==='oled'?'OLED Dark':uiTheme==='everforest'?'Everforest':'Modern';
-  $('#hap').value=hap?'On':'Off';$('#radar').value=radar?'On':'Off';$('#aut').value=autoRep?'On':'Off';
+  $('#hap').value=hap?'On':'Off';$('#radar').value=radar?'On':'Off';$('#aut').value=autoRep?'On':'Off';$('#motion').value=['Off','Low','Full'][motion];$('#tlabels').value=teamLabels?'On':'Off';$('#fps').value=fpsOn?'On':'Off';
   $('#grav').value=GRAVN[gravIdx];$('#sdx').value=SDN[sdIdx];$('#ret').value=RETN[retIdx];$('#fuel').value=FUELN[fuelIdx];
 }
 syncTeams();syncUI();
@@ -2962,6 +2973,9 @@ function selCh(id,v){
         else if(id==='#iface'){uiTheme=v==='Tokyo Night'?'tokyo':v==='Nord'?'nord':v==='OLED Dark'?'oled':v==='Everforest'?'everforest':v.toLowerCase();document.body.classList.remove('modern','classic','gruvbox','tokyo','dark','nord','oled','everforest');document.body.classList.add(uiTheme);if(uiTheme==='dark'||uiTheme==='oled'||uiTheme==='everforest')document.body.classList.add('modern');save('gb_ui',uiTheme)}
   else if(id==='#smute'){muted=v==='Off';saveMute()}
   else if(id==='#msong'){songOn=v==='On';save('gb_song',songOn?'1':'0');if(!songOn)stopSong()}
+  else if(id==='#motion'){motion=['Off','Low','Full'].indexOf(v);if(motion<0)motion=2;save('gb_motion',String(motion))}
+  else if(id==='#tlabels'){teamLabels=v==='On';save('gb_tlabels',teamLabels?'1':'0')}
+  else if(id==='#fps'){fpsOn=v==='On';save('gb_fps',fpsOn?'1':'0');const fb=$('#fpsBadge');if(fb)fb.classList.toggle('hide',!fpsOn)}
   else if(id==='#wsel'){wsel=v==='On';save('gb_wsel',wsel?'1':'0')}
   else if(id==='#hap'){hap=v==='On';save('gb_hap',hap?'1':'0')}
   else if(id==='#radar'){radar=v==='On';save('gb_radar',radar?'1':'0')}
@@ -2971,7 +2985,7 @@ function selCh(id,v){
   else if(id==='#ret'){retIdx=Math.max(0,RETN.indexOf(v));save('gb_ret',retIdx)}
   else if(id==='#fuel'){fuelIdx=Math.max(0,FUELN.indexOf(v));FUEL=FUELV[fuelIdx];save('gb_fuel',fuelIdx)}
 }
-['#tms','#cnt','#hp','#tt','#lvl','#sch','#wnd','#crt','#barl','#map','#isl','#ag','#grav','#sdx','#ret','#fuel','#sky','#ter','#wx','#gfx','#smute','#msong','#wsel','#iface','#hap','#radar','#aut'].forEach(id=>$(id).addEventListener('change',e=>selCh(id,e.target.value)));
+['#tms','#cnt','#hp','#tt','#lvl','#sch','#wnd','#crt','#barl','#map','#isl','#ag','#grav','#sdx','#ret','#fuel','#sky','#ter','#wx','#gfx','#smute','#msong','#wsel','#iface','#hap','#radar','#aut','#motion','#tlabels','#fps'].forEach(id=>$(id).addEventListener('change',e=>selCh(id,e.target.value)));
 ['#hp','#tt','#wnd'].forEach(id=>$(id).addEventListener('input',e=>selCh(id,e.target.value)));
 for(let t=0;t<4;t++){const i=t;$('#tn'+i).style.background=TC[i];$('#tn'+i).onclick=function(){const v=prompt(TN[i]+' team name',TN[i]);if(v===null)return;const s=v.trim().slice(0,12);if(!s)return;TN[i]=s;this.textContent=s;if(nameEls[i])nameEls[i].textContent=s;save('gb_tn'+i,s)};$('#tc'+i).style.background=TC[i];$('#tc'+i).onclick=function(){colIdx[i]=(colIdx[i]+1)%PAL.length;TC[i]=PAL[colIdx[i]];this.style.background=TC[i];$('#tn'+i).style.background=TC[i];if(nameEls[i])nameEls[i].style.color=TC[i];if(barEls[i])barEls[i].style.background=TC[i];save('gb_tc'+i,colIdx[i])}}
 $('#bhelp').onclick=()=>toggleHelp(true);$('#hclose').onclick=()=>toggleHelp(false);
@@ -3005,6 +3019,8 @@ function frame(t){
     const dt=Math.min(.033,(t-last)/1000||0);last=t;
     if(!paused){const sc=slowT>0?.35:1;if(slowT>0)slowT=Math.max(0,slowT-dt*sc);update(dt*sc)}
     draw();hud();songCheck();
+    fpsAcc+=dt;fpsN++;if(fpsAcc>=0.5){fpsVal=Math.round(fpsN/fpsAcc);fpsAcc=0;fpsN=0;}
+    const fb=fpsOn?$('#fpsBadge'):null;if(fb){fb.textContent=fpsVal+' FPS';fb.classList.toggle('hide',state==='menu')}
   }catch(e){console.error('Frame error',e);if(performance.now()-errT>3000){errT=performance.now();showError('Frame error: '+((e&&e.message)||e))}}
   requestAnimationFrame(frame);
 }
