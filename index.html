@@ -23,6 +23,29 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:
 .team{background:rgba(10,20,45,.6);border-radius:12px;padding:5px 9px;font-weight:800;font-size:13px;letter-spacing:.5px;min-width:0}
 .team span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .team.act{outline:2px solid rgba(255,255,255,.55)}
+#menu .card{position:relative;overflow:hidden;padding:0 30px 26px;border-radius:26px;border:2px solid rgba(255,255,255,.16);background:linear-gradient(165deg,#243862 0%,#182141 52%,#11162f 100%);box-shadow:0 26px 70px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.12)}
+.grubsong-strip{margin:0 -30px 10px;overflow:hidden;white-space:nowrap;padding:7px 0;background:linear-gradient(180deg,#ffe27a 0%,#f4c95d 42%,#d99a33 100%);border-top:2px solid #131b2e;border-bottom:2px solid #131b2e;box-shadow:inset 0 3px 4px rgba(255,255,255,.45),inset 0 -3px 5px rgba(60,35,0,.35)}
+.grubsong-strip span{display:inline-block;font-weight:900;font-size:11px;letter-spacing:.24em;color:#101828;padding-left:18px;animation:gscroll 22s linear infinite}
+@keyframes gscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.menu-hero{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px 4px;border-radius:18px;background:radial-gradient(ellipse at 50% -22%,rgba(255,213,116,.33),transparent 62%);margin-bottom:10px}
+.menu-hero-worm{font-size:2.2rem;line-height:1;filter:drop-shadow(0 6px 10px rgba(0,0,0,.45))}
+.menu-hero-title{font-size:clamp(2rem,7.4vw,3.1rem);font-weight:900;letter-spacing:.08em;line-height:.95;text-align:center;background:linear-gradient(180deg,#fff6c8 8%,#ffd54a 32%,#ff9d3c 64%,#ff5a3c 98%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 10px 34px rgba(255,157,60,.25)}
+.menu-hero-sub{font-size:.66rem;letter-spacing:.26em;font-weight:800;opacity:.82;text-align:center}
+@media (prefers-reduced-motion: reduce){.grubsong-strip span{animation:none}}
+.mascot{width:min(104px,30vw);height:auto;filter:drop-shadow(0 10px 14px rgba(0,0,0,.45));animation:mbob 3.2s ease-in-out infinite}
+.menu-hero{gap:2px;padding:10px 8px 2px;margin-bottom:6px}
+.menu-hero-title{font-size:clamp(1.55rem,5.6vw,2.4rem)}
+.menu-hero-sub{font-size:.6rem;letter-spacing:.22em}
+#menu h1{font-size:1.35rem;margin:2px 0 4px}
+#menu #msg{font-size:.85rem;margin:2px 0 8px}
+#menu .big{margin:5px 0;padding:10px 14px}
+@media (max-height:620px){.menu-hero{display:none}.grubsong-strip{display:none}}
+@keyframes mbob{0%,100%{transform:translateY(2px)}50%{transform:translateY(-7px)}}
+@media (prefers-reduced-motion: reduce){.mascot{animation:none}}
+#story .card{max-width:min(560px,94vw);text-align:left}
+#story h2{color:#ffd54a;margin:10px 0 8px;font-size:17px}
+#story p{margin:8px 0;font-size:14.5px;line-height:1.6}
+#story .hint{margin-top:10px;font-size:12px;opacity:.72}
 #fpsBadge{position:fixed;top:8px;left:8px;z-index:12;font:700 11px ui-monospace,monospace;padding:2px 7px;border-radius:6px;background:rgba(0,0,0,.45);color:#9fe8ff;pointer-events:none;letter-spacing:.5px}
 .hide{display:none}
 .bar{height:12px;border-radius:6px;background:rgba(255,255,255,.18);margin-top:4px;overflow:hidden}
@@ -105,8 +128,8 @@ label.crow{cursor:pointer}
 @media(hover:hover){.crow select:hover{border-color:rgba(255,203,61,.55)}.nbtns button:hover{filter:brightness(1.12)}}
 body.pc .crow select,body.pc .nbtns button{cursor:pointer}
 .hint{font-size:13px!important;opacity:.65!important;max-width:420px;line-height:1.45}
-#help,#custom,#settings{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(5,12,30,.8);backdrop-filter:blur(6px);z-index:9;padding:14px}
-#help.hide,#custom.hide,#settings.hide{display:none}
+#help,#custom,#settings,#story{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(5,12,30,.8);backdrop-filter:blur(6px);z-index:9;padding:14px}
+#help.hide,#custom.hide,#settings.hide,#story.hide{display:none}
 #help .card{text-align:left;width:min(560px,94vw)}
 #help h2{margin:16px 0 4px;font-size:16px;color:#ffd54a}
 #help ul{margin:4px 0;padding-left:20px;font-size:14px;line-height:1.55}
@@ -150,12 +173,12 @@ body.modern .nbtns button{border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,.3
 body.modern .nbtns button:active{transform:scale(.94)}
 body.modern #replay{border-color:rgba(255,209,102,.7);background:linear-gradient(180deg,rgba(255,209,102,.32),rgba(255,179,0,.2));box-shadow:0 3px 10px rgba(255,179,0,.25)}
 body.modern #menu{background:radial-gradient(120% 100% at 50% 0%,rgba(30,50,100,.5),rgba(4,8,20,.74));backdrop-filter:blur(7px)}
-body.modern #help,body.modern #custom,body.modern #settings{background:radial-gradient(120% 100% at 50% 0%,rgba(24,40,84,.78),rgba(4,8,20,.85))}
+body.modern #help,body.modern #custom,body.modern #settings,body.modern #story{background:radial-gradient(120% 100% at 50% 0%,rgba(24,40,84,.78),rgba(4,8,20,.85))}
 /* ---------- gruvbox theme ---------- */
 body.gruvbox{--bg:#282828;--bg2:#3c3836;--fg:#ebdbb2;--acc:#fabd2f;--red:#fb4934;--orange:#fe8019;--green:#b8bb26;--blue:#83a598;--purple:#d3869b;--gray:#928374;background:#282828}
-body.gruvbox .team,body.gruvbox #mid,body.gruvbox .mini,body.gruvbox .btn,body.gruvbox .wep-btn,body.gruvbox .wcell,body.gruvbox .card,body.gruvbox .big,body.gruvbox .wep-pan,body.gruvbox #tip,body.gruvbox #replay,body.gruvbox #menu,body.gruvbox #help,body.gruvbox #custom,body.gruvbox #settings{background:var(--bg2);color:var(--fg);border-color:var(--gray)}
+body.gruvbox .team,body.gruvbox #mid,body.gruvbox .mini,body.gruvbox .btn,body.gruvbox .wep-btn,body.gruvbox .wcell,body.gruvbox .card,body.gruvbox .big,body.gruvbox .wep-pan,body.gruvbox #tip,body.gruvbox #replay,body.gruvbox #menu,body.gruvbox #help,body.gruvbox #custom,body.gruvbox #settings,body.gruvbox #story{background:var(--bg2);color:var(--fg);border-color:var(--gray)}
 body.gruvbox .crow select{background-color:var(--bg2)}body.gruvbox .crow select option{background:var(--bg2);color:var(--fg)}body.gruvbox .card{background:var(--bg)}
-body.gruvbox .team,body.gruvbox #mid,body.gruvbox .mini,body.gruvbox .btn,body.gruvbox .wep-btn,body.gruvbox .wep-pan,body.gruvbox .card,body.gruvbox #tip,body.gruvbox #menu,body.gruvbox #help,body.gruvbox #custom,body.gruvbox #settings{border-color:var(--gray)}
+body.gruvbox .team,body.gruvbox #mid,body.gruvbox .mini,body.gruvbox .btn,body.gruvbox .wep-btn,body.gruvbox .wep-pan,body.gruvbox .card,body.gruvbox #tip,body.gruvbox #menu,body.gruvbox #help,body.gruvbox #custom,body.gruvbox #settings,body.gruvbox #story{border-color:var(--gray)}
 body.gruvbox .team.act,body.gruvbox .btn.sel,body.gruvbox .wcell.sel{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}
 body.gruvbox .btn.on:not(#fire),body.gruvbox .btn:active:not(#fire),body.gruvbox .big,body.gruvbox .big.alt{background:var(--acc);color:#282828;border-color:var(--acc)}
 body.gruvbox .big.alt{background:var(--red);color:#fbf1c7}
@@ -169,9 +192,9 @@ body.gruvbox #wind i{background:var(--acc)}
 body.gruvbox #replay{border-color:var(--acc);background:linear-gradient(180deg,rgba(250,189,47,.3),rgba(254,128,25,.18))}
 /* ---------- tokyo night theme ---------- */
 body.tokyo{--bg:#1a1b26;--bg2:#24283b;--fg:#c0caf5;--acc:#7aa2f7;--red:#f7768e;--orange:#ff9e64;--green:#9ece6a;--purple:#bb9af7;--cyan:#7dcfff;--gray:#565f89;background:#1a1b26}
-body.tokyo .team,body.tokyo #mid,body.tokyo .mini,body.tokyo .btn,body.tokyo .wep-btn,body.tokyo .wcell,body.tokyo .card,body.tokyo .big,body.tokyo .wep-pan,body.tokyo #tip,body.tokyo #replay,body.tokyo #menu,body.tokyo #help,body.tokyo #custom,body.tokyo #settings{background:var(--bg2);color:var(--fg);border-color:var(--gray)}
+body.tokyo .team,body.tokyo #mid,body.tokyo .mini,body.tokyo .btn,body.tokyo .wep-btn,body.tokyo .wcell,body.tokyo .card,body.tokyo .big,body.tokyo .wep-pan,body.tokyo #tip,body.tokyo #replay,body.tokyo #menu,body.tokyo #help,body.tokyo #custom,body.tokyo #settings,body.tokyo #story{background:var(--bg2);color:var(--fg);border-color:var(--gray)}
 body.tokyo .crow select{background-color:var(--bg2)}body.tokyo .crow select option{background:var(--bg2);color:var(--fg)}body.tokyo .card{background:var(--bg)}
-body.tokyo .team,body.tokyo #mid,body.tokyo .mini,body.tokyo .btn,body.tokyo .wep-btn,body.tokyo .wep-pan,body.tokyo .card,body.tokyo #tip,body.tokyo #menu,body.tokyo #help,body.tokyo #custom,body.tokyo #settings{border-color:var(--gray)}
+body.tokyo .team,body.tokyo #mid,body.tokyo .mini,body.tokyo .btn,body.tokyo .wep-btn,body.tokyo .wep-pan,body.tokyo .card,body.tokyo #tip,body.tokyo #menu,body.tokyo #help,body.tokyo #custom,body.tokyo #settings,body.tokyo #story{border-color:var(--gray)}
 body.tokyo .team.act,body.tokyo .btn.sel,body.tokyo .wcell.sel{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}
 body.tokyo .btn.on:not(#fire),body.tokyo .btn:active:not(#fire),body.tokyo .big,body.tokyo .big.alt{background:var(--acc);color:#1a1b26;border-color:var(--acc)}
 body.tokyo .big.alt{background:var(--red);color:#c0caf5}
@@ -185,7 +208,7 @@ body.tokyo #wind i{background:var(--acc)}
 body.tokyo #replay{border-color:var(--acc);background:linear-gradient(180deg,rgba(122,162,247,.3),rgba(125,207,255,.18))}
 /* ---------- nord theme ---------- */
 body.nord{--bg:#2e3440;--bg2:#3b4252;--fg:#d8dee9;--acc:#88c0d0;--red:#bf616a;--orange:#d08770;--green:#a3be8c;--purple:#b48ead;--gray:#4c566a;background:#2e3440}
-body.nord .team,body.nord #mid,body.nord .mini,body.nord .btn,body.nord .wep-btn,body.nord .wcell,body.nord .card,body.nord .big,body.nord .wep-pan,body.nord #tip,body.nord #replay,body.nord #menu,body.nord #help,body.nord #custom,body.nord #settings{background:var(--bg2);color:var(--fg);border-color:var(--gray)}
+body.nord .team,body.nord #mid,body.nord .mini,body.nord .btn,body.nord .wep-btn,body.nord .wcell,body.nord .card,body.nord .big,body.nord .wep-pan,body.nord #tip,body.nord #replay,body.nord #menu,body.nord #help,body.nord #custom,body.nord #settings,body.nord #story{background:var(--bg2);color:var(--fg);border-color:var(--gray)}
 body.nord .crow select{background-color:var(--bg2)}body.nord .crow select option{background:var(--bg2);color:var(--fg)}body.nord .card{background:var(--bg)}
 body.nord .team.act,body.nord .btn.sel,body.nord .wcell.sel{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}
 body.nord .btn.on:not(#fire),body.nord .btn:active:not(#fire),body.nord .big{background:var(--acc);color:#2e3440;border-color:var(--acc)}
@@ -199,7 +222,7 @@ body.nord #wind i{background:var(--acc)}
 body.nord #replay{border-color:var(--acc);background:linear-gradient(180deg,rgba(136,192,208,.3),rgba(136,192,208,.16))}
 /* ---------- oled dark theme ---------- */
 body.oled{--bg:#000000;--bg2:#0a0a0a;--fg:#ffffff;--acc:#00ff88;--red:#ff4444;--orange:#ffaa00;--green:#00ff88;--gray:#1a1a1a;background:#000000}
-body.oled .team,body.oled #mid,body.oled .mini,body.oled .btn,body.oled .wep-btn,body.oled .wcell,body.oled .card,body.oled .big,body.oled .wep-pan,body.oled #tip,body.oled #replay,body.oled #menu,body.oled #help,body.oled #custom,body.oled #settings{background:var(--bg2);color:var(--fg);border-color:var(--gray)}
+body.oled .team,body.oled #mid,body.oled .mini,body.oled .btn,body.oled .wep-btn,body.oled .wcell,body.oled .card,body.oled .big,body.oled .wep-pan,body.oled #tip,body.oled #replay,body.oled #menu,body.oled #help,body.oled #custom,body.oled #settings,body.oled #story{background:var(--bg2);color:var(--fg);border-color:var(--gray)}
 body.oled .crow select{background-color:var(--bg2)}body.oled .crow select option{background:var(--bg2);color:var(--fg)}body.oled .card{background:#101010;border-color:#2b2b2b}
 body.oled .team.act,body.oled .btn.sel,body.oled .wcell.sel{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}
 body.oled .btn.on:not(#fire),body.oled .btn:active:not(#fire),body.oled .big{background:var(--acc);color:#000000;border-color:var(--acc)}
@@ -213,7 +236,7 @@ body.oled #wind i{background:var(--acc)}
 body.oled #replay{border-color:var(--acc);background:linear-gradient(180deg,rgba(0,255,136,.3),rgba(0,255,136,.16))}
 /* ---------- dark theme ---------- */
 body.dark{--bg:#0e1013;--bg2:#171a20;--fg:#e6e9f0;--acc:#4da3ff;--red:#ff6b6b;--orange:#ffa94d;--green:#69db7c;--gray:#3a4049;background:#0e1013}
-body.dark .team,body.dark #mid,body.dark .mini,body.dark .btn,body.dark .wep-btn,body.dark .wcell,body.dark .card,body.dark .big,body.dark .wep-pan,body.dark #tip,body.dark #replay,body.dark #menu,body.dark #help,body.dark #custom,body.dark #settings{background:var(--bg2);color:var(--fg);border-color:var(--gray)}
+body.dark .team,body.dark #mid,body.dark .mini,body.dark .btn,body.dark .wep-btn,body.dark .wcell,body.dark .card,body.dark .big,body.dark .wep-pan,body.dark #tip,body.dark #replay,body.dark #menu,body.dark #help,body.dark #custom,body.dark #settings,body.dark #story{background:var(--bg2);color:var(--fg);border-color:var(--gray)}
 body.dark .crow select{background-color:var(--bg2)}body.dark .crow select option{background:var(--bg2);color:var(--fg)}body.dark .card{background:var(--bg)}
 body.dark .team.act,body.dark .btn.sel,body.dark .wcell.sel{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}
 body.dark .btn.on:not(#fire),body.dark .btn:active:not(#fire),body.dark .big{background:var(--acc);color:#0e1013;border-color:var(--acc)}
@@ -227,7 +250,7 @@ body.dark #wind i{background:var(--acc)}
 body.dark #replay{border-color:var(--acc);background:linear-gradient(180deg,rgba(77,163,255,.3),rgba(77,163,255,.16))}
 /* ---------- everforest theme ---------- */
 body.everforest{--bg:#2D353B;--bg2:#343F44;--fg:#D3C6AA;--acc:#A7C080;--red:#E67E80;--orange:#E69875;--green:#A7C080;--gray:#859289;background:#2D353B}
-body.everforest .team,body.everforest #mid,body.everforest .mini,body.everforest .btn,body.everforest .wep-btn,body.everforest .wcell,body.everforest .card,body.everforest .big,body.everforest .wep-pan,body.everforest #tip,body.everforest #replay,body.everforest #menu,body.everforest #help,body.everforest #custom,body.everforest #settings{background:var(--bg2);color:var(--fg);border-color:var(--gray)}
+body.everforest .team,body.everforest #mid,body.everforest .mini,body.everforest .btn,body.everforest .wep-btn,body.everforest .wcell,body.everforest .card,body.everforest .big,body.everforest .wep-pan,body.everforest #tip,body.everforest #replay,body.everforest #menu,body.everforest #help,body.everforest #custom,body.everforest #settings,body.everforest #story{background:var(--bg2);color:var(--fg);border-color:var(--gray)}
 body.everforest .crow select{background-color:var(--bg2)}body.everforest .crow select option{background:var(--bg2);color:var(--fg)}body.everforest .card{background:#232A2E;border-color:#425047}
 body.everforest .team.act,body.everforest .btn.sel,body.everforest .wcell.sel{border-color:var(--green);box-shadow:0 0 0 2px var(--green)}
 body.everforest .btn.on:not(#fire),body.everforest .btn:active:not(#fire),body.everforest .big{background:var(--acc);color:#2D353B;border-color:var(--green)}
@@ -277,7 +300,50 @@ body.everforest #replay{border-color:var(--acc);background:linear-gradient(180de
     </div>
   </div>
 </div>
-<div id="menu"><div class="card">
+<div id="menu"><div class="card menu-card">
+  <div class="grubsong-strip"><span>GRUBSONG ’26 ✦ MAJOR MUNCH ✦ GRUBSONG ’26 ✦ MAJOR MUNCH ✦ </span></div>
+  <div class="menu-hero">
+    <svg class="mascot" viewBox="0 0 210 176" role="img" aria-label="Major Munch, the official Grub Blasters mascot">
+    <title>Major Munch — Grub Blasters mascot</title>
+    <defs>
+      <linearGradient id="mg-body" x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0" stop-color="#b9905a"/><stop offset=".45" stop-color="#ecc984"/><stop offset="1" stop-color="#fff0bd"/>
+      </linearGradient>
+      <linearGradient id="mg-helm" x1="0" y1="1" x2="0" y2="1">
+        <stop offset="0" stop-color="#567a4e"/><stop offset="1" stop-color="#2a3f28"/>
+      </linearGradient>
+      <linearGradient id="mg-rocket" x1="0" y1="1" x2="1" y2="0">
+        <stop offset="0" stop-color="#8a8f99"/><stop offset=".45" stop-color="#d7dde6"/><stop offset="1" stop-color="#6e747e"/>
+      </linearGradient>
+    </defs>
+    <g>
+      <rect x="150" y="54" width="16" height="34" rx="3" fill="url(#mg-rocket)" stroke="#1f242b" stroke-width="2" transform="rotate(-14 158 71)"/>
+      <path d="M156 46 L168 46 L162 30 Z" fill="#e5533c" stroke="#1f242b" stroke-width="2" stroke-linejoin="round" transform="rotate(-14 162 38)"/>
+      <circle cx="159.5" cy="60" r="3" fill="#222"/>
+      <path d="M148 96 C138 88 126 92 126 92 C126 92 142 100 152 110 Z" fill="none" stroke="#1f242b" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="96" cy="126" r="13" fill="url(#mg-body)" stroke="#1f2410" stroke-width="2.4"/>
+      <circle cx="76" cy="118" r="15" fill="url(#mg-body)" stroke="#1f2410" stroke-width="2.4"/>
+      <circle cx="56" cy="106" r="17" fill="url(#mg-body)" stroke="#1f2410" stroke-width="2.4"/>
+      <circle cx="40" cy="86" r="20" fill="url(#mg-body)" stroke="#1f2410" stroke-width="2.4"/>
+      <circle cx="36" cy="56" r="24" fill="url(#mg-body)" stroke="#1f2410" stroke-width="2.6"/>
+      <path d="M12 52 a24 24 0 0 1 48 0 C40 44 32 44 12 52 Z" fill="url(#mg-helm)" stroke="#1f2410" stroke-width="2.4" stroke-linejoin="round"/>
+      <line x1="36" y1="32" x2="36" y2="18" stroke="#1f2410" stroke-width="2.4"/>
+      <circle cx="36" cy="14" r="4.6" fill="#ffd54a" stroke="#1f2410" stroke-width="2"/>
+      <rect x="14" y="50" width="44" height="10" rx="5" fill="#f7c948" stroke="#1f2410" stroke-width="2.2"/>
+      <circle cx="25" cy="55" r="6.4" fill="#fff6c8" stroke="#1f2410" stroke-width="2"/>
+      <circle cx="48" cy="55" r="6.4" fill="#fff6c8" stroke="#1f2410" stroke-width="2"/>
+      <circle cx="26.5" cy="55.5" r="2.4" fill="#1f2410"/>
+      <circle cx="49.5" cy="55.5" r="2.4" fill="#1f2410"/>
+      <path d="M28 71 Q36 78 44 71" fill="none" stroke="#1f2410" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M33 74.5 L35.5 77 L38 74" fill="#fff" stroke="#1f2410" stroke-width="1.4" stroke-linejoin="round"/>
+      <circle cx="21" cy="68" r="3.1" fill="rgba(255,120,120,.5)"/>
+      <circle cx="51" cy="68" r="3.1" fill="rgba(255,120,120,.5)"/>
+    </g>
+    <text x="105" y="166" text-anchor="middle" font-family="system-ui" font-weight="800" font-size="15" fill="#ffe9a8" letter-spacing="2">MAJOR MUNCH</text>
+  </svg>
+    <div class="menu-hero-title">GRUBSONG ’26</div>
+    <div class="menu-hero-sub">THE ANTHEM THE GRUBCREW MARCHES TO</div>
+  </div>
   <h1>🐛 Grub Blasters</h1>
   <p id="msg">Turn-based worm artillery. Blast the other team into the sea!</p>
   <button class="big" id="b2">Local Multiplayer</button>
@@ -285,6 +351,7 @@ body.everforest #replay{border-color:var(--acc);background:linear-gradient(180de
   <button class="big alt" id="bcustom">🎨 Customize</button>
   <button class="big alt" id="bsettings">⚙️ Settings</button>
   <button class="big alt" id="bhelp">❓ Help &amp; Controls</button>
+  <button class="big alt" id="bstory">📖 Story: Grub Blasters &amp; Boggy B</button>
   <button class="big alt" id="bshare">📣 Share this game</button>
   <p class="hint">Tap or drag the map to aim · hold FIRE to charge · double-tap jump to backflip!</p>
 </div></div>
@@ -304,7 +371,7 @@ body.everforest #replay{border-color:var(--acc);background:linear-gradient(180de
   <h2>Weapons</h2>
   <ul>
     <li>Pick a weapon from the <b>weapon shelf</b> in the bottom bar — tap it to open the full list; keys <span class="kbd">1</span>–<span class="kbd">7</span> select the first seven.</li>
-    <li><b>✈️ Airstrike</b>, <b>🌀 Teleport</b>, <b>🌩️ Lightning</b>, <b>🛩️ Carpet Bomb</b> and <b>☢️ Nuke</b>: tap the map to pick a spot, then <span class="kbd">FIRE</span> — the carpet strafes the mark and the nuke sounds a siren before the game's biggest blast. <b>🕊️ Pigeon</b>: mark a spot and it flies straight through terrain to reach it.</li>
+    <li><b>🚁 Boggy B</b>: mark a spot, then press <span class="kbd">FIRE</span> — Boggy rides in on the Grubheli, drops one Grenade on the mark and flies off. One per team per match. <b>✈️ Airstrike</b>, <b>🌀 Teleport</b>, <b>🌩️ Lightning</b>, <b>🛩️ Carpet Bomb</b> and <b>☢️ Nuke</b>: tap the map to pick a spot, then <span class="kbd">FIRE</span> — the carpet strafes the mark and the nuke sounds a siren before the game's biggest blast. <b>🕊️ Pigeon</b>: mark a spot and it flies straight through terrain to reach it.</li>
     <li><b>🐑 Sheep</b> walks on its own — press <span class="kbd">FIRE</span> again to detonate it. <b>🐉 Dragon Ball</b> bounces wildly; press <span class="kbd">FIRE</span> to set it off (it also blows after six bounces) with a huge knockback.</li>
     <li><b>🐄 Mad Cows</b> — unleash three charging cows one after another; each explodes on the first worm (friend or foe) or wall it meets, with Dynamite-strength force.</li>
     <li><b>🍌 Banana Bomb</b> erupts into five bananas that burst in sequence; <b>🦫 Mole</b> tunnels through rock in the direction you fired it, then detonates when it comes out.</li>
@@ -316,6 +383,7 @@ body.everforest #replay{border-color:var(--acc);background:linear-gradient(180de
     <li><b>🔥 Fire Punch</b> is an uppercut that knocks a nearby enemy straight up into the air (and carves through terrain) — useful for launching worms into mines or water; <b>🛡️ Invulnerable</b> shields the active worm in a bubble for the rest of the turn — immune to damage, fall damage and poison, but NOT drowning or knockback.</li>
     <li><b>🪂 Parachute</b> leaps into a gentle glide — steer with <span class="kbd">◀</span> <span class="kbd">▶</span>, slow or speed the descent with <span class="kbd">▲</span> <span class="kbd">▼</span>, and land without fall damage; the turn continues, so switch weapons and fire after landing. <b>👉 Prod</b> gives a worm a harmless shove (ideal for nudging one into the sea); <b>💀 Suicide Bomber</b> sacrifices your worm to release a poison cloud — the blast deals 30 damage like Worms Armageddon; <b>⏭️ Skip</b> ends your turn on the spot and the enemy calls you a coward (and it never runs out).</li>
     <li><b>🔥 Napalm</b> bursts into burning ground; <b>💥 Dyn. Bundle</b> pops open into three bouncing dynamite sticks; <b>🦨 Skunk</b> collects crates, then sprays a wind-drifted poison cloud — press <span class="kbd">FIRE</span> to spray it early and again to detonate it.</li>
+    <li><b>🚁 Boggy B</b>: mark a spot, then hold and release <span class="kbd">FIRE</span> — the Grubheli flies over, Boggy drops the crew grenade, and he rides off again. One per team per match; the Grubsong will play whether you win or not.</li>
     <li><b>🛢️ Explosive barrels</b> are solid — stand on them or drop behind one; shoot it and it erupts, chaining into mines and other barrels. About one in three is an <b>oil drum</b>: its blast leaves burning ground. They fall when the ground beneath them is blown away.</li>
     <li><b>🛡️ Shield</b> raises a bubble that absorbs your next hit — damage, fall damage or poison; <b>🌍 Earthquake</b> shakes every grounded enemy off its feet; <b>🧛 Vampire</b> drains 35 HP from a nearby enemy and heals you by the same amount; <b>🟢 Sticky Bomb</b> sticks to the first surface it touches; <b>🟡 Rubber Grenade</b> ricochets off everything until its 4 s fuse runs out; <b>🪵 Girder</b> drops a solid platform; <b>🫏 Concrete Donkey</b> is dropped from the sky onto a spot you mark — tap the map, then <span class="kbd">FIRE</span>; <b>🧲 Crate Vacuum</b> drags every supply crate toward you.</li>
     <li>Out-of-ammo weapons stay in the shelf but grey out with ×0 — they light up again when you have ammo.</li>
@@ -346,12 +414,25 @@ body.everforest #replay{border-color:var(--acc);background:linear-gradient(180de
   </ul>
   <h2>About</h2>
   <ul>
-    <li><b>Grub Blasters</b> v2.6.5 — a fully-destructible Worms-style artillery sandbox that runs entirely from one HTML file.</li>
-    <li>70 weapons, procedural SFX, floating islands, sudden death, CPU teams, replays.</li>
+    <li><b>Grub Blasters</b> v2.6.6 — a fully-destructible Worms-style artillery sandbox that runs entirely from one HTML file.</li>
+    <li>71 weapons (including 🚁 <b>Boggy B</b>), procedural SFX, floating islands, sudden death, CPU teams, replays, Grubsong ’26 with the full lore of the Grub crew.</li>
+    <li><b>Official mascot:</b> Major Munch — three inches of grub, one enormous tooth, zero fear. Boggy B remains the ace of the Ridge and our homage to Team17.</li>
     <li>Fork it, mod it, share it — the whole game lives in <code>index.html</code>.</li>
     <li>Source &amp; changelog: <a href="https://github.com/Mark44928/GrubBlastersHTML" target="_blank" rel="noopener">github.com/Mark44928/GrubBlastersHTML</a> — MIT.</li>
   </ul>
   <button class="big" id="hclose">Close</button>
+</div></div>
+<div id="story" class="hide"><div class="card story-card">
+  <h1>📖 The Grubsong</h1>
+  <h2>Grub Blasters &amp; Boggy B — field notes for Grubsong ’26</h2>
+  <p><b>1. The Dug-out.</b> In the year 2026 a broke band of grubs — soap-stained and aiming at the clouds — dug their home beneath a single crusty oak. They called it the Dug-out, and every grub in it had already lost someone to the long war on the Ridge.</p>
+  <p><b>2. Captain Boggy B.</b> Their youngest ace: a grub with a pilot’s licence, dangerous left hand and one rule — <em>one grenade, one drop zone, no repeats</em>. He flew the Grubheli with a tail rotor he’d tuned himself, and the Ridge called him Boggy B, as in <em>big</em>.</p>
+  <p><b>3. Major Munch.</b> Their mascot: three inches of grub with a pilot’s swagger, one enormous tooth, and an appetite that once emptied the mess tin before breakfast. Sergeant Munch piloted the Grubheli with his knees, his left hand, and whatever was left in the ration crate. He never volunteered; he volunteered the whole crew.</p>
+  <p><b>4. The Drop Zone.</b> The Ridge held a thousand barrels and one very smug garrison. Boggy primed one grenade, Munch held the heli steady, and the two of them rode the wind in low. One drop ended the Siege of the Crusty Oak.</p>
+  <p><b>5. The Anthem.</b> They didn’t carve statues; they wrote a song. Not to win — to remember how to fight back on a Tuesday morning. It goes: <em>grubs hold the line, we sing it till the walls come down…</em></p>
+  <p><b>6. Grubsong ’26.</b> This one is an original homage to <b>Wormsong</b> (Worms, 1995 — Team17 / Ocean), Bjørn Lynne’s anthem about Boggy B, reportedly inspired by Stan Ridgway’s “Camouflage”. The melody and words here are ours — inspired, not copied. <b>Major Munch</b> is Grub Blasters’ own mascot, drawn for this game; <b>Boggy B</b> is a loving nod to Team17’s hero, kept in our story as the ace of the Ridge.</p>
+  <p class="hint">Whether you win or lose: play one round for the Grub. In memoriam: Boggy B, and every grub that made it back.</p>
+  <button class="big" id="storyClose">Close</button>
 </div></div>
 <div id="custom" class="hide"><div class="card">
   <h1>🎨 Customize</h1>
@@ -406,7 +487,7 @@ body.everforest #replay{border-color:var(--acc);background:linear-gradient(180de
        <label class="crow"><span>Interface</span><select id="iface"><option>Modern</option><option>Classic</option><option>Gruvbox</option><option>Tokyo Night</option><option>Dark</option><option>Nord</option><option>OLED Dark</option><option>Everforest</option></select></label>
       <label class="crow"><span>Worm Select</span><select id="wsel"><option>On</option><option>Off</option></select></label>
       <label class="crow"><span>Crate radar</span><select id="radar"><option>On</option><option>Off</option></select></label>
-      <label class="crow"><span>Graphics</span><select id="gfx"><option>High</option><option>Medium</option><option>Low</option></select></label>
+      <label class="crow"><span>Graphics</span><select id="gfx"><option>High</option><option>Medium</option><option>Low</option><option>Ultra Low</option></select></label>
       <label class="crow"><span>Fullscreen</span><button id="fs" class="mini">⛶</button></label>
     </section>
   </div>
@@ -442,19 +523,19 @@ const PAL=['#ff5252','#3fa9ff','#7dff7d','#ffd54a','#d98bff','#3fe8c9','#ff9b3d'
 const SKYN=['Auto','Day','Sunset','Night','Dawn','Real Time'],GROUNDN=['Auto','Grass','Desert','Snow','Rock'],WXN=['Auto','Clear','Rain','Snow'],ISLN=['Off','1','2','3','4','5','6'];
 const NAMES=['Wiggles','Squirm','Slimer','Noodle','Inch','Gus','Wormy','Slick','Dirt','Pip','Bob','Mudge','Zig','Zag','Nibbles','Grub','Chomp','Digger','Slink','Roly','Mo','Curly','Fuzz','Spud','Tater','Critter','Squiggle','Doodle','Bugsy','Mort','Wrigley','Loopy'];
 const TAUNTS=['Take that!','Boom!','Nice one!','Ouch!','Whoops!','Eat dirt!','Lucky shot!','Ha!','Gotcha!','Watch out!','Incoming!'];
-const WEP=[{id:'bazooka',ico:'🚀',n:'Bazooka'},{id:'grenade',ico:'💣',n:'Grenade'},{id:'dynamite',ico:'🧨',n:'Dynamite'},{id:'shotgun',ico:'🔫',n:'Shotgun'},{id:'airstrike',ico:'✈️',n:'Airstrike'},{id:'teleport',ico:'🌀',n:'Teleport'},{id:'sheep',ico:'🐑',n:'Sheep'},{id:'firepunch',ico:'🔥',n:'Fire Punch'},{id:'mine',ico:'🔴',n:'Mine'},{id:'holy',ico:'😇',n:'Holy'},{id:'cluster',ico:'🛢️',n:'Cluster'},{id:'uzi',ico:'⚡',n:'Uzi'},{id:'torch',ico:'🔥',n:'Torch'},{id:'homing',ico:'🛰️',n:'Homing'},{id:'bunker',ico:'⛏️',n:'Bunker'},{id:'magic',ico:'🪄',n:'Magic'},{id:'banana',ico:'🍌',n:'Banana'},{id:'dragon',ico:'🐉',n:'Dragon'},{id:'mole',ico:'🦫',n:'Mole'},{id:'lightning',ico:'🌩️',n:'Lightning'},{id:'saucer',ico:'🛸',n:'Saucer'},{id:'cow',ico:'🐄',n:'Mad Cows'},{id:'xdmg',ico:'💪',n:'1.5x Damage'},{id:'invuln',ico:'🛡️',n:'Invulnerable'},{id:'kamikaze',ico:'🎌',n:'Kamikaze'},{id:'minigun',ico:'⚙️',n:'Minigun'},{id:'napalm',ico:'🔥',n:'Napalm'},{id:'bundle',ico:'💥',n:'Dyn. Bundle'},{id:'carpet',ico:'🛩️',n:'Carpet Bomb'},{id:'nuke',ico:'☢️',n:'Nuke'},{id:'pigeon',ico:'🕊️',n:'Pigeon'},{id:'skunk',ico:'🦨',n:'Skunk'},{id:'parachute',ico:'🪂',n:'Parachute'},{id:'prod',ico:'👉',n:'Prod'},{id:'suicide',ico:'💀',n:'Suicide Bomber'},{id:'skip',ico:'⏭️',n:'Skip'},{id:'shield',ico:'🛡️',n:'Shield'},{id:'earthquake',ico:'🌍',n:'Earthquake'},{id:'vampire',ico:'🧛',n:'Vampire'},{id:'sticky',ico:'🟢',n:'Sticky Bomb'},{id:'rubber',ico:'🟡',n:'Rubber Nade'},{id:'girder',ico:'🪵',n:'Girder'},{id:'donkey',ico:'🫏',n:'Concrete Donkey'},{id:'vacuum',ico:'🧲',n:'Crate Vacuum'},{id:'splitter',ico:'💫',n:'Splitter'},{id:'mortar',ico:'🪖',n:'Mortar'},{id:'frost',ico:'❄️',n:'Frost Bomb'},{id:'drone',ico:'🤖',n:'Drone Strike'},{id:'grapple',ico:'🪝',n:'Grapple Hook'},{id:'freeze',ico:'🧊',n:'Freeze Ray'},{id:'meteor',ico:'☄️',n:'Meteor Swarm'},{id:'portal',ico:'🕳️',n:'Portal Gun'},{id:'blackhole',ico:'⚫',n:'Black Hole'},{id:'laser',ico:'🔫',n:'Laser Cannon'},{id:'seismic',ico:'💥',n:'Seismic Charge'},{id:'phoenix',ico:'🐦',n:'Phoenix'},{id:'tesla',ico:'⚡',n:'Tesla Coil'},{id:'acid',ico:'☠️',n:'Acid Spray'},{id:'timebomb',ico:'⏰',n:'Time Bomb'},{id:'magnet',ico:'🧲',n:'Magnet Mine'},{id:'granny',ico:'👵',n:'Old Woman'},{id:'battleaxe',ico:'🪓',n:'Battle Axe'},{id:'sniper',ico:'🎯',n:'Sniper Rifle'},{id:'ballgun',ico:'🎳',n:'Ballgun'},{id:'flamer',ico:'🔥',n:'Flamethrower'},{id:'cake',ico:'🎂',n:'Cake'},{id:'piano',ico:'🎹',n:'Piano Strike'},{id:'melon',ico:'🍉',n:'Watermelon'},{id:'molotov',ico:'🍾',n:'Molotov'},{id:'scales',ico:'⚖️',n:'Scales of Justice'}];
+const WEP=[{id:'bazooka',ico:'🚀',n:'Bazooka'},{id:'grenade',ico:'💣',n:'Grenade'},{id:'dynamite',ico:'🧨',n:'Dynamite'},{id:'shotgun',ico:'🔫',n:'Shotgun'},{id:'airstrike',ico:'✈️',n:'Airstrike'},{id:'boggy',ico:'🚁',n:'Boggy B'},{id:'teleport',ico:'🌀',n:'Teleport'},{id:'sheep',ico:'🐑',n:'Sheep'},{id:'firepunch',ico:'🔥',n:'Fire Punch'},{id:'mine',ico:'🔴',n:'Mine'},{id:'holy',ico:'😇',n:'Holy'},{id:'cluster',ico:'🛢️',n:'Cluster'},{id:'uzi',ico:'⚡',n:'Uzi'},{id:'torch',ico:'🔥',n:'Torch'},{id:'homing',ico:'🛰️',n:'Homing'},{id:'bunker',ico:'⛏️',n:'Bunker'},{id:'magic',ico:'🪄',n:'Magic'},{id:'banana',ico:'🍌',n:'Banana'},{id:'dragon',ico:'🐉',n:'Dragon'},{id:'mole',ico:'🦫',n:'Mole'},{id:'lightning',ico:'🌩️',n:'Lightning'},{id:'saucer',ico:'🛸',n:'Saucer'},{id:'cow',ico:'🐄',n:'Mad Cows'},{id:'xdmg',ico:'💪',n:'1.5x Damage'},{id:'invuln',ico:'🛡️',n:'Invulnerable'},{id:'kamikaze',ico:'🎌',n:'Kamikaze'},{id:'minigun',ico:'⚙️',n:'Minigun'},{id:'napalm',ico:'🔥',n:'Napalm'},{id:'bundle',ico:'💥',n:'Dyn. Bundle'},{id:'carpet',ico:'🛩️',n:'Carpet Bomb'},{id:'nuke',ico:'☢️',n:'Nuke'},{id:'pigeon',ico:'🕊️',n:'Pigeon'},{id:'skunk',ico:'🦨',n:'Skunk'},{id:'parachute',ico:'🪂',n:'Parachute'},{id:'prod',ico:'👉',n:'Prod'},{id:'suicide',ico:'💀',n:'Suicide Bomber'},{id:'skip',ico:'⏭️',n:'Skip'},{id:'shield',ico:'🛡️',n:'Shield'},{id:'earthquake',ico:'🌍',n:'Earthquake'},{id:'vampire',ico:'🧛',n:'Vampire'},{id:'sticky',ico:'🟢',n:'Sticky Bomb'},{id:'rubber',ico:'🟡',n:'Rubber Nade'},{id:'girder',ico:'🪵',n:'Girder'},{id:'donkey',ico:'🫏',n:'Concrete Donkey'},{id:'vacuum',ico:'🧲',n:'Crate Vacuum'},{id:'splitter',ico:'💫',n:'Splitter'},{id:'mortar',ico:'🪖',n:'Mortar'},{id:'frost',ico:'❄️',n:'Frost Bomb'},{id:'drone',ico:'🤖',n:'Drone Strike'},{id:'grapple',ico:'🪝',n:'Grapple Hook'},{id:'freeze',ico:'🧊',n:'Freeze Ray'},{id:'meteor',ico:'☄️',n:'Meteor Swarm'},{id:'portal',ico:'🕳️',n:'Portal Gun'},{id:'blackhole',ico:'⚫',n:'Black Hole'},{id:'laser',ico:'🔫',n:'Laser Cannon'},{id:'seismic',ico:'💥',n:'Seismic Charge'},{id:'phoenix',ico:'🐦',n:'Phoenix'},{id:'tesla',ico:'⚡',n:'Tesla Coil'},{id:'acid',ico:'☠️',n:'Acid Spray'},{id:'timebomb',ico:'⏰',n:'Time Bomb'},{id:'magnet',ico:'🧲',n:'Magnet Mine'},{id:'granny',ico:'👵',n:'Old Woman'},{id:'battleaxe',ico:'🪓',n:'Battle Axe'},{id:'sniper',ico:'🎯',n:'Sniper Rifle'},{id:'ballgun',ico:'🎳',n:'Ballgun'},{id:'flamer',ico:'🔥',n:'Flamethrower'},{id:'cake',ico:'🎂',n:'Cake'},{id:'piano',ico:'🎹',n:'Piano Strike'},{id:'melon',ico:'🍉',n:'Watermelon'},{id:'molotov',ico:'🍾',n:'Molotov'},{id:'scales',ico:'⚖️',n:'Scales of Justice'}];
 const WEPID=new Set(WEP.map(w=>w.id));
 const VALS=[-1,0,1,2,3,4,5,6,8,10];
-const TARGETED=['airstrike','teleport','homing','magic','lightning','carpet','nuke','pigeon','donkey','drone','portal','magnet','meteor','blackhole','seismic','sniper','piano'];
+const TARGETED=['airstrike','boggy','teleport','homing','magic','lightning','carpet','nuke','pigeon','donkey','drone','portal','magnet','meteor','blackhole','seismic','sniper','piano'];
 const GUIDE_V={bazooka:p=>120+p*700,bunker:p=>80+p*600,grenade:p=>80+p*620,holy:p=>80+p*620,cluster:p=>80+p*620,banana:p=>80+p*620,dragon:p=>80+p*620,mole:p=>80+p*600,napalm:p=>80+p*620,bundle:p=>80+p*620,magic:p=>140+p*560,homing:p=>90+p*430,sticky:p=>80+p*620,rubber:p=>80+p*620,mortar:p=>70+p*580,drone:p=>130+p*500,laser:p=>160+p*450,melon:p=>80+p*620,molotov:p=>80+p*620};
 const GUIDE_WIND={bazooka:1,bunker:1};
 const AIMLESS=['dynamite','mine','sheep','cow','firepunch','skunk','saucer','xdmg','invuln','parachute','prod','suicide','skip','shield','earthquake','vampire','girder','vacuum','frost','tesla','timebomb','granny','battleaxe','ballgun','flamer','cake','scales'];
 const CHARGE=['bazooka','grenade','holy','cluster','bunker','homing','magic','banana','dragon','mole','napalm','bundle','sticky','rubber','splitter','mortar','drone','melon','molotov'];
 const DIFF=[{n:'Baby',an:.3,pn:.32,thr:180},{n:'Easy',an:.16,pn:.16,thr:130},{n:'Normal',an:.06,pn:.07,thr:70},{n:'Hard',an:.015,pn:.02,thr:40},{n:'Brutal',an:.005,pn:.008,thr:25}];
 const SCH=[
-  {n:'Normal',ammo:()=>({dynamite:2,airstrike:1,teleport:2,sheep:1,cow:1,mine:1,holy:1,cluster:1,uzi:2,torch:1,homing:1,bunker:1,magic:1,banana:1,dragon:1,mole:2,lightning:2,saucer:1,xdmg:2,kamikaze:2,minigun:1,napalm:1,bundle:1,carpet:1,nuke:1,pigeon:1,skunk:1,invuln:2,parachute:2,prod:3,suicide:2,shield:2,earthquake:1,vampire:2,sticky:2,rubber:2,girder:2,donkey:1,vacuum:2,splitter:2,mortar:2,frost:2,drone:1,grapple:2,freeze:2,meteor:1,portal:2,blackhole:1,laser:2,seismic:1,phoenix:1,tesla:2,acid:2,timebomb:2,magnet:2,granny:1,battleaxe:2,sniper:1,ballgun:1,flamer:1,cake:1,piano:1,melon:1,molotov:2,scales:1})},
+  {n:'Normal',ammo:()=>({dynamite:2,airstrike:1,boggy:1,teleport:2,sheep:1,cow:1,mine:1,holy:1,cluster:1,uzi:2,torch:1,homing:1,bunker:1,magic:1,banana:1,dragon:1,mole:2,lightning:2,saucer:1,xdmg:2,kamikaze:2,minigun:1,napalm:1,bundle:1,carpet:1,nuke:1,pigeon:1,skunk:1,invuln:2,parachute:2,prod:3,suicide:2,shield:2,earthquake:1,vampire:2,sticky:2,rubber:2,girder:2,donkey:1,vacuum:2,splitter:2,mortar:2,frost:2,drone:1,grapple:2,freeze:2,meteor:1,portal:2,blackhole:1,laser:2,seismic:1,phoenix:1,tesla:2,acid:2,timebomb:2,magnet:2,granny:1,battleaxe:2,sniper:1,ballgun:1,flamer:1,cake:1,piano:1,melon:1,molotov:2,scales:1})},
   {n:'Greedy',ammo:()=>({})},
-  {n:'Pro Mode',ammo:()=>({dynamite:1,airstrike:0,teleport:1,sheep:1,cow:1,mine:1,holy:1,cluster:1,uzi:1,torch:1,homing:1,bunker:1,magic:1,banana:1,dragon:1,mole:1,lightning:1,saucer:1,xdmg:1,kamikaze:1,minigun:1,napalm:1,bundle:1,carpet:1,nuke:1,pigeon:1,skunk:1,invuln:1,parachute:1,prod:1,suicide:1,shield:1,earthquake:1,vampire:1,sticky:1,rubber:1,girder:1,donkey:1,vacuum:1,splitter:1,mortar:1,frost:1,drone:1,grapple:1,freeze:1,meteor:1,portal:1,blackhole:1,laser:1,seismic:1,phoenix:1,tesla:1,acid:1,timebomb:1,magnet:1,granny:1,battleaxe:1,sniper:1,ballgun:1,flamer:1,cake:1,piano:1,melon:1,molotov:1,scales:1})},
+  {n:'Pro Mode',ammo:()=>({dynamite:1,airstrike:0,boggy:0,teleport:1,sheep:1,cow:1,mine:1,holy:1,cluster:1,uzi:1,torch:1,homing:1,bunker:1,magic:1,banana:1,dragon:1,mole:1,lightning:1,saucer:1,xdmg:1,kamikaze:1,minigun:1,napalm:1,bundle:1,carpet:1,nuke:1,pigeon:1,skunk:1,invuln:1,parachute:1,prod:1,suicide:1,shield:1,earthquake:1,vampire:1,sticky:1,rubber:1,girder:1,donkey:1,vacuum:1,splitter:1,mortar:1,frost:1,drone:1,grapple:1,freeze:1,meteor:1,portal:1,blackhole:1,laser:1,seismic:1,phoenix:1,tesla:1,acid:1,timebomb:1,magnet:1,granny:1,battleaxe:1,sniper:1,ballgun:1,flamer:1,cake:1,piano:1,melon:1,molotov:1,scales:1})},
   {n:'Bazooka Only',ammo:()=>({})}
 ];
 const SKY=[
@@ -488,7 +569,7 @@ let rotOn=false,rotWasPaused=false,booted=false;
 let slowT=0,comboN=0,comboT=0,killFeed=[];
 function buzz(ms){if(!hap)return;try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}}
 function rotCheck(){if(PC)return;const on=innerHeight>innerWidth;if(on===rotOn)return;rotOn=on;$('#rot').classList.toggle('show',on);if(!booted||state==='menu')return;if(on){rotWasPaused=paused;paused=true;charging=false;power=0;$('#fire').classList.remove('on');$('#pause').textContent='▶'}else{paused=rotWasPaused;$('#pause').textContent=paused?'▶':'⏸'}}
-let dpr=1,fit=1,vig=null,low=false,med=false,cam={x:W/2,y:H/2,z:1},camManual=false;
+let dpr=1,fit=1,vig=null,low=false,med=false,ultra=false,cam={x:W/2,y:H/2,z:1},camManual=false;
 const S=()=>(fit*cam.z)||1;
 function camClamp(){const hw=innerWidth/(2*S()),hh=innerHeight/(2*S());cam.x=hw>=W/2?W/2:Math.max(hw,Math.min(W-hw,cam.x));cam.y=hh>=H/2?H/2:Math.max(hh,Math.min(H-hh,cam.y));cam.z=Math.max(1,Math.min(ZMAX,cam.z))}
 function panCam(dx,dy){const s=S();cam.x-=dx/s;cam.y-=dy/s;camManual=true;camClamp()}
@@ -505,9 +586,9 @@ function noise(d,v,f){if(!AC||muted)return;const n=(AC.sampleRate*d)|0,b=AC.crea
 function tone(f1,f2,d,v,type){if(!AC||muted)return;const o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime;o.type=type||'square';o.frequency.setValueAtTime(f1,t);o.frequency.exponentialRampToValueAtTime(f2,t+d);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(AC.destination);o.start();o.stop(t+d)}
 const SFX={boom:(r=40)=>{noise(.3,.3,1800);tone(120,42,.45,.24,'sine');if(r>=60)setTimeout(()=>noise(.8,.22,420),60);if(r>=100){setTimeout(()=>noise(1.1,.26,320),120);setTimeout(()=>tone(60,28,.9,.28,'sine'),60)}},small:()=>noise(.25,.35,1800),shot:()=>{noise(.15,.35,4000);tone(300,80,.12,.1)},launch:()=>{noise(.3,.2,2500);tone(200,500,.25,.06,'sawtooth')},magic:()=>{tone(1100,2300,.3,.07,'sine');setTimeout(()=>tone(1700,2700,.25,.05,'sine'),90);noise(.2,.1,3500)},jump:()=>{tone(190,560,.16,.14,'triangle');noise(.05,.09,900)},backflip:()=>{tone(300,950,.22,.12,'sine');setTimeout(()=>tone(430,1200,.18,.08,'sine'),80)},step:()=>noise(.06,.09,900),hit:()=>tone(400,120,.15,.1),thud:()=>tone(120,50,.08,.12,'sine'),splash:()=>noise(.4,.25,1200),tick:()=>tone(900,900,.04,.05),pick:()=>{tone(500,1000,.18,.08,'sine');setTimeout(()=>tone(800,1400,.15,.07,'sine'),90)},tele:()=>tone(900,150,.35,.09,'sine'),siren:()=>tone(400,900,.6,.06,'sawtooth'),bleat:()=>{tone(620,320,.22,.07,'sawtooth');setTimeout(()=>tone(540,300,.18,.06,'sawtooth'),200)},moo:()=>{tone(190,110,.55,.09,'sawtooth');setTimeout(()=>tone(170,95,.45,.07,'sawtooth'),300)},donkey:()=>{tone(330,215,.3,.11,'sawtooth');setTimeout(()=>tone(255,140,.36,.09,'sawtooth'),190)},bonk:()=>{tone(180,60,.12,.16,'square');noise(.08,.2,900)},jet:()=>noise(.11,.16,1500),win:()=>{[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,f,.18,.09,'triangle'),i*130))},holy:()=>{[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,f,.3,.06,'sine'),i*80))},torch:()=>{noise(.7,.28,1300);tone(160,80,.6,.06,'sawtooth')},thunder:()=>{noise(.9,.5,300);tone(90,40,.7,.12,'sawtooth');setTimeout(()=>noise(.5,.28,600),110)},saucer:()=>{tone(520,920,.5,.06,'sine');setTimeout(()=>tone(920,540,.5,.05,'sine'),140)},coo:()=>{tone(620,560,.12,.06,'sine');setTimeout(()=>tone(720,640,.14,.05,'sine'),160)},fire:()=>{noise(.18,.09,900);tone(90,58,.12,.035,'sawtooth')},hiss:()=>noise(.6,.16,1500),nuke:()=>{tone(60,30,1.4,.3,'sine');setTimeout(()=>noise(1.6,.4,220),80)},gas:()=>noise(.9,.12,1100),chute:()=>{noise(.45,.14,1200);tone(260,520,.35,.06,'sine')},laser:()=>{tone(1200,2400,.08,.12,'sine');noise(.1,.05,4000);setTimeout(()=>tone(1800,600,.06,.08,'sine'),40)}};
 
-/* ---------- menu song ---------- */
-const SONG_M=[72,76,79,84,79,76,72,67,69,72,76,81,76,72,69,64,65,69,72,77,72,69,65,72,67,71,74,79,74,71,67,71];
-const SONG_B=[48,48,48,48,48,48,48,48,45,45,45,45,45,45,45,45,41,41,41,41,41,41,41,41,43,43,43,43,43,43,43,43];
+/* ---------- Grubsong '26 (menu anthem) ---------- */
+const SONG_M=[64,67,71,76,79,76,71,67,69,72,76,81,79,76,72,69,67,71,74,79,74,71,67,62,64,67,71,76,71,67,71,67];
+const SONG_B=[52,52,52,52,52,52,52,52,50,50,50,50,50,50,50,50,48,48,48,48,48,48,48,48,50,50,50,50,50,50,50,50];
 let songT=null,songStep=0,songNext=0;
 function songNote(m,t,d,v,type){if(!AC)return;const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=440*Math.pow(2,(m-69)/12);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d+.05)}
 function songTick(){if(!AC||!songOn||muted){stopSong();return}if(AC.state!=='running'){songNext=AC.currentTime+.05;return}const now=AC.currentTime;if(songNext<now-.4)songNext=now+.05;while(songNext<now+.18){const i=songStep++%32;songNote(SONG_M[i],songNext,.19,.035,'triangle');if(i%2===0)songNote(SONG_B[i],songNext,.42,.04,'sine');songNext+=.22}}
@@ -525,6 +606,12 @@ function mkBg(){
   const gr=g.createLinearGradient(0,0,0,H);gr.addColorStop(0,skyT.top);gr.addColorStop(.55,skyT.mid);gr.addColorStop(1,skyT.bot);
   g.fillStyle=gr;g.fillRect(0,0,W,H);
   const ridge=(c,b,a,f,al)=>{g.globalAlpha=al;g.fillStyle=c;g.beginPath();g.moveTo(0,H);const ph=Math.random()*9;for(let x=0;x<=W;x+=10)g.lineTo(x,b+Math.sin(x*f+ph)*a+Math.sin(x*f*2.7+ph)*a*.3);g.lineTo(W,H);g.fill();g.globalAlpha=1};
+  if(ultra){
+    if(skyT.stars){for(let i=0;i<70;i++){g.fillStyle='rgba(255,255,255,'+(.35+Math.random()*.55)+')';g.beginPath();g.arc(Math.random()*W,Math.random()*H*.6,.7+Math.random()*1.3,0,6.283);g.fill()}}
+    g.fillStyle=skyT.halo;g.beginPath();g.arc(1120,140,100,0,6.283);g.fill();
+    ridge(skyT.h2,500,48,.007,1);
+    return;
+  }
   if(low){
     if(skyT.stars){for(let i=0;i<150;i++){g.fillStyle='rgba(255,255,255,'+(.3+Math.random()*.7)+')';g.beginPath();g.arc(Math.random()*W,Math.random()*H*.6,.6+Math.random()*1.4,0,6.283);g.fill()}}
     g.fillStyle=skyT.halo;g.beginPath();g.arc(1120,140,105,0,6.283);g.fill();
@@ -698,7 +785,7 @@ const lsSet=(k,v)=>{try{localStorage.setItem(k,String(v))}catch(e){}};
 const snapIdx=v=>{let i=1;for(let k=2;k<VALS.length;k++)if(Math.abs(VALS[k]-v)<Math.abs(VALS[i]-v))i=k;return i};
 const snapVal=v=>VALS[snapIdx(v)];
 function sanitizeAmmo(a){const o={};for(const k in a){if(!WEPID.has(k))continue;const v=a[k];if(typeof v==='number'&&v>=0)o[k]=snapVal(Math.min(10,v))}return o}
-try{const a=lsGet('gb_diff'),b=lsGet('gb_per'),c=lsGet('gb_tt'),g=lsGet('gb_guide'),m=lsGet('gb_mute'),h=lsGet('gb_hp'),sk=lsGet('gb_sky'),te=lsGet('gb_ter'),wx=lsGet('gb_wx'),lo=lsGet('gb_low'),tm=lsGet('gb_teams'),sc=lsGet('gb_sch'),wn=lsGet('gb_wnd'),cr=lsGet('gb_crate'),bv=lsGet('gb_barl'),mp=lsGet('gb_map'),il=lsGet('gb_isl'),wsv=lsGet('gb_wsel'),dv=lsGet('gb_dv'),grv=lsGet('gb_grav'),sdd=lsGet('gb_sdv'),rtv=lsGet('gb_ret'),flv=lsGet('gb_fuel'),au=lsGet('gb_auto'),rd=lsGet('gb_radar'),uv=lsGet('gb_ui');const wndOld=lsGet('gb_wndv')===null;lsSet('gb_wndv','1');if(a!==null){const n=+a||0;diff=Math.max(0,Math.min(DIFF.length-1,dv===null&&n<=3?n+1:n))}if(dv===null&&a!==null)try{lsSet('gb_dv','1')}catch(e){}if(b!==null)perTeam=Math.max(2,Math.min(8,+b||3));if(c!==null){const tv=numV(c,1);turnSec=tv<10?(TT0[Math.max(0,Math.min(3,tv))]||30):Math.max(10,Math.min(60,tv))}if(g!==null)guide=g==='1';if(m!==null)muted=m==='1';if(lsGet('gb_hap')==='0')hap=false;if(h!==null){const hv=+h||0;maxHP=hv<50?[100,150,200][Math.max(0,Math.min(2,hv))]:Math.max(50,hv)}for(let t=0;t<4;t++){const v=lsGet('gb_tn'+t);if(v!==null&&v.trim())TN[t]=v.trim().slice(0,12);const cv=lsGet('gb_tc'+t);if(cv!==null){colIdx[t]=Math.max(0,Math.min(PAL.length-1,isNaN(+cv)?t:+cv));TC[t]=PAL[colIdx[t]]}}skyIdx=Math.max(-1,Math.min(4,numV(sk,-1)));terIdx=Math.max(-1,Math.min(3,numV(te,-1)));wxIdx=Math.max(-1,Math.min(2,numV(wx,-1)));if(lo!==null){low=lo==='1';med=lo==='2'};if(tm!==null)teamCount=Math.max(2,Math.min(4,+tm||2));{const csl=lsGet('gb_csch');if(csl!==null)try{const ca=JSON.parse(csl);if(Array.isArray(ca))customs=ca.filter(x=>x&&typeof x.n==='string'&&x.a&&typeof x.a==='object').slice(0,24).map(x=>({n:String(x.n).slice(0,14),a:sanitizeAmmo(x.a)}))}catch(e){}}if(sc!==null)schIdx=Math.max(0,Math.min(SCH.length+customs.length-1,+sc||0));if(wn!==null){let wv=+wn||0;if(wndOld&&(wv===0||wv===1||wv===2)){wv=[.5,1,1.75][wv];lsSet('gb_wnd',wv)}windK=Math.max(0,Math.min(2.5,wv))}if(cr!==null)cratesOn=cr==='1';if(bv!==null){barrelOil=bv==='oil';barrelDrum=bv==='drum';barrelsOn=bv!=='Off'&&bv!=='0'}if(mp!==null)mapIdx=Math.max(0,Math.min(MAPS.length-1,+mp||0));if(il!==null)isl=Math.max(0,Math.min(6,+il||0));if(wsv!==null)wsel=wsv==='1';if(grv!==null){gravIdx=Math.max(0,Math.min(2,isNaN(+grv)?1:+grv));GV=G*GRAVK[gravIdx]}if(sdd!==null){sdIdx=Math.max(0,Math.min(2,isNaN(+sdd)?0:+sdd));sdTurn=SDT[sdIdx]}if(rtv!==null)retIdx=Math.max(0,Math.min(2,isNaN(+rtv)?1:+rtv));if(flv!==null){fuelIdx=Math.max(0,Math.min(2,isNaN(+flv)?1:+flv));FUEL=FUELV[fuelIdx]}if(au!==null)autoRep=au==='1';if(rd!==null)radar=rd==='1';if(uv!==null)uiTheme=uv==='classic'?'classic':uv==='gruvbox'?'gruvbox':uv==='tokyo'?'tokyo':uv==='dark'?'dark':uv==='nord'?'nord':uv==='oled'?'oled':uv==='everforest'?'everforest':'modern';if(lsGet('gb_song')==='0')songOn=false;{const mo=lsGet('gb_motion');if(mo!==null)motion=Math.max(0,Math.min(2,isNaN(+mo)?2:+mo));}{const tl=lsGet('gb_tlabels');if(tl!==null)teamLabels=tl==='1'}{const fp=lsGet('gb_fps');if(fp!==null)fpsOn=fp==='1'}}catch(e){}
+try{const a=lsGet('gb_diff'),b=lsGet('gb_per'),c=lsGet('gb_tt'),g=lsGet('gb_guide'),m=lsGet('gb_mute'),h=lsGet('gb_hp'),sk=lsGet('gb_sky'),te=lsGet('gb_ter'),wx=lsGet('gb_wx'),lo=lsGet('gb_low'),tm=lsGet('gb_teams'),sc=lsGet('gb_sch'),wn=lsGet('gb_wnd'),cr=lsGet('gb_crate'),bv=lsGet('gb_barl'),mp=lsGet('gb_map'),il=lsGet('gb_isl'),wsv=lsGet('gb_wsel'),dv=lsGet('gb_dv'),grv=lsGet('gb_grav'),sdd=lsGet('gb_sdv'),rtv=lsGet('gb_ret'),flv=lsGet('gb_fuel'),au=lsGet('gb_auto'),rd=lsGet('gb_radar'),uv=lsGet('gb_ui');const wndOld=lsGet('gb_wndv')===null;lsSet('gb_wndv','1');if(a!==null){const n=+a||0;diff=Math.max(0,Math.min(DIFF.length-1,dv===null&&n<=3?n+1:n))}if(dv===null&&a!==null)try{lsSet('gb_dv','1')}catch(e){}if(b!==null)perTeam=Math.max(2,Math.min(8,+b||3));if(c!==null){const tv=numV(c,1);turnSec=tv<10?(TT0[Math.max(0,Math.min(3,tv))]||30):Math.max(10,Math.min(60,tv))}if(g!==null)guide=g==='1';if(m!==null)muted=m==='1';if(lsGet('gb_hap')==='0')hap=false;if(h!==null){const hv=+h||0;maxHP=hv<50?[100,150,200][Math.max(0,Math.min(2,hv))]:Math.max(50,hv)}for(let t=0;t<4;t++){const v=lsGet('gb_tn'+t);if(v!==null&&v.trim())TN[t]=v.trim().slice(0,12);const cv=lsGet('gb_tc'+t);if(cv!==null){colIdx[t]=Math.max(0,Math.min(PAL.length-1,isNaN(+cv)?t:+cv));TC[t]=PAL[colIdx[t]]}}skyIdx=Math.max(-1,Math.min(4,numV(sk,-1)));terIdx=Math.max(-1,Math.min(3,numV(te,-1)));wxIdx=Math.max(-1,Math.min(2,numV(wx,-1)));if(lo!==null){ultra=lo==='3';low=ultra||lo==='1';med=lo==='2'};if(tm!==null)teamCount=Math.max(2,Math.min(4,+tm||2));{const csl=lsGet('gb_csch');if(csl!==null)try{const ca=JSON.parse(csl);if(Array.isArray(ca))customs=ca.filter(x=>x&&typeof x.n==='string'&&x.a&&typeof x.a==='object').slice(0,24).map(x=>({n:String(x.n).slice(0,14),a:sanitizeAmmo(x.a)}))}catch(e){}}if(sc!==null)schIdx=Math.max(0,Math.min(SCH.length+customs.length-1,+sc||0));if(wn!==null){let wv=+wn||0;if(wndOld&&(wv===0||wv===1||wv===2)){wv=[.5,1,1.75][wv];lsSet('gb_wnd',wv)}windK=Math.max(0,Math.min(2.5,wv))}if(cr!==null)cratesOn=cr==='1';if(bv!==null){barrelOil=bv==='oil';barrelDrum=bv==='drum';barrelsOn=bv!=='Off'&&bv!=='0'}if(mp!==null)mapIdx=Math.max(0,Math.min(MAPS.length-1,+mp||0));if(il!==null)isl=Math.max(0,Math.min(6,+il||0));if(wsv!==null)wsel=wsv==='1';if(grv!==null){gravIdx=Math.max(0,Math.min(2,isNaN(+grv)?1:+grv));GV=G*GRAVK[gravIdx]}if(sdd!==null){sdIdx=Math.max(0,Math.min(2,isNaN(+sdd)?0:+sdd));sdTurn=SDT[sdIdx]}if(rtv!==null)retIdx=Math.max(0,Math.min(2,isNaN(+rtv)?1:+rtv));if(flv!==null){fuelIdx=Math.max(0,Math.min(2,isNaN(+flv)?1:+flv));FUEL=FUELV[fuelIdx]}if(au!==null)autoRep=au==='1';if(rd!==null)radar=rd==='1';if(uv!==null)uiTheme=uv==='classic'?'classic':uv==='gruvbox'?'gruvbox':uv==='tokyo'?'tokyo':uv==='dark'?'dark':uv==='nord'?'nord':uv==='oled'?'oled':uv==='everforest'?'everforest':'modern';if(lsGet('gb_song')==='0')songOn=false;{const mo=lsGet('gb_motion');if(mo!==null)motion=Math.max(0,Math.min(2,isNaN(+mo)?2:+mo));}{const tl=lsGet('gb_tlabels');if(tl!==null)teamLabels=tl==='1'}{const fp=lsGet('gb_fps');if(fp!==null)fpsOn=fp==='1'}}catch(e){}
 document.body.classList.toggle('modern',uiTheme==='modern'||uiTheme==='dark'||uiTheme==='oled'||uiTheme==='everforest');document.body.classList.toggle('classic',uiTheme==='classic');document.body.classList.toggle('gruvbox',uiTheme==='gruvbox');document.body.classList.toggle('tokyo',uiTheme==='tokyo');document.body.classList.toggle('dark',uiTheme==='dark');document.body.classList.toggle('nord',uiTheme==='nord');document.body.classList.toggle('oled',uiTheme==='oled');document.body.classList.toggle('everforest',uiTheme==='everforest');resize();
 
 
@@ -1164,6 +1251,10 @@ function fire(){
     if(!target){tip('Tap the map to choose a target',2);return}
     doAirstrike();
   }
+  else if(wpn==='boggy'){
+    if(!target){tip('Tap the map to mark Boggy B\u2019s drop zone',2);return}
+    doBoggy();
+  }
   else if(wpn==='lightning'){
     if(!target){tip('Tap the map to call lightning',2);return}
     doLightning();
@@ -1265,6 +1356,15 @@ function doAirstrike(){
   useAmmo('airstrike');
   for(let i=0;i<5;i++)pend.push({t:.5+i*.15,x:target.x+(i-2)*44+(Math.random()-.5)*14,team:cur.team});
   SFX.siren();tip('✈️ Incoming!',1.5);
+}
+/* Grub Blasters' own Boggy B — Grubsong '26 ace. Flies over the mark and
+   drops exactly one grenade, then flies off. One per team. */
+const boggyHelos=[];
+function doBoggy(){
+  useAmmo('boggy');
+  const dir=Math.random()<.5?1:-1;
+  boggyHelos.push({x:dir>0?-180:W+180,y:66+Math.random()*44,vx:dir*300,targetX:target?target.x:W/2,dir,dropped:false,wob:Math.random()*6.3});
+  SFX.siren();tip('🚁 Boggy B incoming — drop zone marked!',2.3);
 }
 function doCarpet(){
   useAmmo('carpet');
@@ -1645,7 +1745,7 @@ function updateProj(dt){
   }
 }
 function boomFx(x,y,r){
-  if(parts.length>(low?200:med?300:400))return;
+  if(parts.length>(ultra?80:low?200:med?300:400))return;
   const cols=['#ffeb3b','#ff9800','#ff5722'],m=low?.4:med?.7:1;
   parts.push({x,y,vx:0,vy:0,life:.12,max:.12,c:'#fff9d0',s:r*.55,g:0,d:0});
   parts.push({x,y,vx:0,vy:0,life:.2,max:.2,c:'#ffd27a',s:r*.34,g:0,d:0});
@@ -1886,6 +1986,7 @@ function aiTurn(dt){
       w.aim=Math.max(-1.2,Math.min(1.45,Math.atan2(-(tg.y-w.y),Math.abs(tg.x-w.x))));
       ai.phase='gun';ai.t=0;return;
     }
+    if(has('boggy')&&ammoOf('boggy')>0&&dist>260&&Math.random()<[.08,.18,.35,.5,.6][diff]){dryTurns=0;wpn='boggy';updateWeps();target={x:tg.x+(Math.random()-.5)*D.thr,y:tg.y};ai.phase='strike';ai.t=0;return}
     if(has('airstrike')&&ammoOf('airstrike')>0&&dist>320&&Math.random()<[.15,.25,.45,.75,.8][diff]){
       dryTurns=0;wpn='airstrike';updateWeps();target={x:tg.x+(Math.random()-.5)*D.thr,y:tg.y};ai.phase='strike';ai.t=0;return;
     }
@@ -1993,6 +2094,15 @@ function update(dt){
   if(humanTurn()&&(state==='aim'||(state==='settle'&&retreat>0)))control(dt);
   else if(state==='aim')aiTurn(dt);
   for(let i=pend.length-1;i>=0;i--){const q=pend[i];q.t-=dt;if(q.t<=0){if(q.meteor){if(q.swarm){for(let k=0;k<q.swarm;k++){proj.push({type:'bomb',x:q.x+(Math.random()-.5)*80,y:-40,vx:(Math.random()-.5)*40,vy:480+Math.random()*80,age:0,shooter:q.team!=null?{team:q.team}:null,r:38,dmg:38,meteor:true});}}else{proj.push({type:'bomb',x:q.x,y:-40,vx:0,vy:520,age:0,shooter:q.team!=null?{team:q.team}:null,r:46,dmg:46,meteor:true});}}else if(q.bh){explode(q.x,q.y,160,100,q.team);for(const e of worms){if(e.alive){const d=Math.hypot(e.x-q.x,e.y-q.y);if(d>0.1&&d<160){const f=1-d/160;e.vx+=(e.x-q.x)/d*f*400;e.vy+=(e.y-q.y)/d*f*400;e.air=true;}}}for(let k=0;k<30;k++){parts.push({x:q.x,y:q.y,vx:(Math.random()-.5)*200,vy:(Math.random()-.5)*200,life:1.2+Math.random()*.8,max:2,c:'#4a0080',s:4+Math.random()*4,g:0,d:2});}shake=Math.max(shake,25);SFX.boom(120);}else if(q.portal){tip('🕳️ Portal opened!',1.5);SFX.tele();}else if(q.seismic){const tx=q.x;for(let y=WATER-1;y>10;y-=4){if(solid(tx,y)){tunnelSeg(tx,y-40,tx,y,18);for(let k=0;k<5;k++){explode(tx,y,60,70,q.team);}shake=Math.max(shake,30);SFX.boom(100);break}}SFX.thunder();}else if(q.lit){strikeLit(q.x,q.team);}else if(q.carpet){proj.push({type:'carpet',x:q.x,y:-30,vx:(Math.random()-.5)*60,vy:300,age:0,r:28,dmg:30,shooter:{team:q.team}});}else if(q.nuke){proj.push({type:'bomb',nuke:true,x:q.x,y:-40,vx:0,vy:460,age:0,shooter:{team:q.team},r:190,dmg:140});}else if(q.piano){proj.push({type:'piano',x:q.x,y:-30,vx:0,vy:420,age:0,r:64,dmg:80,bounces:0,shooter:{team:q.team}});}else{proj.push({type:'bomb',x:q.x,y:-30,vx:0,vy:420,age:0,shooter:{team:q.team},r:32,dmg:30});}pend.splice(i,1);}}
+  for(let i=boggyHelos.length-1;i>=0;i--){
+    const h=boggyHelos[i];h.x+=h.vx*dt;
+    if(!h.dropped&&((h.dir>0&&h.x>=h.targetX)||(h.dir<0&&h.x<=h.targetX))){
+      h.dropped=true;
+      proj.push({type:'grenade',x:h.x,y:h.y+26,vx:h.vx*.3,vy:60,age:0,fuse:2.3,r:52,dmg:60,bn:.45,fr:.72,hr:6.5,shooter:cur});
+      SFX.launch();
+    }
+    if(h.x<-260||h.x>W+260)boggyHelos.splice(i,1);
+  }
   updateProj(dt);
   while(chainFx.length){const q=chainFx.pop();const idx=proj.indexOf(q);if(idx<0)continue;proj.splice(idx,1);explode(q.x,q.y,q.r,q.dmg,q.shooter?q.shooter.team:null)}
   while(barFx.length){const b=barFx.pop();explode(b.x,b.y,54,60,b.by,1.15);if(b.oil){ignite(b.x,b.y,54,b.by);tip('🛢️ Oil drum ignites!',1.5)}}
@@ -2169,6 +2279,37 @@ function drawProjHi(p){
     gloss.addColorStop(0,'rgba(255,255,255,.6)');gloss.addColorStop(1,'rgba(255,255,255,0)');
     ctx.fillStyle=gloss;ctx.beginPath();ctx.arc(-3,-3,5.5,0,6.283);ctx.fill();
   }
+  ctx.restore();
+}
+function drawBoggy(h){
+  ctx.save();ctx.translate(h.x,h.y);
+  const dir=h.dir;
+  ctx.fillStyle='#3b5442';ctx.strokeStyle='#1d2b22';ctx.lineWidth=1.6;
+  ctx.beginPath();ctx.ellipse(0,4,26,9,0,0,6.283);ctx.fill();ctx.stroke();
+  const tailX=dir>0?-50:26;ctx.fillRect(tailX,-4.5,24,6);
+  ctx.fillStyle='#273a2e';ctx.beginPath();ctx.ellipse(-dir*22,-2,7,4.2,0,0,6.283);ctx.fill();
+  ctx.fillStyle='rgba(140,220,255,.9)';ctx.beginPath();ctx.ellipse(dir*10,1,8.5,5,0,0,6.283);ctx.fill();
+  ctx.strokeStyle='#1d2b22';ctx.beginPath();ctx.moveTo(0,-5);ctx.lineTo(0,-11);ctx.stroke();
+  ctx.save();ctx.translate(0,-12);ctx.rotate((frameNow/34)%6.283);
+  ctx.fillStyle=low?'#c8d2da':'rgba(200,210,218,.6)';
+  ctx.beginPath();ctx.fillRect(-25,-1.4,50,2.8);ctx.fill();
+  ctx.restore();
+  ctx.save();ctx.translate(-dir*24,-4);
+  ctx.rotate((frameNow/46)%6.283);
+  ctx.fillStyle=low?'#c8d2da':'rgba(200,210,218,.7)';
+  ctx.beginPath();ctx.fillRect(-6.5,-1,13,2);ctx.fill();
+  ctx.restore();
+  ctx.strokeStyle='rgba(228,232,240,.85)';ctx.lineWidth=1.3;
+  ctx.beginPath();ctx.moveTo(0,12);ctx.lineTo(0,24);ctx.stroke();
+  ctx.save();ctx.translate(0,27.5);
+  ctx.fillStyle='#ffb3c1';ctx.beginPath();ctx.arc(0,0,4.8,0,6.283);ctx.fill();
+  ctx.strokeStyle='#7c2f43';ctx.stroke();
+  ctx.fillStyle='#47543a';ctx.beginPath();ctx.arc(0,-1.1,4.2,3.35,6.08);ctx.fill();
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(dir*1.7,-.3,1.15,0,6.283);ctx.fill();
+  ctx.fillStyle='#111';ctx.beginPath();ctx.arc(dir*2.15,-.3,.55,0,6.283);ctx.fill();
+  ctx.restore();
+  ctx.font='bold 6px system-ui';ctx.textAlign='center';ctx.fillStyle='#ffe9a8';
+  ctx.fillText('BOGGY B',0,5.5);
   ctx.restore();
 }
 function drawProj(p){
@@ -2735,6 +2876,7 @@ function draw(){
     ctx.fillStyle='rgba(0,0,0,.55)';ctx.fillRect(cur.x-fw/2-1,cur.y-68,fw+2,6);
     ctx.fillStyle=f>.35?(sau?'#5ee7ff':'#ffd54a'):'#ff6b6b';ctx.fillRect(cur.x-fw/2,cur.y-67,fw*f,4);
   }
+  for(const h of boggyHelos)drawBoggy(h);
   for(const p of proj)drawProj(p);
   for(const m of muzzles){const a=Math.max(0,m.t/m.max);ctx.save();ctx.translate(m.x,m.y);ctx.rotate(m.ang);ctx.globalCompositeOperation='lighter';ctx.globalAlpha=a;const mg=ctx.createRadialGradient(0,0,0,0,0,22);mg.addColorStop(0,'rgba(255,244,190,'+(.9*a)+')');mg.addColorStop(1,'rgba(255,170,70,0)');ctx.fillStyle=mg;ctx.beginPath();ctx.arc(0,0,22,0,6.283);ctx.fill();ctx.fillStyle='rgba(255,248,210,'+(.9*a)+')';ctx.beginPath();ctx.moveTo(1,-3);ctx.lineTo(14+Math.random()*5,0);ctx.lineTo(1,3);ctx.closePath();ctx.fill();ctx.globalCompositeOperation='source-over';ctx.globalAlpha=1;ctx.restore()}
   for(const t of tracers){ctx.globalAlpha=t.t/.12;if(!low&&!med){ctx.strokeStyle='rgba(255,190,80,.4)';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(t.x1,t.y1);ctx.lineTo(t.x2,t.y2);ctx.stroke()}ctx.strokeStyle='#fff7b0';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(t.x1,t.y1);ctx.lineTo(t.x2,t.y2);ctx.stroke();ctx.globalAlpha=1}
@@ -2947,7 +3089,7 @@ function syncUI(){
   $('#crt').value=cratesOn?'On':'Off';$('#barl').value=barrelDrum?'Barrel only':(barrelOil?'Oil only':(barrelsOn?'On':'Off'));
   $('#map').value=MAPS[mapIdx].n;$('#isl').value=ISLN[isl];$('#ag').value=guide?'On':'Off';
   $('#sky').value=SKYN[skyIdx+1];$('#ter').value=GROUNDN[terIdx+1];$('#wx').value=WXN[wxIdx+1];
-  $('#gfx').value=low?'Low':med?'Medium':'High';$('#smute').value=muted?'Off':'On';$('#msong').value=songOn?'On':'Off';$('#wsel').value=wsel?'On':'Off';$('#iface').value=uiTheme==='classic'?'Classic':uiTheme==='gruvbox'?'Gruvbox':uiTheme==='tokyo'?'Tokyo Night':uiTheme==='dark'?'Dark':uiTheme==='nord'?'Nord':uiTheme==='oled'?'OLED Dark':uiTheme==='everforest'?'Everforest':'Modern';
+  $('#gfx').value=ultra?'Ultra Low':low?'Low':med?'Medium':'High';$('#smute').value=muted?'Off':'On';$('#msong').value=songOn?'On':'Off';$('#wsel').value=wsel?'On':'Off';$('#iface').value=uiTheme==='classic'?'Classic':uiTheme==='gruvbox'?'Gruvbox':uiTheme==='tokyo'?'Tokyo Night':uiTheme==='dark'?'Dark':uiTheme==='nord'?'Nord':uiTheme==='oled'?'OLED Dark':uiTheme==='everforest'?'Everforest':'Modern';
   $('#hap').value=hap?'On':'Off';$('#radar').value=radar?'On':'Off';$('#aut').value=autoRep?'On':'Off';$('#motion').value=['Off','Low','Full'][motion];$('#tlabels').value=teamLabels?'On':'Off';$('#fps').value=fpsOn?'On':'Off';
   $('#grav').value=GRAVN[gravIdx];$('#sdx').value=SDN[sdIdx];$('#ret').value=RETN[retIdx];$('#fuel').value=FUELN[fuelIdx];
 }
@@ -2970,7 +3112,7 @@ function selCh(id,v){
   else if(id==='#sky'){skyIdx=Math.max(-1,SKYN.indexOf(v)-1);save('gb_sky',skyIdx)}
   else if(id==='#ter'){terIdx=Math.max(-1,GROUNDN.indexOf(v)-1);save('gb_ter',terIdx)}
   else if(id==='#wx'){wxIdx=Math.max(-1,WXN.indexOf(v)-1);save('gb_wx',wxIdx)}
-  else if(id==='#gfx'){low=v==='Low';med=v==='Medium';save('gb_low',low?'1':med?'2':'0');resize();mkBg();initScenery()}
+  else if(id==='#gfx'){ultra=v==='Ultra Low';low=ultra||v==='Low';med=v==='Medium';save('gb_low',ultra?'3':low?'1':med?'2':'0');resize();mkBg();initScenery()}
         else if(id==='#iface'){uiTheme=v==='Tokyo Night'?'tokyo':v==='Nord'?'nord':v==='OLED Dark'?'oled':v==='Everforest'?'everforest':v.toLowerCase();document.body.classList.remove('modern','classic','gruvbox','tokyo','dark','nord','oled','everforest');document.body.classList.add(uiTheme);if(uiTheme==='dark'||uiTheme==='oled'||uiTheme==='everforest')document.body.classList.add('modern');save('gb_ui',uiTheme)}
   else if(id==='#smute'){muted=v==='Off';saveMute()}
   else if(id==='#msong'){songOn=v==='On';save('gb_song',songOn?'1':'0');if(!songOn)stopSong()}
@@ -2990,6 +3132,7 @@ function selCh(id,v){
 ['#hp','#tt','#wnd'].forEach(id=>$(id).addEventListener('input',e=>selCh(id,e.target.value)));
 for(let t=0;t<4;t++){const i=t;$('#tn'+i).style.background=TC[i];$('#tn'+i).onclick=function(){const v=prompt(TN[i]+' team name',TN[i]);if(v===null)return;const s=v.trim().slice(0,12);if(!s)return;TN[i]=s;this.textContent=s;if(nameEls[i])nameEls[i].textContent=s;save('gb_tn'+i,s)};$('#tc'+i).style.background=TC[i];$('#tc'+i).onclick=function(){colIdx[i]=(colIdx[i]+1)%PAL.length;TC[i]=PAL[colIdx[i]];this.style.background=TC[i];$('#tn'+i).style.background=TC[i];if(nameEls[i])nameEls[i].style.color=TC[i];if(barEls[i])barEls[i].style.background=TC[i];save('gb_tc'+i,colIdx[i])}}
 $('#bhelp').onclick=()=>toggleHelp(true);$('#hclose').onclick=()=>toggleHelp(false);
+$('#bstory').onclick=()=>$('#story').classList.remove('hide');$('#storyClose').onclick=()=>$('#story').classList.add('hide');$('#story').addEventListener('click',e=>{if(e.target.id==='story')e.currentTarget.classList.add('hide')});
 $('#bcustom').onclick=()=>toggleCustom(true);$('#cclose').onclick=()=>toggleCustom(false);
 $('#bsettings').onclick=()=>toggleSettings(true);$('#sclose').onclick=()=>toggleSettings(false);$('#gear').onclick=()=>toggleSettings();
 $('#bschedit').onclick=openScheme;$('#sedone').onclick=closeScheme;$('#snew').onclick=newScheme;$('#ssave').onclick=saveScheme;$('#sdl').onclick=dlSchemes;$('#sdel').onclick=delScheme;$('#simp').onclick=()=>$('#sfile').click();
@@ -3008,6 +3151,8 @@ try{pickTheme();}catch(e){console.error('pickTheme error',e);skyT=SKY[0];gnd=GRO
 try{buildTeams();}catch(e){console.error('buildTeams error',e)}
 try{buildWeps();}catch(e){console.error('buildWeps error',e)}
 booted=true;
+/* offline shell (GitHub Pages only): instant repeat visits once cached */
+if(typeof navigator!=='undefined'&&'serviceWorker' in navigator&&location.protocol.indexOf('http')===0){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});}
 (typeof queueMicrotask==='function'?queueMicrotask:setTimeout)(()=>{
   try{genTerrain();}catch(e){console.error('genTerrain error',e)}
   try{mkBg();}catch(e){console.error('mkBg error',e);bg=null}
