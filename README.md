@@ -39,7 +39,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Tap any of your worms to take control of it — move anyone, anywhere
 - Double-tap jump for a backflip — a backwards somersault that gains height, plus a flat "low backflip" variant
 - Solid worms — they block each other, can be climbed and stood upon (worm stacking), and fall when their footing drops away
-- Big customization: team count, computer level, scheme, worm count, HP and turn timer sliders, wind strength (0–2.5× slider — calm days to full storms), gravity (low / normal / high), sudden death timing, retreat time, jetpack fuel, supply crates on/off, barrels on/off/oil-only, map size and islands — plus 🎨 Customize for team names and colors, sky, terrain, weather and the aim guide, and ⚙️ Settings for interface theme, sound, menu song, vibration, auto replay, Worm Select, crate radar, graphics and fullscreen
+- Big customization: team count, computer level, scheme, worm count, HP and turn timer sliders, wind strength (0–2.5× slider — calm days to full storms), gravity (low / normal / high), sudden death timing, retreat time, jetpack fuel, supply crates on/off, barrels on/off/oil-only, map size and islands — plus 🎨 Customize for team names and colors, sky, terrain, weather and the aim guide, and ⚙️ Settings for interface theme, sound, menu song, vibration, motion (Full / Low / Off screen-shake), team labels (A/B/C/D over each worm), FPS counter, auto replay, Worm Select, crate radar, graphics and fullscreen
 - Cinematic explosions — layered boom audio, shockwave rings, fireballs, smoke, sparks, rim embers and dirt debris, with screen shake (and phone vibration) that scales with the blast
 - Combo kill banners: blow up two or more worms in one blast for DOUBLE KILL / TRIPLE KILL / chain callouts — with a slow-motion flourish when a shot ends the match
 - Turn replay: press R (or the 🎬 button) right after a shot to watch the last turn play out again — FIRE cycles play / 3× speed / pause, slow-mo with S, Esc closes; Auto Replay in ⚙️ Settings plays every turn back for you
@@ -74,7 +74,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Four sky themes (day, sunset, night, dawn) — Auto rolls one per match, Real Time follows your device clock — and four terrain themes (grass, desert, snow, rock)
 - Native system fonts and parallax clouds for a clean, pretty look
 - Procedural sound effects synthesized with Web Audio — no audio files
-- Pause button plus ⚙️ Settings — interface theme (Modern / Classic / Gruvbox / Tokyo Night / Dark / Nord / OLED Dark / Everforest), sound, menu song, vibration (haptic feedback on phones), auto replay, Worm Select, crate radar, graphics and fullscreen; settings persist in localStorage
+- Pause button plus ⚙️ Settings — interface theme (Modern / Classic / Gruvbox / Tokyo Night / Dark / Nord / OLED Dark / Everforest), sound, menu song, vibration (haptic feedback on phones), motion (Full / Low / Off — scales screen-shake), team labels, FPS counter, auto replay, Worm Select, crate radar, graphics and fullscreen; settings persist in localStorage
 
 ## How to play
 
@@ -102,7 +102,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Open Help & Controls from the menu button, or press H.
 - Tap one of your own worms to take control of it mid-turn — turn **Worm Select** off in ⚙️ Settings to disable.
 - After your shot lands you can watch it again: the 🎬 button appears (or press R). FIRE cycles play / 3× / pause, S slows it down, Esc closes it, and Auto Replay in ⚙️ Settings plays every turn back automatically.
-- 🎨 Customize in the menu sets the match itself (teams, worms, HP, turn time, computer level, scheme, gravity, sudden death, retreat time, jetpack fuel, wind, crates, barrels, map, islands, names, colors, sky, terrain, weather, aim guide) while ⚙️ Settings holds the interface theme (Modern / Classic / Gruvbox / Tokyo Night / Dark / Nord / OLED Dark / Everforest), sound, menu song, vibration, auto replay, Worm Select, crate radar, graphics and fullscreen — Done (or Esc) closes either card and everything persists.
+- 🎨 Customize in the menu sets the match itself (teams, worms, HP, turn time, computer level, scheme, gravity, sudden death, retreat time, jetpack fuel, wind, crates, barrels, map, islands, names, colors, sky, terrain, weather, aim guide) while ⚙️ Settings holds the interface theme (Modern / Classic / Gruvbox / Tokyo Night / Dark / Nord / OLED Dark / Everforest), sound, menu song, vibration, motion, auto replay, Worm Select, crate radar, graphics and fullscreen — Done (or Esc) closes either card and everything persists.
 - Tap 🔨 beside **Weapon Scheme** in 🎨 Customize to build custom loadouts: press ＋ for a new scheme, name up to 24 of them, set every weapon to ∞ or 0–10 ammo, download them as JSON and import them on another device; deleting the last one leaves the editor empty until you press ＋ again.
 - The parachute turns a fall into a glide — steer with ◀ ▶ and slow or speed the descent with ▲ ▼, then keep your turn and fire after landing; the prod shoves a worm without hurting it (straight into the sea, if you like); the suicide bomber trades your worm for a lingering poison cloud; and Skip hands the turn straight to the enemy.
 - Don't like how the match is going? The 🔄 button (top-right of the HUD) restarts it from turn 1 — the exact same map, worms and barrels — after a quick confirmation.
@@ -222,7 +222,7 @@ verifies the "About N KB" line in this README matches `index.html`.
 
 ## Tech
 
-Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 265 KB in total.
+Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 268 KB in total.
 
 ## History
 
