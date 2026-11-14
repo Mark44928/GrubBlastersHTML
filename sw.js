@@ -1,6 +1,6 @@
 // Bump when index.html changes so clients pick up the new shell instead of
 // serving a stale cache forever.
-const CACHE_NAME = "grubblasters-v1";
+const CACHE_NAME = "grubblasters-v2";
 const SHELL = [
   "./",
   "./index.html",
