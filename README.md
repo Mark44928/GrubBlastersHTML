@@ -52,7 +52,9 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Built-in Help & Controls screen (menu button or the H key)
 - Fully destructible terrain — craters stay, worms fall
 - Shifting wind that bends rockets mid-flight
-- Seventy weapons in one tap-to-open shelf menu: bazooka, grenade, dynamite, shotgun, fire punch, mine, sheep, airstrike, teleport, holy grenade, cluster bomb, uzi, blowtorch, homing missile, bunker buster, magic bullet, banana bomb, dragon ball, mole bomb, lightning, flying saucer, mad cows, minigun, kamikaze, 1.5x damage, invulnerable, napalm strike, dynamite bundle, carpet bombing, nuke, homing pigeon, skunk, parachute, prod, suicide bomber, skip, shield, earthquake, vampire, sticky bomb, rubber grenade, girder, concrete donkey, crate vacuum, splitter, mortar, frost bomb, drone strike, grapple hook, freeze ray, meteor swarm, portal gun, black hole, laser cannon, seismic charge, phoenix, tesla coil, acid spray, time bomb, magnet mine, old woman, battle axe, sniper rifle, ballgun, flamethrower, cake, piano strike, watermelon, molotov, scales of justice
+- Seventy-one weapons in one tap-to-open shelf menu: bazooka, grenade, dynamite, shotgun, fire punch, mine, sheep, airstrike, **Boggy B**, teleport, holy grenade, cluster bomb, uzi, blowtorch, homing missile, bunker buster, magic bullet, banana bomb, dragon ball, mole bomb, lightning, flying saucer, mad cows, minigun, kamikaze, 1.5x damage, invulnerable, napalm strike, dynamite bundle, carpet bombing, nuke, homing pigeon, skunk, parachute, prod, suicide bomber, skip, shield, earthquake, vampire, sticky bomb, rubber grenade, girder, concrete donkey, crate vacuum, splitter, mortar, frost bomb, drone strike, grapple hook, freeze ray, meteor swarm, portal gun, black hole, laser cannon, seismic charge, phoenix, tesla coil, acid spray, time bomb, magnet mine, old woman, battle axe, sniper rifle, ballgun, flamethrower, cake, piano strike, watermelon, molotov, scales of justice
+- **Offline shell** — a tiny service worker precaches the page, so after the first visit re-launches are instant and the game works offline
+- **Official mascot: Major Munch** — three inches of grub, one enormous tooth, zero fear. Hand-drawn vector grub in the menu hero, co-piloting the lore with Boggy B, and headlining the Grubsong ’26 anthem
 - The shelf panel shows each weapon's icon, name and remaining ammo
 - Explosive barrels scattered across the map are solid — stand on them, or shoot one to erupt it, chaining into mines and other barrels. Some are oil drums that ignite the ground when they blow. Blow the ground out from under one and it drops (toggle in 🎨 Customize)
 - Napalm and oil drums set the ground on fire — flames keep damaging anything standing in them while they burn; the skunk's gas cloud poisons worms, and a health crate cures them
@@ -74,7 +76,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Four sky themes (day, sunset, night, dawn) — Auto rolls one per match, Real Time follows your device clock — and four terrain themes (grass, desert, snow, rock)
 - Native system fonts and parallax clouds for a clean, pretty look
 - Procedural sound effects synthesized with Web Audio — no audio files
-- Pause button plus ⚙️ Settings — interface theme (Modern / Classic / Gruvbox / Tokyo Night / Dark / Nord / OLED Dark / Everforest), sound, menu song, vibration (haptic feedback on phones), motion (Full / Low / Off — scales screen-shake), team labels, FPS counter, auto replay, Worm Select, crate radar, graphics and fullscreen; settings persist in localStorage
+- Pause button plus ⚙️ Settings — interface theme (Modern / Classic / Gruvbox / Tokyo Night / Dark / Nord / OLED Dark / Everforest), sound, menu song, vibration (haptic feedback on phones), motion (Full / Low / Off — scales screen-shake), graphics (High / Medium / Low / Ultra Low), team labels, FPS counter, auto replay, Worm Select, crate radar, graphics and fullscreen; settings persist in localStorage
 
 ## How to play
 
@@ -87,7 +89,7 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Pinch the map (or scroll) to zoom — the camera follows your worm, the shell in flight, and your marked target. Two-finger drag (or right-drag on desktop) pans the map; moving or firing snaps the camera back.
 - Tap one of your other alive worms to switch to it — you can move any worm on your turn, not just the next in line.
 - After firing you get a short retreat window; press FIRE during it to skip it and end your turn early.
-- Airstrike, teleport, the homing missile, the magic bullet, lightning, the carpet bombers, the nuke and the concrete donkey arm a map target first — tap the map, then press FIRE.
+- Airstrike, **Boggy B**, teleport, the homing missile, the magic bullet, lightning, the carpet bombers, the nuke and the concrete donkey arm a map target first — tap the map, then press FIRE.
 - Release the sheep and it wanders on its own, blowing up on the first worm it touches (or after 8 s); press FIRE again to detonate it on command. The dragon ball bounces on the same FIRE-to-detonate rule (it also blows after six bounces).
 - The banana bomb bursts into five bananas that go off one after another; the mole bomb tunnels through rock in a dead-straight line in the direction you fired it and detonates the moment it finishes digging and pokes out of the rock. It also blows on a worm, after 5 seconds, or at the water line.
 - The napalm strike sets the ground alight where it lands — flames bite anyone standing in them every couple of seconds, and oil drums spread the fire when they blow. The skunk sprays tall poisoned gas (wind carries it): anything in the cloud gets poisoned for the rest of the match — 5 HP a turn, never fatal — until a health crate cures it. The homing pigeon is fearless, flying straight through terrain to reach your marked spot.
@@ -133,6 +135,7 @@ Ammo below is for the Normal scheme. **Greedy** makes every weapon unlimited, **
 | Dynamite | 2 per team | Dropped at your feet; 4 s fuse; biggest blast |
 | Shotgun | Unlimited | Two instant hitscan shots |
 | Airstrike | 1 per team | Pick a target; five bombs rain from the sky |
+| Boggy B | 1 per team | Mark a target; the Grubheli flies over and Boggy B drops one Grenade on the mark, then flies off |
 | Teleport | 2 per team | Warp your worm to a chosen spot |
 | Sheep | 1 per team | Walks by itself until it finds a worm or is detonated |
 | Mad Cows | 1 per team | Releases three charging cows one after another — each explodes on the first worm (friend or foe) or wall it meets, with Dynamite-strength force (75) |
@@ -222,7 +225,7 @@ verifies the "About N KB" line in this README matches `index.html`.
 
 ## Tech
 
-Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 268 KB in total.
+Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 281 KB in total.
 
 ## History
 
@@ -245,6 +248,7 @@ The project grew through a series of tagged releases:
 - **v2.6.3 — Tip fix (correct)** — The manual-detonate hint now names the actual weapon: Old Woman and Cake no longer say "🐉 detonate the dragon ball!" — every manual-detonate weapon shows its own prompt (Skunk / Old Woman / Cake / Dragon Ball).
 - **v2.6.4 — Hat clearance** — Worm name/HP tag moved up so the team hats are no longer half-covered by it.
 - **v2.6.5 — Hat seating** — Team hats now rest directly on a worm's head (no gap).
+- **v2.6.6 — Grubsong ’26** — New weapon **🚁 Boggy B**: mark a target, FIRE, and the Grubheli flies over the mark — Boggy B drops one crew Grenade on the spot and rides off; one per team per match. The main menu is rebuilt with the Grubsong ’26 hero banner and a scrolling anthem marquee; the menu theme is retuned to an original, anthemic E-minor-flavoured homage to **Wormsong ’95** (Worms, 1995, Team17 / Ocean — Bjørn Lynne), and a new **Story** modal (book button) tells the lore of the Grub crew and their own Boggy B. Dedicated to every grub that made it back. Also in v2.6.6: **Major Munch** — Grub Blasters’ own original mascot (three inches of grub, one tooth, rocket backpack), hand-drawn in SVG for the menu hero, co-piloting the lore, and filling the marquee where Boggy B once stood.
 
 
 ## 🛠️ More from Mark44928

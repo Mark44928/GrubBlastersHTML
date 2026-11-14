@@ -33,6 +33,7 @@ $(GBJS): index.html
 
 syntax: $(GBJS)
 	@node --check "$(GBJS)"
+	@node --check sw.js
 	@echo "SYNTAX OK"
 
 size:
