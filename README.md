@@ -43,7 +43,9 @@ Grub Blasters is a turn-based artillery game in the spirit of *Worms*, built ent
 - Cinematic explosions — layered boom audio, shockwave rings, fireballs, smoke, sparks, rim embers and dirt debris, with screen shake (and phone vibration) that scales with the blast
 - Combo kill banners: blow up two or more worms in one blast for DOUBLE KILL / TRIPLE KILL / chain callouts — with a slow-motion flourish when a shot ends the match
 - Turn replay: press R (or the 🎬 button) right after a shot to watch the last turn play out again — FIRE cycles play / 3× speed / pause, slow-mo with S, Esc closes; Auto Replay in ⚙️ Settings plays every turn back for you
-- Eight interface themes: the default Modern look (glassy panels, gradients, tap feedback), the original Classic look, and six more palettes — Gruvbox (warm retro, #fabd2f accents), Tokyo Night (cool neon, #7aa2f7 accents), Dark (high-contrast night mode), Nord (cool slate, #88c0d0 accents), OLED Dark (pure black, #00ff88 accents) and Everforest (warm green, #a7c080 accents) — switch anytime in ⚙️ Settings → Interface.
+- **Replay export/import** — save the last turn as a `.json` file and load it again from ⚙️ Settings → Replay (including the cached terrain)
+- **Setup share codes** — Customize → Copy setup code creates a link/code with teams, HP, scheme, wind, map size, islands, rules and interface theme; Load code applies it instantly
+- Ten interface themes: the default Modern look (glassy panels, gradients, tap feedback), the original Classic look, and eight more palettes — Gruvbox (warm retro, #fabd2f accents), Tokyo Night (cool neon, #7aa2f7 accents), Dark (high-contrast night mode), Nord (cool slate, #88c0d0 accents), OLED Dark (pure black, #00ff88 accents), Everforest (warm green, #a7c080 accents), plus Greenit (#7BD88F) and Bluney (#7DBBFF) from the theme families — switch anytime in ⚙️ Settings → Interface.
 - A synthesized menu theme song loops on the start screen — turn it off in ⚙️ Settings
 - High-graphics mode (default) — detailed worms with animated tails and glossy highlights, textured terrain with grass fringes, rock strata and pebbles, a layered sunlit sky and volumetric clouds, rippling water with shimmer, glow trails and gloss on every projectile, richer explosions, fires, gas and barrels, plus a filmic vignette
 - Medium-graphics mode — a performance middle ground: keeps the detailed terrain texture, cloud sprites, fire/gas effects and the vignette but trims particle counts, glow halos, tracer glow and rain/snow density for 60 FPS on mid-range phones
@@ -225,7 +227,7 @@ verifies the "About N KB" line in this README matches `index.html`.
 
 ## Tech
 
-Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 281 KB in total.
+Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. About 290 KB in total.
 
 ## History
 
