@@ -283,7 +283,7 @@ body.everforest #replay{border-color:var(--acc);background:linear-gradient(180de
   <div id="top">
     <div id="teams"></div>
     <div id="mid"><div id="time">30</div><div id="wind"><i id="wf"></i><u></u></div><div id="wtxt">WIND</div><div id="xd" class="hide">💪 1.5×</div><div id="iv" class="hide">🛡️ INVULN</div><div id="sh" class="hide">🛡️ SHIELD</div><div id="sd"></div></div>
-    <div id="icons"><button class="mini" id="replay">🎬</button><button class="mini" id="rst">🔄</button><button class="mini" id="pause">⏸</button><button class="mini" id="gear">⚙️</button><button class="mini" id="quit">✕</button></div>
+    <div id="icons"><button class="mini" id="shot" title="Download a screenshot">📷</button><button class="mini" id="replay">🎬</button><button class="mini" id="rst">🔄</button><button class="mini" id="pause">⏸</button><button class="mini" id="gear">⚙️</button><button class="mini" id="quit">✕</button></div>
   </div>
   <div id="banner"></div>
   <div id="tip"></div>
@@ -366,7 +366,7 @@ body.everforest #replay{border-color:var(--acc);background:linear-gradient(180de
     <li>Pinch (or scroll) to zoom — the camera follows the active worm and any shell in flight. Two-finger drag (or right-drag) pans the map; move or fire to snap back.</li>
     <li>Tap one of your other worms to take control of it (turn <b>Worm Select</b> off in ⚙️ Settings to disable).</li>
     <li>After firing you get a short retreat window; press <span class="kbd">FIRE</span> to skip it. Use <span class="kbd">🎬</span> (or <span class="kbd">R</span>) to replay the last shot — <span class="kbd">FIRE</span> cycles play / 3× / pause, <span class="kbd">S</span> slow-mo, <span class="kbd">Esc</span>/<span class="kbd">Enter</span> closes; Auto Replay is in ⚙️ Settings.</li>
-    <li>HUD buttons: <span class="kbd">🎬</span> replay · <span class="kbd">🔄</span> restart this map · <span class="kbd">⏸</span> pause · <span class="kbd">⚙️</span> Settings · <span class="kbd">✕</span> quit to the menu.</li>
+    <li>HUD buttons: <span class="kbd">📷</span> screenshot · <span class="kbd">🎬</span> replay · <span class="kbd">🔄</span> restart this map · <span class="kbd">⏸</span> pause · <span class="kbd">⚙️</span> Settings · <span class="kbd">✕</span> quit to the menu.</li>
   </ul>
   <h2>Weapons</h2>
   <ul>
@@ -3144,6 +3144,7 @@ $('#sname').addEventListener('input',()=>{stashScheme();persistCustoms();refresh
 $('#bshare').onclick=()=>shareGame();
 $('#pause').onclick=togglePause;
 $('#rst').onclick=()=>{if(state==='menu')return;if(confirm('Restart this match? The same terrain and worms start over.')){rec=null;rep=null;repC=null;lastMovie=null;matchSnap?restartMatch():newGame(gameMode)}};
+$('#shot').onclick=()=>{try{const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='grub-blasters.png';document.body.appendChild(a);a.click();a.remove();tip('📷 Screenshot saved',2)}catch(e){tip('Screenshot failed',2)}};
 $('#replay').onclick=()=>{if(state==='replay'){stopReplay(false);return}if(!lastMovie||rec)return;if(state==='settle'||state==='aim'||state==='over')startReplay(lastMovie,state)};
 $('#fs').onclick=()=>{const d=document.documentElement;if(document.fullscreenElement||document.webkitFullscreenElement)(document.exitFullscreen||document.webkitExitFullscreen||(()=>{})).call(document);else(d.requestFullscreen||d.webkitRequestFullscreen||(()=>{})).call(d)};
 $('#quit').onclick=()=>{state='menu';paused=false;charging=false;power=0;turnTime=0;turnTeam=0;curSheep=null;curDet=null;rec=null;rep=null;repC=null;lastMovie=null;matchSnap=null;closeWepPan();$('#pause').textContent='⏸';$('#msg').textContent='Turn-based worm artillery. Blast the other team into the sea!';$('#menu').classList.remove('hide')};
