@@ -262,6 +262,21 @@ body.everforest #banner{text-shadow:0 3px 0 #000,0 0 26px var(--acc)}
 body.everforest #time{color:var(--fg);text-shadow:0 0 18px var(--acc)}
 body.everforest #wind i{background:var(--acc)}
 body.everforest #replay{border-color:var(--acc);background:linear-gradient(180deg,rgba(167,192,128,.3),rgba(167,192,128,.16))}
+/* ---------- greenit & bluney themes ---------- */
+body.greenit{--bg:#0C1F17;--bg2:#102A20;--fg:#DEF4E5;--acc:#7BD88F;--red:#E06C75;--orange:#D7A657;--green:#7BD88F;--purple:#B6F5C6;--cyan:#63C9A8;--gray:#6F917B;background:#0C1F17}
+body.bluney{--bg:#0E1B2E;--bg2:#122A46;--fg:#E3EFF9;--acc:#7DBBFF;--red:#F07178;--orange:#FFB86C;--green:#7DBBFF;--purple:#B9A8E0;--cyan:#8BD5FF;--gray:#5C7C9C;background:#0E1B2E}
+body.greenit .team,body.greenit #mid,body.greenit .mini,body.greenit .btn,body.greenit .wep-btn,body.greenit .wcell,body.greenit .card,body.greenit .big,body.greenit .wep-pan,body.greenit #tip,body.greenit #replay,body.greenit #menu,body.greenit #help,body.greenit #custom,body.greenit #settings,body.greenit #story,body.bluney .team,body.bluney #mid,body.bluney .mini,body.bluney .btn,body.bluney .wep-btn,body.bluney .wcell,body.bluney .card,body.bluney .big,body.bluney .wep-pan,body.bluney #tip,body.bluney #replay,body.bluney #menu,body.bluney #help,body.bluney #custom,body.bluney #settings,body.bluney #story{background:var(--bg2);color:var(--fg);border-color:var(--gray)}
+body.greenit .crow select,body.bluney .crow select{background-color:var(--bg2)}body.greenit .crow select option,body.bluney .crow select option{background:var(--bg2);color:var(--fg)}body.greenit .card,body.bluney .card{background:var(--bg)}
+body.greenit .team.act,body.greenit .btn.sel,body.greenit .wcell.sel,body.bluney .team.act,body.bluney .btn.sel,body.bluney .wcell.sel{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}
+body.greenit .btn.on:not(#fire),body.greenit .btn:active:not(#fire),body.greenit .big,body.greenit .big.alt,body.bluney .btn.on:not(#fire),body.bluney .btn:active:not(#fire),body.bluney .big,body.bluney .big.alt{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+body.greenit .btn:active,body.greenit .big:active,body.greenit .mini:active,body.greenit .wcell:active,body.greenit .wep-btn:active,body.bluney .btn:active,body.bluney .big:active,body.bluney .mini:active,body.bluney .wcell:active,body.bluney .wep-btn:active{transform:scale(.94)}
+body.greenit .wcell.sel,body.greenit .wcell.sel:hover,body.bluney .wcell.sel,body.bluney .wcell.sel:hover{background:var(--acc)}
+body.greenit #fire,body.bluney #fire{border-color:var(--orange);box-shadow:0 6px 18px rgba(255,184,108,.25)}
+body.greenit #banner,body.bluney #banner{text-shadow:0 3px 0 #000,0 0 26px var(--acc)}
+body.greenit #time,body.bluney #time{color:var(--fg);text-shadow:0 0 18px var(--acc)}
+body.greenit #wind i,body.bluney #wind i{background:var(--acc)}
+body.greenit #replay{border-color:var(--acc);background:linear-gradient(180deg,rgba(123,216,143,.3),rgba(123,216,143,.16))}
+body.bluney #replay{border-color:var(--acc);background:linear-gradient(180deg,rgba(125,187,255,.28),rgba(125,187,255,.14))}
 #schemedit{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(5,12,30,.8);backdrop-filter:blur(6px);z-index:10;padding:14px}
 #schemedit.hide{display:none}
 #schemedit .card{width:min(780px,94vw)}
@@ -400,7 +415,7 @@ body.everforest #replay{border-color:var(--acc);background:linear-gradient(180de
     <li><b>Normal</b>: standard ammo. <b>Greedy</b>: every weapon, unlimited ammo. <b>Pro Mode</b>: scarce ammo, no airstrike. <b>Bazooka Only</b>: just rockets.</li>
     <li>Tap 🔨 next to <b>Weapon Scheme</b> to build a custom loadout — press ＋ for a new scheme, set each weapon to ∞ or 0–10, then Save; schemes are saved on the device and can be downloaded/imported as JSON. Deleting the last scheme leaves the editor empty until you press ＋ again.</li>
     <li>🎨 Customize sets the match: teams, worms per team, HP, turn time, computer level, scheme, gravity, sudden death, retreat time, jetpack fuel, wind, crates, barrels, map size, islands, aim guide, team names/colors, sky, terrain and weather.</li>
-    <li>⚙️ Settings (menu, or the gear in the HUD) covers interface theme (Modern / Classic / Gruvbox / Tokyo Night / Dark / Nord / OLED Dark / Everforest), sound, menu song, vibration, motion (Full / Low / Off — screen-shake intensity), auto replay, Worm Select, crate radar, graphics and fullscreen.</li>
+    <li>⚙️ Settings (menu, or the gear in the HUD) covers interface theme (Modern / Classic / Gruvbox / Tokyo Night / Dark / Nord / OLED Dark / Everforest / Greenit / Bluney), sound, menu song, vibration, motion (Full / Low / Off — screen-shake intensity), auto replay, Worm Select, crate radar, graphics and fullscreen.</li>
     <li><b>Map size</b>: Standard, Wide, or Epic — bigger maps keep large armies from cluttering. <b>Islands</b> splits the map into up to six floating sky islands.</li>
   </ul>
   <h2>Tips</h2>
@@ -469,6 +484,10 @@ body.everforest #replay{border-color:var(--acc);background:linear-gradient(180de
       <div class="crow"><span>Team colors</span><div class="nbtns"><button id="tc0" class="sw" title="Cycle team colour"></button><button id="tc1" class="sw" title="Cycle team colour"></button><button id="tc2" class="sw hide" title="Cycle team colour"></button><button id="tc3" class="sw hide" title="Cycle team colour"></button></div></div>
     </section>
   </div>
+  <div class="nbtns" style="justify-content:center;margin:10px 0">
+    <button class="btn" id="ccopy" style="padding:8px 14px;font-size:13px">📋 Copy setup code</button>
+    <button class="btn" id="cload" style="padding:8px 14px;font-size:13px">📥 Load code</button>
+  </div>
   <button class="big" id="cclose">Done</button>
 </div></div>
 <div id="settings" class="hide"><div class="card">
@@ -484,11 +503,15 @@ body.everforest #replay{border-color:var(--acc);background:linear-gradient(180de
       <label class="crow"><span>Auto replay</span><select id="aut"><option>Off</option><option>On</option></select></label>
     </section>
     <section class="csec"><h2>Game</h2>
-       <label class="crow"><span>Interface</span><select id="iface"><option>Modern</option><option>Classic</option><option>Gruvbox</option><option>Tokyo Night</option><option>Dark</option><option>Nord</option><option>OLED Dark</option><option>Everforest</option></select></label>
+       <label class="crow"><span>Interface</span><select id="iface"><option>Modern</option><option>Classic</option><option>Gruvbox</option><option>Tokyo Night</option><option>Dark</option><option>Nord</option><option>OLED Dark</option><option>Everforest</option><option>Greenit</option><option>Bluney</option></select></label>
       <label class="crow"><span>Worm Select</span><select id="wsel"><option>On</option><option>Off</option></select></label>
       <label class="crow"><span>Crate radar</span><select id="radar"><option>On</option><option>Off</option></select></label>
       <label class="crow"><span>Graphics</span><select id="gfx"><option>High</option><option>Medium</option><option>Low</option><option>Ultra Low</option></select></label>
       <label class="crow"><span>Fullscreen</span><button id="fs" class="mini">⛶</button></label>
+    </section>
+    <section class="csec"><h2>Replay</h2>
+      <div class="nbtns"><button class="btn" id="rexport" style="padding:8px 12px;font-size:13px">Export last replay</button><button class="btn" id="rimport" style="padding:8px 12px;font-size:13px">Import replay</button></div>
+      <input type="file" id="rfile" accept=".json,application/json" hidden>
     </section>
   </div>
   <button class="big" id="sclose">Done</button>
@@ -785,8 +808,8 @@ const lsSet=(k,v)=>{try{localStorage.setItem(k,String(v))}catch(e){}};
 const snapIdx=v=>{let i=1;for(let k=2;k<VALS.length;k++)if(Math.abs(VALS[k]-v)<Math.abs(VALS[i]-v))i=k;return i};
 const snapVal=v=>VALS[snapIdx(v)];
 function sanitizeAmmo(a){const o={};for(const k in a){if(!WEPID.has(k))continue;const v=a[k];if(typeof v==='number'&&v>=0)o[k]=snapVal(Math.min(10,v))}return o}
-try{const a=lsGet('gb_diff'),b=lsGet('gb_per'),c=lsGet('gb_tt'),g=lsGet('gb_guide'),m=lsGet('gb_mute'),h=lsGet('gb_hp'),sk=lsGet('gb_sky'),te=lsGet('gb_ter'),wx=lsGet('gb_wx'),lo=lsGet('gb_low'),tm=lsGet('gb_teams'),sc=lsGet('gb_sch'),wn=lsGet('gb_wnd'),cr=lsGet('gb_crate'),bv=lsGet('gb_barl'),mp=lsGet('gb_map'),il=lsGet('gb_isl'),wsv=lsGet('gb_wsel'),dv=lsGet('gb_dv'),grv=lsGet('gb_grav'),sdd=lsGet('gb_sdv'),rtv=lsGet('gb_ret'),flv=lsGet('gb_fuel'),au=lsGet('gb_auto'),rd=lsGet('gb_radar'),uv=lsGet('gb_ui');const wndOld=lsGet('gb_wndv')===null;lsSet('gb_wndv','1');if(a!==null){const n=+a||0;diff=Math.max(0,Math.min(DIFF.length-1,dv===null&&n<=3?n+1:n))}if(dv===null&&a!==null)try{lsSet('gb_dv','1')}catch(e){}if(b!==null)perTeam=Math.max(2,Math.min(8,+b||3));if(c!==null){const tv=numV(c,1);turnSec=tv<10?(TT0[Math.max(0,Math.min(3,tv))]||30):Math.max(10,Math.min(60,tv))}if(g!==null)guide=g==='1';if(m!==null)muted=m==='1';if(lsGet('gb_hap')==='0')hap=false;if(h!==null){const hv=+h||0;maxHP=hv<50?[100,150,200][Math.max(0,Math.min(2,hv))]:Math.max(50,hv)}for(let t=0;t<4;t++){const v=lsGet('gb_tn'+t);if(v!==null&&v.trim())TN[t]=v.trim().slice(0,12);const cv=lsGet('gb_tc'+t);if(cv!==null){colIdx[t]=Math.max(0,Math.min(PAL.length-1,isNaN(+cv)?t:+cv));TC[t]=PAL[colIdx[t]]}}skyIdx=Math.max(-1,Math.min(4,numV(sk,-1)));terIdx=Math.max(-1,Math.min(3,numV(te,-1)));wxIdx=Math.max(-1,Math.min(2,numV(wx,-1)));if(lo!==null){ultra=lo==='3';low=ultra||lo==='1';med=lo==='2'};if(tm!==null)teamCount=Math.max(2,Math.min(4,+tm||2));{const csl=lsGet('gb_csch');if(csl!==null)try{const ca=JSON.parse(csl);if(Array.isArray(ca))customs=ca.filter(x=>x&&typeof x.n==='string'&&x.a&&typeof x.a==='object').slice(0,24).map(x=>({n:String(x.n).slice(0,14),a:sanitizeAmmo(x.a)}))}catch(e){}}if(sc!==null)schIdx=Math.max(0,Math.min(SCH.length+customs.length-1,+sc||0));if(wn!==null){let wv=+wn||0;if(wndOld&&(wv===0||wv===1||wv===2)){wv=[.5,1,1.75][wv];lsSet('gb_wnd',wv)}windK=Math.max(0,Math.min(2.5,wv))}if(cr!==null)cratesOn=cr==='1';if(bv!==null){barrelOil=bv==='oil';barrelDrum=bv==='drum';barrelsOn=bv!=='Off'&&bv!=='0'}if(mp!==null)mapIdx=Math.max(0,Math.min(MAPS.length-1,+mp||0));if(il!==null)isl=Math.max(0,Math.min(6,+il||0));if(wsv!==null)wsel=wsv==='1';if(grv!==null){gravIdx=Math.max(0,Math.min(2,isNaN(+grv)?1:+grv));GV=G*GRAVK[gravIdx]}if(sdd!==null){sdIdx=Math.max(0,Math.min(2,isNaN(+sdd)?0:+sdd));sdTurn=SDT[sdIdx]}if(rtv!==null)retIdx=Math.max(0,Math.min(2,isNaN(+rtv)?1:+rtv));if(flv!==null){fuelIdx=Math.max(0,Math.min(2,isNaN(+flv)?1:+flv));FUEL=FUELV[fuelIdx]}if(au!==null)autoRep=au==='1';if(rd!==null)radar=rd==='1';if(uv!==null)uiTheme=uv==='classic'?'classic':uv==='gruvbox'?'gruvbox':uv==='tokyo'?'tokyo':uv==='dark'?'dark':uv==='nord'?'nord':uv==='oled'?'oled':uv==='everforest'?'everforest':'modern';if(lsGet('gb_song')==='0')songOn=false;{const mo=lsGet('gb_motion');if(mo!==null)motion=Math.max(0,Math.min(2,isNaN(+mo)?2:+mo));}{const tl=lsGet('gb_tlabels');if(tl!==null)teamLabels=tl==='1'}{const fp=lsGet('gb_fps');if(fp!==null)fpsOn=fp==='1'}}catch(e){}
-document.body.classList.toggle('modern',uiTheme==='modern'||uiTheme==='dark'||uiTheme==='oled'||uiTheme==='everforest');document.body.classList.toggle('classic',uiTheme==='classic');document.body.classList.toggle('gruvbox',uiTheme==='gruvbox');document.body.classList.toggle('tokyo',uiTheme==='tokyo');document.body.classList.toggle('dark',uiTheme==='dark');document.body.classList.toggle('nord',uiTheme==='nord');document.body.classList.toggle('oled',uiTheme==='oled');document.body.classList.toggle('everforest',uiTheme==='everforest');resize();
+try{const a=lsGet('gb_diff'),b=lsGet('gb_per'),c=lsGet('gb_tt'),g=lsGet('gb_guide'),m=lsGet('gb_mute'),h=lsGet('gb_hp'),sk=lsGet('gb_sky'),te=lsGet('gb_ter'),wx=lsGet('gb_wx'),lo=lsGet('gb_low'),tm=lsGet('gb_teams'),sc=lsGet('gb_sch'),wn=lsGet('gb_wnd'),cr=lsGet('gb_crate'),bv=lsGet('gb_barl'),mp=lsGet('gb_map'),il=lsGet('gb_isl'),wsv=lsGet('gb_wsel'),dv=lsGet('gb_dv'),grv=lsGet('gb_grav'),sdd=lsGet('gb_sdv'),rtv=lsGet('gb_ret'),flv=lsGet('gb_fuel'),au=lsGet('gb_auto'),rd=lsGet('gb_radar'),uv=lsGet('gb_ui');const wndOld=lsGet('gb_wndv')===null;lsSet('gb_wndv','1');if(a!==null){const n=+a||0;diff=Math.max(0,Math.min(DIFF.length-1,dv===null&&n<=3?n+1:n))}if(dv===null&&a!==null)try{lsSet('gb_dv','1')}catch(e){}if(b!==null)perTeam=Math.max(2,Math.min(8,+b||3));if(c!==null){const tv=numV(c,1);turnSec=tv<10?(TT0[Math.max(0,Math.min(3,tv))]||30):Math.max(10,Math.min(60,tv))}if(g!==null)guide=g==='1';if(m!==null)muted=m==='1';if(lsGet('gb_hap')==='0')hap=false;if(h!==null){const hv=+h||0;maxHP=hv<50?[100,150,200][Math.max(0,Math.min(2,hv))]:Math.max(50,hv)}for(let t=0;t<4;t++){const v=lsGet('gb_tn'+t);if(v!==null&&v.trim())TN[t]=v.trim().slice(0,12);const cv=lsGet('gb_tc'+t);if(cv!==null){colIdx[t]=Math.max(0,Math.min(PAL.length-1,isNaN(+cv)?t:+cv));TC[t]=PAL[colIdx[t]]}}skyIdx=Math.max(-1,Math.min(4,numV(sk,-1)));terIdx=Math.max(-1,Math.min(3,numV(te,-1)));wxIdx=Math.max(-1,Math.min(2,numV(wx,-1)));if(lo!==null){ultra=lo==='3';low=ultra||lo==='1';med=lo==='2'};if(tm!==null)teamCount=Math.max(2,Math.min(4,+tm||2));{const csl=lsGet('gb_csch');if(csl!==null)try{const ca=JSON.parse(csl);if(Array.isArray(ca))customs=ca.filter(x=>x&&typeof x.n==='string'&&x.a&&typeof x.a==='object').slice(0,24).map(x=>({n:String(x.n).slice(0,14),a:sanitizeAmmo(x.a)}))}catch(e){}}if(sc!==null)schIdx=Math.max(0,Math.min(SCH.length+customs.length-1,+sc||0));if(wn!==null){let wv=+wn||0;if(wndOld&&(wv===0||wv===1||wv===2)){wv=[.5,1,1.75][wv];lsSet('gb_wnd',wv)}windK=Math.max(0,Math.min(2.5,wv))}if(cr!==null)cratesOn=cr==='1';if(bv!==null){barrelOil=bv==='oil';barrelDrum=bv==='drum';barrelsOn=bv!=='Off'&&bv!=='0'}if(mp!==null)mapIdx=Math.max(0,Math.min(MAPS.length-1,+mp||0));if(il!==null)isl=Math.max(0,Math.min(6,+il||0));if(wsv!==null)wsel=wsv==='1';if(grv!==null){gravIdx=Math.max(0,Math.min(2,isNaN(+grv)?1:+grv));GV=G*GRAVK[gravIdx]}if(sdd!==null){sdIdx=Math.max(0,Math.min(2,isNaN(+sdd)?0:+sdd));sdTurn=SDT[sdIdx]}if(rtv!==null)retIdx=Math.max(0,Math.min(2,isNaN(+rtv)?1:+rtv));if(flv!==null){fuelIdx=Math.max(0,Math.min(2,isNaN(+flv)?1:+flv));FUEL=FUELV[fuelIdx]}if(au!==null)autoRep=au==='1';if(rd!==null)radar=rd==='1';if(uv!==null)uiTheme=uv==='classic'?'classic':uv==='gruvbox'?'gruvbox':uv==='tokyo'?'tokyo':uv==='dark'?'dark':uv==='nord'?'nord':uv==='oled'?'oled':uv==='everforest'?'everforest':uv==='greenit'?'greenit':uv==='bluney'?'bluney':'modern';if(lsGet('gb_song')==='0')songOn=false;{const mo=lsGet('gb_motion');if(mo!==null)motion=Math.max(0,Math.min(2,isNaN(+mo)?2:+mo));}{const tl=lsGet('gb_tlabels');if(tl!==null)teamLabels=tl==='1'}{const fp=lsGet('gb_fps');if(fp!==null)fpsOn=fp==='1'}}catch(e){}
+document.body.classList.toggle('modern',uiTheme==='modern'||uiTheme==='dark'||uiTheme==='oled'||uiTheme==='everforest');document.body.classList.toggle('classic',uiTheme==='classic');document.body.classList.toggle('gruvbox',uiTheme==='gruvbox');document.body.classList.toggle('tokyo',uiTheme==='tokyo');document.body.classList.toggle('dark',uiTheme==='dark');document.body.classList.toggle('nord',uiTheme==='nord');document.body.classList.toggle('oled',uiTheme==='oled');document.body.classList.toggle('everforest',uiTheme==='everforest');document.body.classList.toggle('greenit',uiTheme==='greenit');document.body.classList.toggle('bluney',uiTheme==='bluney');resize();
 
 
 const PTS=[[-1,-8],[1,-8],[-3.5,-6],[3.5,-6],[-4.5,-3],[4.5,-3],[-4.5,0],[4.5,0],[-3.5,3],[3.5,3],[-2.5,6],[2.5,6],[-1,8],[1,8]];
@@ -803,8 +826,37 @@ function boxNorm(o,x,y,hw,hh){const dx=x-o.x,dy=y-o.y;return Math.abs(dx)*hh>Mat
 function halfW(dy){return dy<-6?2+(dy+8)*.75:dy<-3?3.5+(dy+6)/3:dy<0?4.5:4.5-dy*.4375}
 function wormHit(w,x,y,pad){pad=pad||0;const dy=y-w.y;if(dy<-8-pad||dy>8+pad)return false;return Math.abs(x-w.x)<=halfW(dy<-8?-8:dy>8?8:dy)+pad}
 function tip(m,t){tipMsg=m;tipT=t||2}
+function b64uEncode(s){return btoa(unescape(encodeURIComponent(s))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+function b64uDecode(s){let v=String(s).replace(/-/g,'+').replace(/_/g,'/');while(v.length%4)v+='=';return decodeURIComponent(escape(atob(v)))}
+function buildSetupCode(){
+  const s={v:1,tm:teamCount,pt:perTeam,hp:maxHP,tt:turnSec,df:diff,sc:schIdx<SCH.length?schIdx:0,wn:windK,cr:cratesOn?1:0,bl:barrelDrum?'d':barrelOil?'o':barrelsOn?'b':'n',mp:mapIdx,il:isl,ag:guide?1:0,gr:gravIdx,sd:sdIdx,rt:retIdx,fu:fuelIdx,sk:skyIdx,te:terIdx,wx:wxIdx,ui:uiTheme,tn:TN.slice(0,teamCount),tc:colIdx.slice(0,teamCount)};
+  return b64uEncode(JSON.stringify(s));
+}
+function setupLabel(t){return t==='classic'?'Classic':t==='gruvbox'?'Gruvbox':t==='tokyo'?'Tokyo Night':t==='dark'?'Dark':t==='nord'?'Nord':t==='oled'?'OLED Dark':t==='everforest'?'Everforest':t==='greenit'?'Greenit':t==='bluney'?'Bluney':'Modern'}
+function applySetupCode(input){
+  let code=String(input||'').trim();
+  const m=code.match(/[#&?]m=([A-Za-z0-9_-]+)/);
+  if(m)code=m[1];
+  let o;try{o=JSON.parse(b64uDecode(code))}catch(e){return false}
+  if(!o||o.v!==1)return false;
+  const num=(v,lo,hi,d)=>{v=Number(v);return Number.isFinite(v)?Math.max(lo,Math.min(hi,Math.round(v))):d};
+  teamCount=num(o.tm,2,4,teamCount);perTeam=num(o.pt,2,8,perTeam);maxHP=num(o.hp,50,500,maxHP);turnSec=num(o.tt,10,60,turnSec);
+  diff=num(o.df,0,DIFF.length-1,diff);schIdx=num(o.sc,0,SCH.length-1,0);windK=num(o.wn,0,2.5,windK);cratesOn=+o.cr?true:false;
+  barrelsOn=o.bl!=='n';barrelOil=o.bl==='o';barrelDrum=o.bl==='d';mapIdx=num(o.mp,0,MAPS.length-1,mapIdx);isl=num(o.il,0,6,isl);guide=+o.ag?true:false;
+  gravIdx=num(o.gr,0,2,gravIdx);GV=G*GRAVK[gravIdx];sdIdx=num(o.sd,0,2,sdIdx);sdTurn=SDT[sdIdx];retIdx=num(o.rt,0,2,retIdx);fuelIdx=num(o.fu,0,2,fuelIdx);FUEL=FUELV[fuelIdx];
+  skyIdx=num(o.sk,-1,4,skyIdx);terIdx=num(o.te,-1,3,terIdx);wxIdx=num(o.wx,-1,2,wxIdx);
+  if(Array.isArray(o.tn))for(let t=0;t<teamCount;t++)if(typeof o.tn[t]==='string'&&o.tn[t].trim())TN[t]=o.tn[t].trim().slice(0,12);
+  if(Array.isArray(o.tc))for(let t=0;t<teamCount;t++){const i=num(o.tc[t],0,PAL.length-1,t);colIdx[t]=i;TC[t]=PAL[i]}
+  const themes=['modern','classic','gruvbox','tokyo','dark','nord','oled','everforest','greenit','bluney'];
+  if(themes.includes(o.ui))uiTheme=o.ui;
+  save('gb_teams',teamCount);save('gb_per',perTeam);save('gb_hp',maxHP);save('gb_tt',turnSec);save('gb_diff',diff);save('gb_sch',schIdx);
+  save('gb_wnd',windK);save('gb_crate',cratesOn?'1':'0');save('gb_barl',barrelDrum?'drum':barrelOil?'oil':barrelsOn?'1':'0');save('gb_map',mapIdx);save('gb_isl',isl);
+  save('gb_guide',guide?'1':'0');save('gb_grav',gravIdx);save('gb_sdv',sdIdx);save('gb_ret',retIdx);save('gb_fuel',fuelIdx);save('gb_sky',skyIdx);save('gb_ter',terIdx);save('gb_wx',wxIdx);
+  for(let t=0;t<teamCount;t++){save('gb_tn'+t,TN[t]);save('gb_tc'+t,colIdx[t])}
+  selCh('#iface',setupLabel(uiTheme));syncTeams();syncUI();return true;
+}
 function shareGame(txt){
-  const url=location.href.split('#')[0];
+  const url=location.href.split('#')[0]+'#m='+buildSetupCode();
   const t=txt||'Grub Blasters — turn-based worm artillery in one HTML file. Come blast with me:';
   const data={title:'Grub Blasters',text:t,url};
   if(!window.isSecureContext){return fallback(url,t,'🔒 Not HTTPS — share needs secure context (use the live URL)');}
@@ -896,11 +948,34 @@ function finishRec(){
   if(rec.frames.length>2){rec.dur=rec.t;rec.autoPlayed=false;lastMovie=rec}
   rec=null;
 }
+function downloadReplay(){
+  if(!lastMovie||!lastMovie.frames||lastMovie.frames.length<3){alert('No replay yet — fire a shot first.');return}
+  const out={v:1,dur:lastMovie.dur,ev:lastMovie.ev,frames:lastMovie.frames,base:lastMovie.base?lastMovie.base.toDataURL('image/png'):null};
+  const blob=new Blob([JSON.stringify(out)],{type:'application/json'});
+  const u=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=u;a.download='grub-replay-'+new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')+'.json';
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),3000);
+}
+function importReplayFile(f){
+  const rd=new FileReader();
+  rd.onload=()=>{
+    try{
+      const o=JSON.parse(rd.result);
+      if(!o||o.v!==1||!Array.isArray(o.frames)||o.frames.length<3||!Array.isArray(o.ev)||o.frames.length>500||o.ev.length>5000)throw 0;
+      if(!o.frames.every(f=>f&&typeof f.t==='number'&&Array.isArray(f.wm)&&Array.isArray(f.pj)&&Array.isArray(f.ba)))throw 0;
+      const done=(base)=>{lastMovie={dur:Number(o.dur)||o.frames[o.frames.length-1].t||1,ev:o.ev,frames:o.frames,base,autoPlayed:true};toggleSettings(false);tip('🎬 Replay loaded — press 🎬',2.5)};
+      if(typeof o.base==='string'&&o.base.startsWith('data:image/')){
+        const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=img.width;c.height=img.height;c.getContext('2d').drawImage(img,0,0);done(c)};img.onerror=()=>done(null);img.src=o.base;
+      }else done(null);
+    }catch(e){alert('Invalid replay file')}
+  };
+  rd.readAsText(f);
+}
 function startReplay(m,from){
   if(!m||!m.frames||!m.frames.length||rep)return false;
   rep={m,i:0,t:0,speed:1,from,evi:0,wasPaused:paused};
   repC=document.createElement('canvas');repC.width=W;repC.height=H;repCtx=repC.getContext('2d');
-  repCtx.drawImage(m.base,0,0);
+  if(m.base)repCtx.drawImage(m.base,0,0);
   charging=false;power=0;parts.length=0;rings.length=0;tracers.length=0;curSheep=null;curDet=null;paused=false;$('#pause').textContent='⏸';closeWepPan();if(from==='over')$('#menu').classList.add('hide');state='replay';
   tip('🎬 Replay — FIRE 3× · S slow-mo · Esc exit',2.4);
   return true;
@@ -3091,11 +3166,12 @@ function syncUI(){
   $('#crt').value=cratesOn?'On':'Off';$('#barl').value=barrelDrum?'Barrel only':(barrelOil?'Oil only':(barrelsOn?'On':'Off'));
   $('#map').value=MAPS[mapIdx].n;$('#isl').value=ISLN[isl];$('#ag').value=guide?'On':'Off';
   $('#sky').value=SKYN[skyIdx+1];$('#ter').value=GROUNDN[terIdx+1];$('#wx').value=WXN[wxIdx+1];
-  $('#gfx').value=ultra?'Ultra Low':low?'Low':med?'Medium':'High';$('#smute').value=muted?'Off':'On';$('#msong').value=songOn?'On':'Off';$('#wsel').value=wsel?'On':'Off';$('#iface').value=uiTheme==='classic'?'Classic':uiTheme==='gruvbox'?'Gruvbox':uiTheme==='tokyo'?'Tokyo Night':uiTheme==='dark'?'Dark':uiTheme==='nord'?'Nord':uiTheme==='oled'?'OLED Dark':uiTheme==='everforest'?'Everforest':'Modern';
+  $('#gfx').value=ultra?'Ultra Low':low?'Low':med?'Medium':'High';$('#smute').value=muted?'Off':'On';$('#msong').value=songOn?'On':'Off';$('#wsel').value=wsel?'On':'Off';$('#iface').value=uiTheme==='classic'?'Classic':uiTheme==='gruvbox'?'Gruvbox':uiTheme==='tokyo'?'Tokyo Night':uiTheme==='dark'?'Dark':uiTheme==='nord'?'Nord':uiTheme==='oled'?'OLED Dark':uiTheme==='everforest'?'Everforest':uiTheme==='greenit'?'Greenit':uiTheme==='bluney'?'Bluney':'Modern';
   $('#hap').value=hap?'On':'Off';$('#radar').value=radar?'On':'Off';$('#aut').value=autoRep?'On':'Off';$('#motion').value=['Off','Low','Full'][motion];$('#tlabels').value=teamLabels?'On':'Off';$('#fps').value=fpsOn?'On':'Off';
   $('#grav').value=GRAVN[gravIdx];$('#sdx').value=SDN[sdIdx];$('#ret').value=RETN[retIdx];$('#fuel').value=FUELN[fuelIdx];
 }
 syncTeams();syncUI();
+try{const _m=(location.hash||'').match(/#m=([A-Za-z0-9_-]+)/);if(_m)applySetupCode(_m[1])}catch(e){}
 const saveMute=()=>{$('#smute').value=muted?'Off':'On';save('gb_mute',muted?'1':'0');if(muted)stopSong()};
 saveMute();
 function selCh(id,v){
@@ -3115,7 +3191,7 @@ function selCh(id,v){
   else if(id==='#ter'){terIdx=Math.max(-1,GROUNDN.indexOf(v)-1);save('gb_ter',terIdx)}
   else if(id==='#wx'){wxIdx=Math.max(-1,WXN.indexOf(v)-1);save('gb_wx',wxIdx)}
   else if(id==='#gfx'){ultra=v==='Ultra Low';low=ultra||v==='Low';med=v==='Medium';save('gb_low',ultra?'3':low?'1':med?'2':'0');resize();mkBg();initScenery()}
-        else if(id==='#iface'){uiTheme=v==='Tokyo Night'?'tokyo':v==='Nord'?'nord':v==='OLED Dark'?'oled':v==='Everforest'?'everforest':v.toLowerCase();document.body.classList.remove('modern','classic','gruvbox','tokyo','dark','nord','oled','everforest');document.body.classList.add(uiTheme);if(uiTheme==='dark'||uiTheme==='oled'||uiTheme==='everforest')document.body.classList.add('modern');save('gb_ui',uiTheme)}
+        else if(id==='#iface'){uiTheme=v==='Tokyo Night'?'tokyo':v==='Nord'?'nord':v==='OLED Dark'?'oled':v==='Everforest'?'everforest':v==='Greenit'?'greenit':v==='Bluney'?'bluney':v.toLowerCase();document.body.classList.remove('modern','classic','gruvbox','tokyo','dark','nord','oled','everforest','greenit','bluney');document.body.classList.add(uiTheme);if(uiTheme==='dark'||uiTheme==='oled'||uiTheme==='everforest')document.body.classList.add('modern');save('gb_ui',uiTheme)}
   else if(id==='#smute'){muted=v==='Off';saveMute()}
   else if(id==='#msong'){songOn=v==='On';save('gb_song',songOn?'1':'0');if(!songOn)stopSong()}
   else if(id==='#motion'){motion=['Off','Low','Full'].indexOf(v);if(motion<0)motion=2;save('gb_motion',String(motion))}
@@ -3136,7 +3212,10 @@ for(let t=0;t<4;t++){const i=t;$('#tn'+i).style.background=TC[i];$('#tn'+i).oncl
 $('#bhelp').onclick=()=>toggleHelp(true);$('#hclose').onclick=()=>toggleHelp(false);
 $('#bstory').onclick=()=>$('#story').classList.remove('hide');$('#storyClose').onclick=()=>$('#story').classList.add('hide');$('#story').addEventListener('click',e=>{if(e.target.id==='story')e.currentTarget.classList.add('hide')});
 $('#bcustom').onclick=()=>toggleCustom(true);$('#cclose').onclick=()=>toggleCustom(false);
+$('#ccopy').onclick=()=>{const u=location.href.split('#')[0]+'#m='+buildSetupCode();if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(u).then(()=>tip('🔗 Setup link copied',2.2)).catch(()=>prompt('Copy setup link',u));else prompt('Copy setup link',u)};
+$('#cload').onclick=()=>{const s=prompt('Paste a Grub Blasters setup code or link');if(!s)return;if(applySetupCode(s)){toggleCustom(false);tip('✅ Setup loaded',2.2)}else alert('Invalid setup code')};
 $('#bsettings').onclick=()=>toggleSettings(true);$('#sclose').onclick=()=>toggleSettings(false);$('#gear').onclick=()=>toggleSettings();
+$('#rexport').onclick=downloadReplay;$('#rimport').onclick=()=>$('#rfile').click();$('#rfile').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(f)importReplayFile(f);e.target.value=''});
 $('#bschedit').onclick=openScheme;$('#sedone').onclick=closeScheme;$('#snew').onclick=newScheme;$('#ssave').onclick=saveScheme;$('#sdl').onclick=dlSchemes;$('#sdel').onclick=delScheme;$('#simp').onclick=()=>$('#sfile').click();
 $('#sfile').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(f)importSchemes(f);e.target.value=''});
 $('#slist').addEventListener('change',e=>{stashScheme();persistCustoms();sed.idx=Math.max(0,Math.min(customs.length-1,+e.target.value||0));loadSchemeEditor()});

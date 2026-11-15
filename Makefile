@@ -41,6 +41,7 @@ size:
 	@awk '/About [0-9]+ KB/{print "README:     " $$0}' README.md
 
 check: syntax
+	@node tests/test_share_code.mjs
 	@sz=$$(wc -c < index.html | awk '{printf "%.0f", $$1/1024}'); rm=$$(grep -o 'About [0-9]* KB' README.md | grep -o '[0-9]*'); if [ "$$sz" != "$$rm" ]; then echo "SIZE MISMATCH: index.html is ~$$sz KB, README says ~$$rm KB - run 'make sync-size'"; exit 1; fi; echo "SIZE SYNC OK (~$$sz KB)"
 	@wep=$$(sed -n "s/^const WEP=\(.*\);$$/\1/p" index.html | grep -oE "id:'[a-z]+'" | wc -l | tr -d ' '); rows=$$(awk '/^\| --- \| --- \| --- \|$$/{inw=1;next} inw&&/^\| /{c++} inw&&/^$$/{inw=0} END{print c}' README.md); if [ "$$wep" != "$$rows" ]; then echo "WEAPON TABLE DRIFT: index.html has $$wep weapons, README table has $$rows rows"; exit 1; fi; echo "WEAPONS OK ($$wep)"
 
