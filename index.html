@@ -785,16 +785,18 @@ mango:
   wiGloss(13,15,2.6,4,-.45,.32)+
   wiLine('M9 23c3 1 7 1 10-1',WI_C.orangeD,1.2),
 comet:
-  `<g transform="rotate(-24 16 16)">`+
-  `<path d="M12 9C8 12 5 17 2 24c5-3 8-7 11-11z" fill="${WI_C.orange}" ${WI_I}/>`+
-  `<path d="M11 11C8 14 6 18 4 22c3-2 5-5 7-8z" fill="${WI_C.gold}"/>`+
-  `<path d="M9 9c2-3 6-5 9-4h2c4 0 7 3 7 7v3c0 4-3 7-7 7h-4c-3 0-6-2-7-5z" fill="${WI_C.red}" ${WI_I}/>`+
-  `<path d="M11 20c-2 0-3 2-2 4 1 2 3 2 4 1v-5z" fill="${WI_C.red}" ${WI_I}/>`+
-  wiLine('M14 7v6M19 7v6M24 8v5','#9e2f2f',1.2)+
-  `<path d="M9 25h17v2c0 2-2 3-4 3H11c-2 0-3-1-2-3z" fill="#6f1d1d" ${WI_I}/>`+
+  `<g transform="rotate(-22 16 16)">`+
+  `<path d="M12 9C7.5 13 4 19 1 25c5.5-3 9-8 12-12z" fill="${WI_C.cyan}" ${WI_I}/>`+
+  `<path d="M11 11C8 14.5 5.5 18.5 3 23c3.8-2.5 6.5-6 8.5-9.5z" fill="${WI_C.ice}"/>`+
+  `<path d="M9.5 10.5C7.5 13 6 15.5 4.5 18.5c2.5-1.8 4-4.4 5-7z" fill="#fff" opacity=".75"/>`+
+  `<path d="M10 10c2-3 5.5-5 9-4.5h2c4.5 .2 7 3.4 7 7.5v2c0 4.4-3 7.2-7.4 7.2h-4.3c-3.2 0-5.6-2-6.8-4.7z" fill="${WI_C.gold}" ${WI_I}/>`+
+  `<path d="M11 20c-2 0-3 2-2 4 1 2 3 2 4 1v-5z" fill="${WI_C.orange}" ${WI_I}/>`+
+  wiLine('M15 7v6M20 7v6M25 8v5','#b87409',1.2)+
+  `<path d="M10 25h16v2c0 2-2 3-4 3H12c-2 0-3-1-2-3z" fill="${WI_C.blueD}" ${WI_I}/>`+
+  wiLine('M12 25.8h13',WI_C.ice,1)+
   `</g>`+
-  wiLine('M4 12l-3-1M3 18H0','#ffd2ad',2)+
-  wiSpark(27,6,2.2),
+  `<path d="M28 6l1.2 3.1L32 10l-2.8.7-1.2 3.1-1-3.1L24 10l3-1.2z" fill="#fff" ${WI_I}/>`+
+  wiSpark(6,6,1.8),
 burrow:
   `<path d="M3 21c4-8 15-11 19-5 3 5-2 10-8 10H8c-3 0-5-2-5-5z" fill="${WI_C.brown}" ${WI_I}/>`+
   wiPath('M22 13l7 3-7 4z',WI_C.steelD)+
@@ -973,20 +975,21 @@ splitter:
   wiLine('M12 13L8 10M20 13l4-4M20 21l4 2','#e3d4ff',1.2,'stroke-dasharray="2 2"')+
   wiGloss(14,14,2,2,-.3,.3),
 mortar:
-  wiRect(5,27,22,3,1.5,WI_C.steelD)+
-  `<g transform="rotate(24 16 18)">`+
-  wiRect(10,6,12,21,4,'#5f734e')+
-  wiRect(8.5,4,15,5,2.5,WI_C.steelD)+
-  `<ellipse cx="16" cy="6.5" rx="5.5" ry="2" fill="#18251a" ${WI_I}/>`+
-  wiRect(13,9,3,15,1.5,'#a9c18c','opacity=".35"')+
+  wiRect(3,27,26,3.5,1.8,WI_C.steelD)+
+  `<g transform="rotate(30 16 18)">`+
+  wiRect(10.5,7,11,19,4,'#5f734e')+
+  wiRect(9,5,14,4.5,2,WI_C.steelD)+
+  `<ellipse cx="16" cy="5.8" rx="5.2" ry="1.8" fill="#18251a" ${WI_I}/>`+
+  wiRect(13,9,3,14,1.5,'#a9c18c','opacity=".35"')+
   wiLine('M12 13v10M20 12v11','#3f5236',1)+
   `</g>`+
-  wiLine('M11 27l3-4M21 27l-3-4',WI_C.steelD,1.6)+
-  `<g transform="rotate(24 24 5)">`+
-  `<path d="M24 1c2 0 3.5 1.8 3.5 4S26 9.5 24 9.5 20.5 7.5 20.5 5 22 1 24 1z" fill="${WI_C.gold}" ${WI_I}/>`+
-  `<path d="M24 2v2M21 4l1 1M27 4l-1 1" stroke="${WI_C.orangeD}" stroke-width=".9" stroke-linecap="round"/>`+
+  wiLine('M13 24l-6 5M21 23l5 6',WI_C.steelL,1.8)+
+  `<g transform="rotate(30 25 3)">`+
+  `<path d="M25 0c2 0 2.8 2 2.8 4S26.5 7.5 25 7.5 22.2 6 22.2 4 23 0 25 0z" fill="${WI_C.gold}" ${WI_I}/>`+
+  `<path d="M23 6l-2 1v-2M27 6l2 1v-2" fill="${WI_C.steelD}" ${WI_I}/>`+
   `</g>`+
-  wiSpark(29,2,1.5),
+  wiCircle(29,9,2.2,'#cbd5e1','opacity=".25"')+
+  wiSpark(30,2,1.5),
 frost:
   `<circle cx="16" cy="16" r="9" fill="${WI_C.ice}" ${WI_I}/>`+
   wiLine('M16 5v22M6 10l20 12M26 10L6 22','#fff',1.6)+
@@ -1090,27 +1093,28 @@ magnet:
   wiLine('M16 3l2 2-2 2M22 3l2 2-2 2','#dbeafe',1.2)+
   wiGloss(10,12,1.5,4,0,.2),
 elder:
-  `<g transform="rotate(-7 24 18)">`+
-  `<path d="M24 13v16" stroke="${WI_C.brownD}" stroke-width="1.8" stroke-linecap="round"/>`+
-  `<path d="M24 29c-2 0-3-1-3-2.6" fill="none" stroke="${WI_C.brownD}" stroke-width="1.8" stroke-linecap="round"/>`+
-  `<path d="M17 13c1.5-5.5 4-8 7-8s5.5 2.5 7 8c-2.3-1.8-4.7-1.4-7 0-2.3-1.4-4.7-1.8-7 0z" fill="${WI_C.purple}" ${WI_I}/>`+
-  `<path d="M17 13c2.3 2.2 4.7 2.2 7 0 2.3 2.2 4.7 2.2 7 0" fill="none" stroke="${WI_C.purpleD}" stroke-width="1" stroke-linecap="round"/>`+
-  `<path d="M24 5v8" stroke="${WI_C.brownD}" stroke-width="1.4" stroke-linecap="round"/>`+
-  `<circle cx="24" cy="3.8" r="1.1" fill="${WI_C.gold}" ${WI_I}/>`+
+  `<g transform="rotate(2 16 18)">`+
+  wiEllipse(23,26,6,3.5,WI_C.greenD)+
+  wiEllipse(18,23,6.5,4.2,WI_C.greenD)+
+  wiEllipse(14,19,6,4.4,WI_C.green)+
   `</g>`+
-  wiEllipse(22,25,5,3,WI_C.greenD)+
-  wiEllipse(19,21,5.5,3.8,WI_C.green)+
-  wiEllipse(15,17,5,4,WI_C.green)+
-  wiLine('M17 25c2-1 4-1 6 0M14 21c2.5-1 5-1 7.5 0','#2c5b29',1)+
-  wiEllipse(10.5,12,5.5,4.8,WI_C.lime)+
-  `<path d="M6 13c-1 4.5 1.5 7.5 5 8.5 3.5-1 6-4 5-8.5-1.5 1.5-3.2 1.8-5 1-1.8.8-3.5.5-5-1z" fill="${WI_C.white}" ${WI_I}/>`+
-  `<circle cx="8.5" cy="9.8" r="2.1" fill="none" stroke="${WI_C.gold}" stroke-width="1.2"/>`+
-  `<circle cx="13.5" cy="9.8" r="2.1" fill="none" stroke="${WI_C.gold}" stroke-width="1.2"/>`+
-  wiLine('M10.6 9.8h.8',WI_C.gold,1.1)+
-  wiCircle(8.5,9.8,.7,'#1a1020')+wiCircle(13.5,9.8,.7,'#1a1020')+
-  wiLine('M6 6.2c1-1 2.5-1.2 3.7-.5M11.8 5.7c1.2-.7 2.7-.5 3.7.5',WI_C.white,1.1)+
-  wiLine('M17 16c2.5 0 4.5 1 6 2.4',WI_C.greenD,1.6)+
-  wiGloss(9.5,8,2,1,0,.18),
+  wiEllipse(9.5,13,5.8,5.2,WI_C.green)+
+  `<path d="M4.8 17c-1.5 4 0 7 4.5 8.5 1.5-2 2.5-4.5 2-7.5-1.6 1.2-3.4 1.4-5.2.5-1.6 1-3 .6-4.3-1.5z" fill="${WI_C.white}" ${WI_I}/>`+
+  `<path d="M6.2 21c1.2 1.8 3 2.8 5 3M7.2 24c1.4.6 2.6.7 3.8.4" fill="none" stroke="#cfd7e5" stroke-width="1" stroke-linecap="round"/>`+
+  wiLine('M5 9.2l2.2-1.2M12 9.2l2-1.1','#f4f7fb',1.5)+
+  wiCircle(7.2,10.7,2,'#f4f7fb')+wiCircle(11.8,10.7,2,'#f4f7fb')+
+  `<circle cx="7.2" cy="10.7" r="2" fill="none" stroke="${WI_C.gold}" stroke-width="1.25"/><circle cx="11.8" cy="10.7" r="2" fill="none" stroke="${WI_C.gold}" stroke-width="1.25"/>`+
+  wiLine('M9.2 10.7h.6',WI_C.gold,1)+
+  wiCircle(7.2,10.7,.65,'#1a1020')+wiCircle(11.8,10.7,.65,'#1a1020')+
+  `<path d="M7.8 14.2c1.2 1.2 2.9 1.2 4.1 0" fill="none" stroke="#7a4a24" stroke-width=".9" stroke-linecap="round"/>`+
+  `<path d="M13 17c3.5.5 5.5 2.4 5.8 5.4-2.2 1.2-4.7 1.1-6.8-.2z" fill="${WI_C.purple}" ${WI_I}/>`+
+  wiLine('M14 18.5c1.4 1.3 2.6 1.8 4 1.8','#6d4aa3',1)+
+  `<g transform="rotate(-3 26 18)">`+
+  `<path d="M26 11v17" stroke="${WI_C.brownD}" stroke-width="2" stroke-linecap="round"/>`+
+  `<path d="M26 11c0-2 1.6-3.3 3.2-2.6" fill="none" stroke="${WI_C.brownD}" stroke-width="1.8" stroke-linecap="round"/>`+
+  `<circle cx="26" cy="9.2" r="1.1" fill="${WI_C.gold}" ${WI_I}/>`+
+  `</g>`+
+  wiSpark(28,5.5,1.8),
 battleaxe:
   `<g transform="rotate(35 16 16)">`+
   wiRect(14,5,4,24,2,WI_C.brown)+
