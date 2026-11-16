@@ -45,6 +45,7 @@ Grub Blasters is a turn-based artillery game built entirely as a single, depende
 - Turn replay: press R (or the 🎬 button) right after a shot to watch the last turn play out again — FIRE cycles play / 3× speed / pause, slow-mo with S, Esc closes; Auto Replay in ⚙️ Settings plays every turn back for you
 - **Replay export/import** — export the last turn as **GIF** (10/15/20 FPS, 320/480/640px, once/forever) or **JSON** (including cached terrain), or load a replay file again from ⚙️ Settings → Replay
 - **Setup share codes + QR** — Customize → Copy setup code/Load code handles teams, HP, scheme, wind, map size, islands, rules and interface theme; the QR button renders an offline scannable code for the same link
+- **Weapon Codex** — menu → 📚 Weapon Codex opens a searchable, mode-filtered gallery of all 72 weapons with their current-scheme ammo, vector icon and firing mode
 - Ten interface themes: the default Modern look (glassy panels, gradients, tap feedback), the original Classic look, and eight more palettes — Gruvbox (warm retro, #fabd2f accents), Tokyo Night (cool neon, #7aa2f7 accents), Dark (high-contrast night mode), Nord (cool slate, #88c0d0 accents), OLED Dark (pure black, #00ff88 accents), Everforest (warm green, #a7c080 accents), plus Greenit (#7BD88F) and Bluney (#7DBBFF) from the theme families — switch anytime in ⚙️ Settings → Interface.
 - A synthesized menu theme song loops on the start screen — turn it off in ⚙️ Settings
 - High-graphics mode (default) — detailed worms with animated tails and glossy highlights, textured terrain with grass fringes, rock strata and pebbles, a layered sunlit sky and volumetric clouds, rippling water with shimmer, glow trails and gloss on every projectile, richer explosions, fires, gas and barrels, plus a filmic vignette
@@ -228,7 +229,7 @@ verifies the "About N KB" line in this README matches `index.html`.
 
 ## Tech
 
-Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. Setup QR codes use the embedded MIT-licensed `qrcode-generator` 1.4.4 encoder. About 356 KB in total.
+Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. Setup QR codes use the embedded MIT-licensed `qrcode-generator` 1.4.4 encoder. About 361 KB in total.
 
 ## History
 
@@ -261,7 +262,7 @@ Tiny, dependency-free tools from the same family:
 - [plusafetch](https://github.com/Mark44928/plusafetch) — C++23 fetch for Termux — ~23 ms, zero subprocesses on the default path
 - [Plusalator](https://github.com/Mark44928/Plusalator) — C++17 calculator REPL — Qalculate-flavored, ghost autosuggest, 18 themes
 - [SnakTUI](https://github.com/Mark44928/SnakTUI) — modern Snake for your terminal — Textual + Python
-- [Easy-Termux-Package-Manager](https://github.com/Mark44928/Easy-Termux-Package-Manager) — fzf-driven package manager for Termux — snapshots, audit, 186 tests
+- [Easy-Termux-Package-Manager](https://github.com/Mark44928/Easy-Termux-Package-Manager) — fzf-driven package manager for Termux — snapshots, audit, 187 tests
 - [NoNameOS](https://github.com/Mark44928/NoNameOS) — OS simulation in a single C++17 file — virtual FS, real shell
 - [Greenit](https://github.com/Mark44928/Greenit) — green-injected theme family — dark + light, single palette.json
 - [CalculaHTML](https://github.com/Mark44928/CalculaHTML) — static HTML calculator — 15 themes + System mode, zero deps

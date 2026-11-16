@@ -41,7 +41,7 @@
 - **Live:** https://mark44928.github.io/GrubBlastersHTML/
 - **Repo:** https://github.com/Mark44928/GrubBlastersHTML
 - **Version:** 2.6.6 (Grubsong ’26)
-- **File size:** ~356 KB (single file, no dependencies)
+- **File size:** ~361 KB (single file, no dependencies)
 - **Language:** Vanilla JavaScript (ES6+), HTML5, CSS3
 - **Target:** Mobile browsers (Android/iOS) + Desktop. PWA via inline `data:application/manifest+json` manifest.
 - **Canvas:** 2D context, logical pixels, DPR-capped at 2
@@ -82,7 +82,7 @@ Run `make check`. Run `make sync-size`. Verify manually. Never say "it works" wi
 
 | Path | Purpose | Edit? |
 |---|---|---|
-| `index.html` | The entire game (style, DOM, script). ~356 KB. | Yes — this is where all work happens |
+| `index.html` | The entire game (style, DOM, script). ~361 KB. | Yes — this is where all work happens |
 | `README.md` | Player-facing docs. | Yes — keep in sync with gameplay changes |
 | `Makefile` | Dev tasks: check, serve, publish, verify. | Rarely |
 | `AGENTS.md` | This file. | Yes — keep current |
