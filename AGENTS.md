@@ -17,7 +17,7 @@
 9. [Core State](#core-state)
 10. [Turn Flow](#turn-flow)
 11. [Gravity & Damage](#gravity--damage)
-12. [Weapons System (71 weapons)](#weapons-system-71-weapons)
+12. [Weapons System (72 weapons)](#weapons-system-72-weapons)
 13. [AI System](#ai-system)
 14. [Rendering Pipeline](#rendering-pipeline)
 15. [Game Loop](#game-loop)
@@ -36,12 +36,12 @@
 
 ## Project Identity
 
-**Grub Blasters** is a turn-based artillery game (Worms-style) shipped as **one dependency-free HTML file**. Two to four teams of worms blast each other across procedurally generated, fully destructible terrain on a zoomable 1400–2800 × 800 logical canvas, with a fuel-limited jetpack for mobility.
+**Grub Blasters** is a turn-based artillery game shipped as **one dependency-free HTML file**. Two to four teams of worms blast each other across procedurally generated, fully destructible terrain on a zoomable 1400–2800 × 800 logical canvas, with a fuel-limited jetpack for mobility.
 
 - **Live:** https://mark44928.github.io/GrubBlastersHTML/
 - **Repo:** https://github.com/Mark44928/GrubBlastersHTML
 - **Version:** 2.6.6 (Grubsong ’26)
-- **File size:** ~281 KB (single file, no dependencies)
+- **File size:** ~322 KB (single file, no dependencies)
 - **Language:** Vanilla JavaScript (ES6+), HTML5, CSS3
 - **Target:** Mobile browsers (Android/iOS) + Desktop. PWA via inline `data:application/manifest+json` manifest.
 - **Canvas:** 2D context, logical pixels, DPR-capped at 2
@@ -82,7 +82,7 @@ Run `make check`. Run `make sync-size`. Verify manually. Never say "it works" wi
 
 | Path | Purpose | Edit? |
 |---|---|---|
-| `index.html` | The entire game (style, DOM, script). ~281 KB. | Yes — this is where all work happens |
+| `index.html` | The entire game (style, DOM, script). ~322 KB. | Yes — this is where all work happens |
 | `README.md` | Player-facing docs. | Yes — keep in sync with gameplay changes |
 | `Makefile` | Dev tasks: check, serve, publish, verify. | Rarely |
 | `AGENTS.md` | This file. | Yes — keep current |
@@ -144,7 +144,7 @@ Run `make check`. Run `make sync-size`. Verify manually. Never say "it works" wi
 - **Floating islands (`isl>0`):** `islands[]` blobs with spawn slots.
 - **`mask`** (`Uint8Array`, W×H) from alpha>100. `solid(x,y)` reads it.
 - **`crater(x,y,r)`** — terrain removal (no-ops for `r<=0`). **`tunnel()`**/`tunnelSeg()`** — rim-less/rim-less capsule variants.
-- **`hit(x,y)`** — 14-point worm hitbox (~9×16px coffin). **`wormHit(w,x,y,pad)`** — coffin expanded by pad (rockets 3, mines 8, sheep 3).
+- **`hit(x,y)`** — 14-point worm hitbox (~9×16px coffin). **`wormHit(w,x,y,pad)`** — coffin expanded by pad (rockets 3, mines 8, bouncer 3).
 - **`hitW(w,x,y)`** — terrain + worms + props (`propSolid()`: 18×22 barrel, armed mine ±5/±6). Used by walk/stepWorm/gravity.
 - **Water:** `WATER0=725`, rises during sudden death.
 
@@ -168,7 +168,7 @@ After firing: state='settle' → retreat window (0/3/6 s, skip with FIRE) → en
 endTurn() → next living team → gameOver() if ≤1 team remains
 ```
 **Sudden death:** turn ≥ sdTurn: sea +20px/turn, 5 wither/turn from turn 17, 60% meteor from turn 19.
-**Retreat:** `(wpn sheep/skunk/dragon/kamikaze/suicide OR ai)?0:RETV[retIdx]`
+**Retreat:** `(wpn bouncer/stinkbug/comet/kamikaze/suicide/elder/cake/ballgun/flamer OR ai)?0:RETV[retIdx]`
 
 ### Gravity & Damage
 - **`G=620`**, `GV=G*GRAVK[gravIdx]` (Low .6 / Normal 1 / High 1.5).
@@ -179,17 +179,17 @@ endTurn() → next living team → gameOver() if ≤1 team remains
 
 ---
 
-## Weapons System (71 weapons)
+## Weapons System (72 weapons)
 
 | Type | Weapons |
 |---|---|
-| **AIMLESS** (no aim tap) | dynamite, mine, sheep, cow, firepunch, skunk, saucer, xdmg, invuln, parachute, prod, suicide, skip, shield, earthquake, vampire, girder, vacuum, frost, tesla, timebomb, granny, battleaxe, ballgun, flamer, cake, scales |
-| **TARGETED** (tap map, then FIRE) | airstrike, boggy, teleport, homing, magic, lightning, carpet, nuke, pigeon, donkey, drone, portal, magnet, meteor, blackhole, seismic, sniper, piano |
-| **CHARGE** (hold to charge) | bazooka, grenade, holy, cluster, bunker, homing, magic, banana, dragon, mole, napalm, bundle, sticky, rubber, splitter, mortar, drone, melon, molotov |
+| **AIMLESS** (no aim tap) | dynamite, mine, bouncer, herd, uppercut, stinkbug, saucer, xdmg, invuln, parachute, prod, suicide, skip, shield, earthquake, vampire, girder, vacuum, frost, tesla, timebomb, elder, battleaxe, ballgun, flamer, cake, balance |
+| **TARGETED** (tap map, then FIRE) | airstrike, halostrike, munch, teleport, homing, seeker, lightning, carpet, nuke, hornet, colossus, drone, portal, magnet, meteor, blackhole, seismic, sniper, piano |
+| **CHARGE** (hold to charge) | bazooka, grenade, halo, cluster, bunker, homing, seeker, mango, comet, burrow, napalm, bundle, sticky, rubber, splitter, mortar, drone, melon, molotov |
 
-**Key behaviors:** Bazooka ∞ammo, wind-affected, 0.25s grace. Sheep/Cow wander/detonate. Homing: 150px straight then track ≤3rad/s, duds after 5s. Magic bullet: r88, 9s timeout. Banana: 5 burst (30 HP minis + 10 HP core). Kamikaze: suicidal dig. Mine: 2s arm, <17px trigger, persists turns. Sticky: sticks on contact, 3.5s detonate. Donkey: targeted, vertical shaft, 100 dmg. **Always use `useAmmo(id)`** — direct decrement makes `NaN`.
+**Key behaviors:** Bazooka ∞ammo, wind-affected, 0.25s grace. Bouncer/Feral Grub wander/detonate. Homing: 150px straight then track ≤3rad/s, duds after 5s. Seeker Round: r88, 9s timeout. Mango Bomb: 5 burst (30 HP minis + 10 HP core). Kamikaze: suicidal dig. Mine: 2s arm, <17px trigger, persists turns. Sticky: sticks on contact, 3.5s detonate. Granite Grub: targeted, vertical shaft, 100 dmg. **Always use `useAmmo(id)`** — direct decrement makes `NaN`.
 
-**Damage Baseline (WA 3-star):** Bazooka/Grenade/Homing/Sheep-Cow 50/50/50/75 · Cluster 10+30×5 · Banana 10+30×5 · Holy/Magic 100 · Shotgun 25×2 · Dynamite/Mine 75/50 · Minigun 6×16 · Firepunch/Kamikaze/Dragon/Mole 30 · Suicide 30+poison · Blowtorch 15 · Airstrike/Carpet 30×5 · Donkey 100 · Barrel 60 · **v2.6.0 (authentic W:A/Hedgewars):** Granny 75 · Battleaxe ½ victim HP · Sniper 60 · Ballgun 8×~18 balls · Flamer 4/0.12s stream ~50 · Cake 75 (FIRE stops it) · Piano 80×3 bounces · Melon 30+35×5 slices · Molotov 25+fire pool · Scales evens all HP.
+**Damage Baseline:** Bazooka/Grenade/Homing/Bouncer-Feral Grub 50/50/50/75 · Cluster 10+30×5 · Mango 10+30×5 · Halo/Seeker 100 · Shotgun 25×2 · Dynamite/Mine 75/50 · Minigun 6×16 · Uppercut/Kamikaze/Comet/Burrow 30 · Suicide 30+poison · Blowtorch 15 · Airstrike/Carpet 30×5 · Granite Grub 100 · Barrel 60 · **v2.6.0:** Grub Elder 75 · Battleaxe ½ victim HP · Sniper 60 · Ballgun 8×~18 balls · Flamer 4/0.12s stream ~50 · Cake 75 (FIRE stops it) · Piano 80×3 bounces · Melon 30+35×5 slices · Molotov 25+fire pool · Balance Beam evens all HP.
 
 ---
 
@@ -203,7 +203,7 @@ endTurn() → next living team → gameOver() if ≤1 team remains
 ---
 
 ## Rendering Pipeline
-Painter's order: Shake → Background → Clouds → Terrain → Graves → Crates → Barrels → Fires → Worms → Gas → Aim aids → Projectiles → Tracers/rings → Particles → Leaves → Weather → Water → Floating texts → Crate radar → Vignette.
+Painter's order: Shake → Background → Clouds → Terrain → Graves → Crates → Barrels → Fires → Grubs → Gas → Aim aids → Projectiles → Tracers/rings → Particles → Leaves → Weather → Water → Floating texts → Crate radar → Vignette.
 
 **High:** detailed sprites, gradient water, glow/trails, filmic vignette. **Medium:** trims particles/glow. **Low:** DPR=1, no weather/decor.
 
@@ -262,7 +262,7 @@ All reads guarded try/catch. Key entries:
 ## Manual Smoke Test (Condensed)
 - [ ] Both modes × every difficulty. 4 teams vs CPU → 2v2. Ammo decrements; unlimited stays unlimited.
 - [ ] Schemes: Greedy, Pro Mode, Bazooka Only. Turn arrows skip dead teams. Wind bends rockets.
-- [ ] Targeted flow (airstrike/teleport/etc.), Sheep release+detonate, Mines arm/trigger/chains, Graves sink, Retreat skip.
+- [ ] Targeted flow (airstrike/teleport/etc.), Bouncer release+detonate, Mines arm/trigger/chains, Graves sink, Retreat skip.
 - [ ] Pause ignores actions. PC hides touch pads, shows crosshair.
 - [ ] 8px climb, worm slides through 10px holes, stand on heads, grenade rests on head, rocket contact-explodes, barrel chains, saucer boards/lands, parachute glides.
 - [ ] Backflip (double-tap jump). Help/Settings pause+resume. Worm select. Jetpack fuel. Replay. Sudden death. Win/confetti/draw.
@@ -305,9 +305,9 @@ All reads guarded try/catch. Key entries:
 25. Saucer landing: `vy=0` + `para=true` to avoid fall damage.
 26. Mines detonate once: `p.struck` flag.
 27. `startTurn()` with no living worm → `endTurn()`, not `return`.
-28. Donkey uses `tunnelSeg()` per frame, never `crater()` or stacked circles.
+28. Granite Grub uses `tunnelSeg()` per frame, never `crater()` or stacked circles.
 29. `gb_wndv` marker written on every `gb_wnd` store or boot re-migrates.
-30. Replays: `startRec()` BEFORE terrain changes (fire-punch, torch, girder, donkey).
+30. Replays: `startRec()` BEFORE terrain changes (blaze uppercut, torch, girder, colossus).
 31. Barrel push-out uses real hitbox (±9/±11), not ±14/±18.5.
 32. Weapon shelf closes on `fire()`, `endTurn()`, `startTurn()` — `closeWepPan()`.
 33. `targeted` weapons can't be `AIMLESS`. Don't mis-categorize.
@@ -340,7 +340,7 @@ All reads guarded try/catch. Key entries:
 
 **Terrain:** `solid(x,y)` | `hit(x,y)` | `hitW(w,x,y)` | `wormHit(w,x,y,pad)` | `normalAt(x,y)` | `crater(x,y,r)` | `tunnel(x,y,r)` | `tunnelSeg(x0,y0,x1,y1,r)` | `barrelAt(x,y)` | `boxNorm(o,x,y,hw,hh)` | `propSolid(x,y)`
 
-**Worms:** `stepWorm(w,dt)` | `walk(w,dir,dt)` | `jump()` | `damageWorm(w,d,by,silent)` | `killWorm(w,drown,by)` | `wormAt(self,x,y)`
+**Grubs (internally `worms`):** `stepWorm(w,dt)` | `walk(w,dir,dt)` | `jump()` | `damageWorm(w,d,by,silent)` | `killWorm(w,drown,by)` | `wormAt(self,x,y)`
 
 **Projectiles:** `updateProj(dt)` | `drawProj(p)` | `drawProjHi(p)` | `explode(x,y,r,dmg,by,kb)` | `fire()` | `startCharge()` | `releaseFire()`
 
@@ -375,24 +375,24 @@ All reads guarded try/catch. Key entries:
 
 This AGENTS.md is the **single source of truth**. If you find a discrepancy between this file and the code, the code wins — but update this file to match.
 
-- v1.0.0 — Initial release: hot-seat, wind-blown destructible terrain, 13 weapons (incl. Mad Cow herd), aim guide, sudden death, procedural SFX.
+- v1.0.0 — Initial release: hot-seat, wind-blown destructible terrain, 13 weapons (incl. Feral Grub herd), aim guide, sudden death, procedural SFX.
 - v1.0.1 — Solid hitboxes, optional Gemini AI, L/R weapon nav.
-- v1.0.2 — Full customization (gravity, sudden death, retreat, fuel, team colors), straight kamikaze/mole digging.
-- v1.0.3 — Aimable kamikaze, mole exit explosions, jump/backflip + footstep SFX, Real Time sky.
-- v2.0.0 — The Exploding Feature Update: smooth donkey shafts, uncapped HP, installable PWA, native share.
+- v1.0.2 — Full customization (gravity, sudden death, retreat, fuel, team colors), straight kamikaze/burrow digging.
+- v1.0.3 — Aimable kamikaze, burrow exit explosions, jump/backflip + footstep SFX, Real Time sky.
+- v2.0.0 — The Exploding Feature Update: smooth colossus shafts, uncapped HP, installable PWA, native share.
 - v2.0.1 — Aim guide for charged ballistics + per-weapon launch speeds.
-- v2.0.2 — W:A damage-fidelity sweep + unified lob physics.
+- v2.0.2 — artillery damage-fidelity sweep + unified lob physics.
 - v2.0.3 — Bug sweep (mine double-detonation, barrel kill credit, saucer landing, charge ownership, AI aim solver, girder placement, AI stall, turn-time migration).
 - v2.5.0 — The Evergreen Update: Medium graphics tier + Everforest theme.
-- v2.6.0 — The Armageddon Update: 10 new W:A/Hedgewars-authentic weapons (Old Woman, Battle Axe, Sniper Rifle, Ballgun, Flamethrower, Cake, Piano Strike, Watermelon, Molotov, Scales of Justice) + Hedgewars-style team hats. Suite of fire()/updateProj/drawProj branches follows the established patterns.
-- v2.6.1 — The Armageddon Update (fixes): fixed a frame error by relocating the new-weapon projectile art from drawCrate into drawProj (crash on any non-health crate), PGLOW glows for the new projectile types, upgraded vector art for all ten, axe-slash rings + Scales flash, sniper muzzle flash.
-- v2.6.2 — Tip fix: hud() prioritizes manual-detonate hints over timed toasts; setWpn() clears stale tipT; dragon gets an armed-state hint line.
-- v2.6.3 — hud() detonate prompt now keyed off curDet.type (skunk/granny/cake/dragon each show their own hint; other weapons no longer claim dragon ball).
+- v2.6.0 — The Heavy Artillery Update: 10 new weapons (Grub Elder, Battle Axe, Sniper Rifle, Ballgun, Flamethrower, Cake, Piano Strike, Watermelon, Molotov, Balance Beam) + team hats. Suite of fire()/updateProj/drawProj branches follows the established patterns.
+- v2.6.1 — The Heavy Artillery Update (fixes): fixed a frame error by relocating the new-weapon projectile art from drawCrate into drawProj (crash on any non-health crate), PGLOW glows for the new projectile types, upgraded vector art for all ten, axe-slash rings + Balance Beam flash, sniper muzzle flash.
+- v2.6.2 — Tip fix: hud() prioritizes manual-detonate hints over timed toasts; setWpn() clears stale tipT; comet gets an armed-state hint line.
+- v2.6.3 — hud() detonate prompt now keyed off curDet.type (stinkbug/elder/cake/comet each show their own hint; other weapons no longer claim comet).
 - Perf pass — frameNow (frame-scoped clock) replaces per-draw native clock calls; measureText cached for name/HP labels; killFeed uses in-place prune (no per-frame alloc); HUD team HP summed in one loop per team; water waves sampled at 44px (was 24px); glow/trail/flame/worm body gradients memoized (bounded LRU caches); no gameplay changes. v2.6.5 size ~265 KB.
 - v2.6.4 — Name/HP tag moved to y-47 (was y-34) so team hats are no longer covered.
 - v2.6.5 — Team hat baseline y-14 → y-9.5 (rests on head top y-8.7).
 
-- v2.6.6 — Grubsong ’26: new weapon **🚁 Boggy B** (mark a spot, FIRE — the Grubheli flies over and drops one crew Grenade on the mark, then flies off; one per team per match), menu rebuilt as the Grubsong ’26 hero banner with scrolling anthem marquee, original E-minor anthem honoring Wormsong ’95, **Major Munch** SVG mascot, Story modal (📖 book button). The weapon-type table above now lists Boggy B under TARGETED; counts updated to 71.
+- v2.6.6 — Grubsong ’26: new weapons **🚁 Major Munch** (mark a spot, FIRE — the Grubheli flies over and drops one crew Grenade on the mark, then flies off; one per team per match) and **🌠 Halo Strike** (three consecrated bombs on the mark, TARGETED), menu rebuilt as the Grubsong ’26 hero banner with scrolling anthem marquee, original E-minor anthem, **Major Munch** SVG mascot, Story modal (📖 book button). The weapon-type table above now lists Major Munch under TARGETED; counts updated to 72.
 
 *The game is one file. The rules are absolute. The quality is non-negotiable.*
 
