@@ -313,6 +313,26 @@ body.bluney #replay{border-color:var(--acc);background:linear-gradient(180deg,rg
 /* ---------- accessibility ---------- */
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
 @media (forced-colors: active){.btn,.mini,.big,.wep-btn,.wcell,.nbtns button,.team,.crow select{border:1px solid ButtonText}}
+#codex{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(5,12,30,.84);backdrop-filter:blur(7px);z-index:11;padding:14px}
+#codex.hide{display:none}
+#codex .card{width:min(920px,94vw);max-height:88vh;display:flex;flex-direction:column;gap:10px;background:var(--bg2);color:var(--fg);border:1px solid var(--gray);border-radius:18px;padding:16px;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+#codex h1{margin:0;font-size:21px;letter-spacing:.02em}
+.codex-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.codex-tools input{flex:1 1 220px;min-width:160px;background:var(--bg);color:var(--fg);border:1px solid var(--gray);border-radius:9px;padding:9px 11px;font:inherit}
+.codex-tools input:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+.codex-filter{border:1px solid var(--gray);background:transparent;color:var(--fg);border-radius:999px;padding:6px 11px;font:inherit;font-size:12px;cursor:pointer}
+.codex-filter.on{border-color:var(--gold);color:var(--gold);background:rgba(255,208,70,.1)}
+#codexCount{font-size:12px;opacity:.72;margin-left:auto}
+#codexList{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:8px;overflow:auto;padding:4px 2px 8px;scrollbar-width:thin}
+.codex-item{display:grid;grid-template-columns:46px 1fr;gap:8px;align-items:center;padding:8px;border:1px solid var(--gray);border-radius:12px;background:rgba(255,255,255,.025)}
+.codex-item .wtile{width:42px;height:42px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.04);border:1px solid var(--gray)}
+.codex-item svg.wi{width:32px;height:32px}
+.codex-name{font-weight:800;font-size:13px;line-height:1.15}
+.codex-meta{display:flex;gap:6px;align-items:center;margin-top:3px;font-size:11px;opacity:.86}
+.codex-mode{color:var(--mc,#ffb35c)}
+.codex-ammo{margin-left:auto;font-variant-numeric:tabular-nums}
+.codex-empty{padding:20px;text-align:center;opacity:.7;grid-column:1/-1}
+@media(max-width:520px){#codex .card{max-height:92vh;padding:12px}.codex-item{grid-template-columns:38px 1fr}.codex-item .wtile{width:36px;height:36px}.codex-item svg.wi{width:28px;height:28px}}
 </style>
 </head>
 <body>
@@ -390,6 +410,7 @@ body.bluney #replay{border-color:var(--acc);background:linear-gradient(180deg,rg
   <button class="big alt" id="bcustom">🎨 Customize</button>
   <button class="big alt" id="bsettings">⚙️ Settings</button>
   <button class="big alt" id="bhelp">❓ Help &amp; Controls</button>
+  <button class="big alt" id="bcodex">📚 Weapon Codex</button>
   <button class="big alt" id="bstory">📖 Story: Grub Blasters &amp; Major Munch</button>
   <button class="big alt" id="bshare">📣 Share this game</button>
   <p class="hint">Tap or drag the map to aim · hold FIRE to charge · double-tap jump to backflip!</p>
@@ -461,6 +482,21 @@ body.bluney #replay{border-color:var(--acc);background:linear-gradient(180deg,rg
   </ul>
   <button class="big" id="hclose">Close</button>
 </div></div>
+<div id="codex" class="hide" role="dialog" aria-modal="true" aria-label="Weapon Codex">
+  <div class="card">
+    <h1>📚 Weapon Codex</h1>
+    <div class="codex-tools">
+      <input id="codexSearch" type="search" placeholder="Search 72 weapons…" autocomplete="off" aria-label="Search weapons">
+      <button type="button" class="codex-filter on" data-mode="all">All</button>
+      <button type="button" class="codex-filter" data-mode="targeted">TAP MAP</button>
+      <button type="button" class="codex-filter" data-mode="charge">AIM</button>
+      <button type="button" class="codex-filter" data-mode="aimless">DIRECT</button>
+      <span id="codexCount" aria-live="polite"></span>
+    </div>
+    <div id="codexList"></div>
+    <button class="big" id="codexClose">Close</button>
+  </div>
+</div>
 <div id="story" class="hide" role="dialog" aria-modal="true" aria-label="Story"><div class="card story-card">
   <h1>📖 The Grubsong</h1>
   <h2>Grub Blasters &amp; Major Munch — field notes for Grubsong ’26</h2>
@@ -3883,6 +3919,20 @@ function updateWeps(){
     wepPan.appendChild(b);
   });
 }
+let codexMode='all';
+function codexCategory(id){if(TARGETED.includes(id))return 'targeted';if(AIMLESS.includes(id))return 'aimless';return 'charge'}
+function renderCodex(){
+  const box=$('#codexList'),q=($('#codexSearch').value||'').toLowerCase().trim();
+  const scheme=schAll()[schIdx]||SCH[0],maxAmmo=scheme?scheme.ammo():{},available=new Set(wepList().map(w=>w.id));
+  const rows=WEP.filter(w=>{const cat=codexCategory(w.id);if(codexMode!=='all'&&cat!==codexMode)return false;return !q||w.n.toLowerCase().includes(q)||w.id.includes(q)});
+  box.innerHTML=rows.length?rows.map(w=>{
+    const m=wMode(w.id),c=!available.has(w.id)?'—':(maxAmmo[w.id]===undefined?'∞':'×'+maxAmmo[w.id]);
+    return '<div class="codex-item" data-id="'+w.id+'"><span class="wtile">'+(wIcon(w.id)||w.ico)+'</span><span><span class="codex-name">'+esc(w.n)+'</span><span class="codex-meta" style="--mc:'+m[1]+'"><span class="codex-mode">'+m[0]+'</span><span class="codex-ammo">'+c+'</span></span></span></div>';
+  }).join(''):'<div class="codex-empty">No weapon matches that search.</div>';
+  $('#codexCount').textContent=rows.length+' of '+WEP.length;
+}
+function openCodex(){$('#codexSearch').value='';codexMode='all';document.querySelectorAll('.codex-filter').forEach(b=>b.classList.toggle('on',b.dataset.mode==='all'));renderCodex();$('#codex').classList.remove('hide');setTimeout(()=>$('#codexSearch').focus(),30)}
+function closeCodex(){$('#codex').classList.add('hide')}
 document.addEventListener('pointerdown',e=>{if(wepPan&&!wepPan.classList.contains('hide')&&!wb.contains(e.target))closeWepPan()},true);
 buildWeps();
 let aimDrag=false;
@@ -3936,6 +3986,7 @@ const keyOf=e=>e.key.length===1?e.key.toLowerCase():e.key;
 addEventListener('keydown',e=>{
   const k=keyOf(e);
   if(e.target&&e.target.tagName==='SELECT'&&k!=='Escape')return;
+  if(!$('#codex').classList.contains('hide')){if(k==='Escape'){closeCodex();e.preventDefault()}else if(!(e.target&&e.target.tagName==='INPUT')&&k!=='Tab')e.preventDefault();return}
   if(!$('#story').classList.contains('hide')){if(k==='Escape'||k==='Enter'){$('#story').classList.add('hide');e.preventDefault()}else if(k!=='Tab')e.preventDefault();return}
   if(!$('#help').classList.contains('hide')){if(k==='Escape'||k==='p'||k==='h')toggleHelp(false);if(k!=='Tab')e.preventDefault();return}
   if(!$('#schemedit').classList.contains('hide')){if(k==='Escape'){closeScheme();e.preventDefault()}else if(!(e.target&&(e.target.tagName==='SELECT'||e.target.tagName==='INPUT'))&&k!=='Tab')e.preventDefault();return}
@@ -4018,6 +4069,7 @@ function selCh(id,v){
 ['#hp','#tt','#wnd'].forEach(id=>$(id).addEventListener('input',e=>selCh(id,e.target.value)));
 for(let t=0;t<4;t++){const i=t;$('#tn'+i).style.background=TC[i];$('#tn'+i).onclick=function(){const v=prompt(TN[i]+' team name',TN[i]);if(v===null)return;const s=v.trim().slice(0,12);if(!s)return;TN[i]=s;this.textContent=s;if(nameEls[i])nameEls[i].textContent=s;save('gb_tn'+i,s)};$('#tc'+i).style.background=TC[i];$('#tc'+i).onclick=function(){colIdx[i]=(colIdx[i]+1)%PAL.length;TC[i]=PAL[colIdx[i]];this.style.background=TC[i];$('#tn'+i).style.background=TC[i];if(nameEls[i])nameEls[i].style.color=TC[i];if(barEls[i])barEls[i].style.background=TC[i];save('gb_tc'+i,colIdx[i])}}
 $('#bhelp').onclick=()=>toggleHelp(true);$('#hclose').onclick=()=>toggleHelp(false);
+$('#bcodex').onclick=openCodex;$('#codexClose').onclick=closeCodex;$('#codex').addEventListener('click',e=>{if(e.target.id==='codex')closeCodex()});$('#codexSearch').addEventListener('input',renderCodex);document.querySelectorAll('.codex-filter').forEach(b=>b.addEventListener('click',()=>{codexMode=b.dataset.mode;document.querySelectorAll('.codex-filter').forEach(x=>x.classList.toggle('on',x===b));renderCodex()}));
 $('#bstory').onclick=()=>$('#story').classList.remove('hide');$('#storyClose').onclick=()=>$('#story').classList.add('hide');$('#story').addEventListener('click',e=>{if(e.target.id==='story')e.currentTarget.classList.add('hide')});
 $('#qrModal').addEventListener('click',e=>{if(e.target.id==='qrModal')e.currentTarget.classList.add('hide')});
 $('#replayExport').addEventListener('click',e=>{if(e.target.id==='replayExport')closeReplayExport()});
