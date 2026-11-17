@@ -32,18 +32,15 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   if (request.method !== "GET") return;
   if (request.mode === "navigate") {
+    const fresh = fetch(request).then((response) => {
+      const clone = response.clone();
+      const write = caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+      return write.then(() => response, () => response);
+    });
+    // Wait synchronously so the update survives when a cached page is served.
+    event.waitUntil(fresh.catch(() => {}));
     event.respondWith(
-      (async () => {
-        const cached = await caches.match(request);
-        const fresh = fetch(request)
-          .then((response) => {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-            return response;
-          })
-          .catch(() => cached);
-        return cached || fresh;
-      })()
+      caches.match(request).then((cached) => cached || fresh)
     );
     return;
   }
