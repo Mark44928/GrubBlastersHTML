@@ -236,7 +236,7 @@ Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is gen
 Grub Blasters was created by Mark44928 and launched in October 2026 as a single-file, dependency-free HTML5 take on the turn-based artillery formula. The entire game is one `index.html` with zero dependencies, runs in any modern browser, and is published to GitHub Pages at https://mark44928.github.io/GrubBlastersHTML/ under the MIT License.
 
 The project grew through a series of tagged releases:
-- **v0.1–v0.2** - originally generated in the Claude app; v1.0 committed Oct 17. From legacy/ folder on source code.
+- **v0.1–v0.2** — early experimental builds; v1.0 committed Oct 17. From legacy/ folder on source code.
 - **v1.0.0** — Initial release: local hot-seat, wind-blown destructible terrain, 13 weapons (including the Feral Grub herd), an aim guide, sudden death, and procedural Web-Audio SFX.
 - **v1.0.1** — Solid hitboxes on throwable weapons, optional Gemini AI (API key), left/right weapon navigation.
 - **v1.0.2** — Full customization suite (gravity, sudden-death timing, retreat time, jetpack fuel, team colors), straight kamikaze/burrow digging.
@@ -259,10 +259,13 @@ The project grew through a series of tagged releases:
 
 Tiny, dependency-free tools from the same family:
 
+- [Pythonator](https://github.com/Mark44928/Pythonator) — Python rewrite of Plusalator — stdlib-only, `--eval`/`--json`
+- [Bluney](https://github.com/Mark44928/Bluney) — blue-injected theme family — dark + light, single palette.json
+- [Mark44928](https://github.com/Mark44928) — profile and project index
 - [plusafetch](https://github.com/Mark44928/plusafetch) — C++23 fetch for Termux — ~23 ms, zero subprocesses on the default path
 - [Plusalator](https://github.com/Mark44928/Plusalator) — C++17 calculator REPL — Qalculate-flavored, ghost autosuggest, 18 themes
-- [SnakTUI](https://github.com/Mark44928/SnakTUI) — modern Snake for your terminal — Textual + Python
-- [Easy-Termux-Package-Manager](https://github.com/Mark44928/Easy-Termux-Package-Manager) — fzf-driven package manager for Termux — snapshots, audit, 187 tests
+- [SnakTUI](https://github.com/Mark44928/SnakTUI) — Snake game for the terminal — Textual + Python
+- [Easy-Termux-Package-Manager](https://github.com/Mark44928/Easy-Termux-Package-Manager) — fzf-driven package manager for Termux — snapshots, audit, 188 tests
 - [NoNameOS](https://github.com/Mark44928/NoNameOS) — OS simulation in a single C++17 file — virtual FS, real shell
 - [Greenit](https://github.com/Mark44928/Greenit) — green-injected theme family — dark + light, single palette.json
 - [CalculaHTML](https://github.com/Mark44928/CalculaHTML) — static HTML calculator — 15 themes + System mode, zero deps
