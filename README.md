@@ -1,5 +1,7 @@
 # Grub Blasters
 
+<p align="center"><img src="assets/logo.svg" width="760" alt="Grub Blasters logo"></p>
+
 [![Play: live demo](https://img.shields.io/badge/play-live_demo-ffcb3d?style=flat-square&logo=githubpages&logoColor=black)](https://mark44928.github.io/GrubBlastersHTML/)
 [![GitHub stars](https://img.shields.io/github/stars/Mark44928/GrubBlastersHTML?style=flat-square)](https://github.com/Mark44928/GrubBlastersHTML/stargazers)
 [![Last commit](https://img.shields.io/github/last-commit/Mark44928/GrubBlastersHTML?style=flat-square)](https://github.com/Mark44928/GrubBlastersHTML/commits/main)
@@ -230,7 +232,7 @@ verifies the "About N KB" line in this README matches `index.html`.
 
 ## Tech
 
-Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. Setup QR codes use the embedded MIT-licensed `qrcode-generator` 1.4.4 encoder. About 363 KB in total.
+Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. Setup QR codes use the embedded MIT-licensed `qrcode-generator` 1.4.4 encoder. About 364 KB in total.
 
 ## History
 
