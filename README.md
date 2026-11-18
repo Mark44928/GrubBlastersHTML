@@ -36,6 +36,7 @@ Grub Blasters is a turn-based artillery game built entirely as a single, depende
 - Zoomable camera that follows the active worm and any shell in flight (pinch or scroll)
 - Jetpack with a fuel tank — hold 🚀 to fly, fuel refills every turn, and CPU teams fly too
 - One-tap sharing after every win (native share sheet on phones) and Add to Home Screen support for app-like play
+- After-action report at game over: all-time score for the team configuration (kept on the device), a match MVP (damage + 80×kills, HP tiebreak), and a one-tap Rematch button
 - Tap any of your worms to take control of it — move anyone, anywhere
 - Double-tap jump for a backflip — a backwards somersault that gains height, plus a flat "low backflip" variant
 - Solid worms — they block each other, can be climbed and stood upon (worm stacking), and fall when their footing drops away
@@ -72,7 +73,7 @@ Grub Blasters is a turn-based artillery game built entirely as a single, depende
 - Weather: rain, snow, and drifting fireflies on clear nights
 - Grubs have opinions — they taunt during battle
 - Sudden death — Standard raises the sea from turn 16, Late from turn 25 (Off disables it), worms wither, and meteors start falling
-- Session scoreboard: wins shown live in the HUD, kills and damage in the game-over summary
+- Session scoreboard: wins shown live in the HUD; the game-over summary lists kills and damage plus an all-time per-configuration record (2–4 teams, kept on the device) and a match MVP
 - Optional aim guide dotting the predicted path of every ballistic weapon you charge — bazooka, bunker buster, grenade, halo, cluster, mango, comet, burrow, napalm, bundle, seeker and homing missiles, sticky and rubber bombs, splitter, mortar, drone, laser. Wind bends the two rockets like in the game itself, and the seeker round and homing missile draw their actual curved homing path to your marked spot (no arc until a spot is marked — they can't be fired without one)
 - Configurable turn timer (10–60 s slider)
 - Red worm names when health runs low; victory confetti on the winner
@@ -229,7 +230,7 @@ verifies the "About N KB" line in this README matches `index.html`.
 
 ## Tech
 
-Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. Setup QR codes use the embedded MIT-licensed `qrcode-generator` 1.4.4 encoder. About 361 KB in total.
+Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. Setup QR codes use the embedded MIT-licensed `qrcode-generator` 1.4.4 encoder. About 363 KB in total.
 
 ## History
 
@@ -253,6 +254,7 @@ The project grew through a series of tagged releases:
 - **v2.6.4 — Hat clearance** — Worm name/HP tag moved up so the team hats are no longer half-covered by it.
 - **v2.6.5 — Hat seating** — Team hats now rest directly on a worm's head (no gap).
 - **v2.6.6 — Grubsong ’26** — New weapon **🚁 Major Munch**: mark a target, FIRE, and the Grubheli flies over the mark — Major Munch drops one crew Grenade on the spot and rides off; one per team per match. The main menu is rebuilt with the Grubsong ’26 hero banner and a scrolling anthem marquee; the menu theme is an original, anthemic E-minor instrumental, and a new **Story** modal (book button) tells the lore of the Grub crew and their own Major Munch. Dedicated to every grub that made it back. Also in v2.6.6: **Major Munch** — Grub Blasters’ own original mascot (three inches of grub, one tooth, rocket backpack), hand-drawn in SVG for the menu hero, and filling the marquee.
+- **v2.6.8 — After-Action Report** — The game-over screen now shows an all-time record for the team configuration (e.g. 2 teams × 3 worms — wins per team, draws and matches played), persisted on the device under one localStorage key and shown alongside the existing Score/Kills/Damage line; the record survives corrupt or tampered storage untouched. Each match also names an **MVP** team (damage + 80×kills; higher remaining HP breaks ties), and a **Rematch** button restarts a fresh match with the same settings and mode.
 
 
 ## 🛠️ More from Mark44928
@@ -265,7 +267,7 @@ Tiny, dependency-free tools from the same family:
 - [plusafetch](https://github.com/Mark44928/plusafetch) — C++23 fetch for Termux — ~23 ms, zero subprocesses on the default path
 - [Plusalator](https://github.com/Mark44928/Plusalator) — C++17 calculator REPL — Qalculate-flavored, ghost autosuggest, 18 themes
 - [SnakTUI](https://github.com/Mark44928/SnakTUI) — Snake game for the terminal — Textual + Python
-- [Easy-Termux-Package-Manager](https://github.com/Mark44928/Easy-Termux-Package-Manager) — fzf-driven package manager for Termux — snapshots, audit, 193 tests
+- [Easy-Termux-Package-Manager](https://github.com/Mark44928/Easy-Termux-Package-Manager) — fzf-driven package manager for Termux — snapshots, audit, 194 tests
 - [NoNameOS](https://github.com/Mark44928/NoNameOS) — OS simulation in a single C++17 file — virtual FS, real shell
 - [Greenit](https://github.com/Mark44928/Greenit) — green-injected theme family — dark + light, single palette.json
 - [CalculaHTML](https://github.com/Mark44928/CalculaHTML) — static HTML calculator — 15 themes + System mode, zero deps

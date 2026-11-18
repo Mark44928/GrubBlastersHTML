@@ -40,8 +40,8 @@
 
 - **Live:** https://mark44928.github.io/GrubBlastersHTML/
 - **Repo:** https://github.com/Mark44928/GrubBlastersHTML
-- **Version:** 2.6.6 (Grubsong ’26)
-- **File size:** ~361 KB (single file, no dependencies)
+- **Version:** 2.6.8
+- **File size:** ~363 KB (single file, no dependencies)
 - **Language:** Vanilla JavaScript (ES6+), HTML5, CSS3
 - **Target:** Mobile browsers (Android/iOS) + Desktop. PWA via inline `data:application/manifest+json` manifest.
 - **Canvas:** 2D context, logical pixels, DPR-capped at 2
@@ -82,7 +82,7 @@ Run `make check`. Run `make sync-size`. Verify manually. Never say "it works" wi
 
 | Path | Purpose | Edit? |
 |---|---|---|
-| `index.html` | The entire game (style, DOM, script). ~361 KB. | Yes — this is where all work happens |
+| `index.html` | The entire game (style, DOM, script). ~363 KB. | Yes — this is where all work happens |
 | `README.md` | Player-facing docs. | Yes — keep in sync with gameplay changes |
 | `Makefile` | Dev tasks: check, serve, publish, verify. | Rarely |
 | `AGENTS.md` | This file. | Yes — keep current |
@@ -236,6 +236,7 @@ All reads guarded try/catch. Key entries:
 | `gb_csch` | unset | Custom schemes JSON, max 24 |
 | `gb_hap` | on | Haptics |
 | `gb_barl` | on | on/oil/drum/off |
+| `grub-blasters-all-time-wins-v1` | unset | All-time per-config record `{ "2-3": {wins[],draws,matches}, … }` keyed by `teamCount-perTeam`; corrupt JSON ignored, values clamped, no network |
 
 ---
 
@@ -393,7 +394,8 @@ This AGENTS.md is the **single source of truth**. If you find a discrepancy betw
 - v2.6.5 — Team hat baseline y-14 → y-9.5 (rests on head top y-8.7).
 
 - v2.6.6 — Grubsong ’26: new weapons **🚁 Major Munch** (mark a spot, FIRE — the Grubheli flies over and drops one crew Grenade on the mark, then flies off; one per team per match) and **🌠 Halo Strike** (three consecrated bombs on the mark, TARGETED), menu rebuilt as the Grubsong ’26 hero banner with scrolling anthem marquee, original E-minor anthem, **Major Munch** SVG mascot, Story modal (📖 book button). The weapon-type table above now lists Major Munch under TARGETED; counts updated to 72.
+- v2.6.8 — After-Action Report: game-over screen now records an all-time per-configuration result under `grub-blasters-all-time-wins-v1` (wins per team, draws, matches; corrupt JSON ignored, bogus keys/values dropped; no network) and shows it alongside the Score/Kills/Damage line. New MVP line (this match: damage + 80×kills, higher remaining team HP breaks ties) and a 🔁 Rematch button (`newGame(gameMode)`, audio re-init) next to Share result. Per-match MVP stats are deltas off `mvpDmg0`/`mvpKill0` snapshots taken in `newGame()`/`restartMatch()` (session `kdmg`/`kills` are cumulative by design). Service-worker cache bumped to `grubblasters-v6`.
 
 *The game is one file. The rules are absolute. The quality is non-negotiable.*
 
-*Last updated: 2026-11-14 — Grub Blasters v2.6.6*
+*Last updated: 2026-11-18 — Grub Blasters v2.6.8*
