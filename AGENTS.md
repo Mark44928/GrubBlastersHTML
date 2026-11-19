@@ -17,7 +17,7 @@
 9. [Core State](#core-state)
 10. [Turn Flow](#turn-flow)
 11. [Gravity & Damage](#gravity--damage)
-12. [Weapons System (72 weapons)](#weapons-system-72-weapons)
+12. [Weapons System (73 weapons)](#weapons-system-72-weapons)
 13. [AI System](#ai-system)
 14. [Rendering Pipeline](#rendering-pipeline)
 15. [Game Loop](#game-loop)
@@ -179,7 +179,7 @@ endTurn() → next living team → gameOver() if ≤1 team remains
 
 ---
 
-## Weapons System (72 weapons)
+## Weapons System (73 weapons)
 
 | Type | Weapons |
 |---|---|
@@ -189,7 +189,7 @@ endTurn() → next living team → gameOver() if ≤1 team remains
 
 **Key behaviors:** Bazooka ∞ammo, wind-affected, 0.25s grace. Bouncer/Feral Grub wander/detonate. Homing: 150px straight then track ≤3rad/s, duds after 5s. Seeker Round: r88, 9s timeout. Mango Bomb: 5 burst (30 HP minis + 10 HP core). Kamikaze: suicidal dig. Mine: 2s arm, <17px trigger, persists turns. Sticky: sticks on contact, 3.5s detonate. Granite Grub: targeted, vertical shaft, 100 dmg. **Always use `useAmmo(id)`** — direct decrement makes `NaN`.
 
-**Damage Baseline:** Bazooka/Grenade/Homing/Bouncer-Feral Grub 50/50/50/75 · Cluster 10+30×5 · Mango 10+30×5 · Halo/Seeker 100 · Shotgun 25×2 · Dynamite/Mine 75/50 · Minigun 6×16 · Uppercut/Kamikaze/Comet/Burrow 30 · Suicide 30+poison · Blowtorch 15 · Airstrike/Carpet 30×5 · Granite Grub 100 · Barrel 60 · **v2.6.0:** Grub Elder 75 · Battleaxe ½ victim HP · Sniper 60 · Ballgun 8×~18 balls · Flamer 4/0.12s stream ~50 · Cake 75 (FIRE stops it) · Piano 80×3 bounces · Melon 30+35×5 slices · Molotov 25+fire pool · Balance Beam evens all HP.
+**Damage Baseline:** Bazooka/Grenade/Homing/Bouncer-Feral Grub 50/50/50/75 · Cluster 10+30×5 · Mango 10+30×5 · Halo/Seeker 100 · Shotgun 25×2 · Dynamite/Mine 75/50 · Minigun 6×16 · Uppercut/Kamikaze/Comet/Burrow 30 · Suicide 30+poison · Blowtorch 15 · Airstrike/Carpet 30×5 · Granite Grub 100 · Barrel 60 · **Grub of Lies:** up to 6×32-wall bursts, 32 per worm contact · **v2.6.0:** Grub Elder 75 · Battleaxe ½ victim HP · Sniper 60 · Ballgun 8×~18 balls · Flamer 4/0.12s stream ~50 · Cake 75 (FIRE stops it) · Piano 80×3 bounces · Melon 30+35×5 slices · Molotov 25+fire pool · Balance Beam evens all HP.
 
 ---
 
@@ -394,6 +394,7 @@ This AGENTS.md is the **single source of truth**. If you find a discrepancy betw
 - v2.6.5 — Team hat baseline y-14 → y-9.5 (rests on head top y-8.7).
 
 - v2.6.6 — Grubsong ’26: new weapons **🚁 Major Munch** (mark a spot, FIRE — the Grubheli flies over and drops one crew Grenade on the mark, then flies off; one per team per match) and **🌠 Halo Strike** (three consecrated bombs on the mark, TARGETED), menu rebuilt as the Grubsong ’26 hero banner with scrolling anthem marquee, original E-minor anthem, **Major Munch** SVG mascot, Story modal (📖 book button). The weapon-type table above now lists Major Munch under TARGETED; counts updated to 72.
+- v2.7.0 — **Grub of Lies** 🐃: a super weapon directly riffed on *Buffalo of Lies*. Charges forward in the direction your grub faces, climbs gentle terrain, cannot jump, and barrels through steep terrain with up to six cave-in bursts (32 HP each). Each wall burst carves a tunnel; it damages enemy worms on contact, collects crates it runs over, then vanishes. Normal scheme gives 1 per team, Pro Mode leaves it out.
 - v2.6.8 — After-Action Report: game-over screen now records an all-time per-configuration result under `grub-blasters-all-time-wins-v1` (wins per team, draws, matches; corrupt JSON ignored, bogus keys/values dropped; no network) and shows it alongside the Score/Kills/Damage line. New MVP line (this match: damage + 80×kills, higher remaining team HP breaks ties) and a 🔁 Rematch button (`newGame(gameMode)`, audio re-init) next to Share result. Per-match MVP stats are deltas off `mvpDmg0`/`mvpKill0` snapshots taken in `newGame()`/`restartMatch()` (session `kdmg`/`kills` are cumulative by design). Service-worker cache bumped to `grubblasters-v6`.
 
 *The game is one file. The rules are absolute. The quality is non-negotiable.*
