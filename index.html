@@ -1806,7 +1806,7 @@ function importReplayFile(f){
     try{
       const o=JSON.parse(rd.result);
       if(!o||o.v!==1||!Array.isArray(o.frames)||o.frames.length<3||!Array.isArray(o.ev)||o.frames.length>500||o.ev.length>5000)throw 0;
-      if(!o.frames.every(f=>f&&typeof f.t==='number'&&Array.isArray(f.wm)&&Array.isArray(f.pj)&&Array.isArray(f.ba)))throw 0;
+      if(!o.frames.every(f=>f&&typeof f.t==='number'&&isFinite(f.t)&&[f.wm,f.pj,f.ba,f.cr,f.gv,f.fi,f.ga,f.bo].every(Array.isArray)&&typeof f.water==='number'&&isFinite(f.water)&&f.cam&&[f.cam.x,f.cam.y,f.cam.z].every(v=>typeof v==='number'&&isFinite(v))))throw 0;
       const done=(base)=>{lastMovie={dur:Number(o.dur)||o.frames[o.frames.length-1].t||1,ev:o.ev,frames:o.frames,base,autoPlayed:true};toggleSettings(false);tip('🎬 Replay loaded — press 🎬',2.5)};
       if(typeof o.base==='string'&&o.base.startsWith('data:image/')){
         const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=img.width;c.height=img.height;c.getContext('2d').drawImage(img,0,0);done(c)};img.onerror=()=>done(null);img.src=o.base;
@@ -3062,7 +3062,7 @@ function update(dt){
   if(shots>0){shotT-=dt;if(shotT<=0){shootGun();shots--;shotT=shotCfg.delay}}
   if(state==='settle'){
     retreat=Math.max(0,retreat-dt);settleT+=dt;
-    const q=proj.every(p=>p.type==='mine')&&pend.length===0&&shots===0&&worms.every(w=>!w.alive||!w.air||w.sau>0)&&retreat<=0;
+    const q=proj.every(p=>p.type==='mine')&&pend.length===0&&shots===0&&munchHelos.length===0&&worms.every(w=>!w.alive||!w.air||w.sau>0)&&retreat<=0;
     quiet=q?quiet+dt:0;
     if(quiet>1||settleT>25)endTurn();
   }
@@ -4092,7 +4092,7 @@ function selCh(id,v){
   else if(id==='#hp'){maxHP=Math.max(50,Math.round(+v)||100);$('#hpv').value=maxHP+' HP';save('gb_hp',maxHP)}
   else if(id==='#tt'){turnSec=Math.max(10,Math.min(60,+v||30));$('#ttv').value=turnSec+'s';save('gb_tt',turnSec)}
   else if(id==='#lvl'){diff=Math.max(0,DIFF.findIndex(d=>d.n===v));save('gb_diff',diff);save('gb_dv',1)}
-  else if(id==='#sch'){schIdx=Math.max(0,Math.min(schAll().length-1,+v||0));save('gb_sch',schIdx)}
+  else if(id==='#sch'){if(state!=='menu'){syncUI();tip('Start a new match to change the weapon scheme',2.2);return}schIdx=Math.max(0,Math.min(schAll().length-1,+v||0));save('gb_sch',schIdx)}
   else if(id==='#wnd'){windK=Math.max(0,Math.min(2.5,+v||0));$('#wndv').value=windK+'×';save('gb_wnd',windK);save('gb_wndv','1')}
   else if(id==='#crt'){cratesOn=v==='On';save('gb_crate',cratesOn?'1':'0')}
   else if(id==='#barl'){const v2=v==='Oil only',v3=v==='Barrel only';barrelsOn=v!=='Off';barrelOil=v2;barrelDrum=v3;save('gb_barl',v2?'oil':v3?'drum':barrelsOn?'1':'0')}
