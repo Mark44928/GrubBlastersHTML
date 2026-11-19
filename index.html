@@ -13,7 +13,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Mark44928">
 <meta property="og:title" content="Grub Blasters! 💥">
-<meta property="og:description" content="Turn-based artillery in one dependency-free HTML file with 72 weapons and destructible terrain.">
+<meta property="og:description" content="Turn-based artillery in one dependency-free HTML file with 73 weapons and destructible terrain.">
 <meta property="og:url" content="https://mark44928.github.io/GrubBlastersHTML/">
 <meta property="og:image" content="https://mark44928.github.io/GrubBlastersHTML/docs/og.png">
 <meta property="og:image:width" content="1200">
@@ -447,6 +447,7 @@ body.yellen #replay{border-color:var(--acc);background:linear-gradient(180deg,rg
     <li><b>🚁 Major Munch</b>: mark a spot, then press <span class="kbd">FIRE</span> — Munch rides in on the Grubheli, drops one Grenade on the mark and flies off. One per team per match. <b>✈️ Airstrike</b>, <b>🌠 Halo Strike</b>, <b>🌀 Teleport</b>, <b>🌩️ Lightning</b>, <b>🛩️ Carpet Bomb</b> and <b>☢️ Nuke</b>: tap the map to pick a spot, then <span class="kbd">FIRE</span> — the carpet strafes the mark and the nuke sounds a siren before the game's biggest blast. <b>🐝 Hornet</b>: mark a spot and it flies straight through terrain to reach it.</li>
     <li><b>🪲 Bouncer Bug</b> walks on its own — press <span class="kbd">FIRE</span> again to detonate it. <b>☄️ Comet Fist</b> bounces wildly; press <span class="kbd">FIRE</span> to set it off (it also blows after six bounces) with a huge knockback.</li>
     <li><b>🐛 Feral Grubs</b> — unleash three charging grubs one after another; each explodes on the first grub (friend or foe) or wall it meets, with Dynamite-strength force.</li>
+    <li><b>🐃 Grub of Lies</b> — a full-on Buffalo of Lies riff: charges forward in the direction you face, steps over gentle terrain, detonates dead-on into steep walls and carves through, then vanishes after six bursts (32 damage each); collects crates it runs over.</li>
     <li><b>🥭 Mango Bomb</b> erupts into five mangoes that burst in sequence; <b>🕳️ Burrow Bomb</b> tunnels through rock in the direction you fired it, then detonates when it comes out.</li>
     <li><b>🔴 Mines</b> arm after 2 s, stay between turns, and chain-react when shot.</li>
     <li><b>🔥 Blowtorch</b> cuts a tunnel; <b>✨ Halo Grenade</b> packs a huge blast.</li>
@@ -488,7 +489,7 @@ body.yellen #replay{border-color:var(--acc);background:linear-gradient(180deg,rg
   <h2>About</h2>
   <ul>
     <li><b>Grub Blasters</b> v2.6.8 — a fully-destructible turn-based artillery sandbox that runs entirely from one HTML file.</li>
-    <li>72 weapons (including 🚁 <b>Major Munch</b> and 🌠 <b>Halo Strike</b>), procedural SFX, floating islands, sudden death, CPU teams, replays, Grubsong ’26 with the full lore of the Grub crew.</li>
+    <li>73 weapons (including 🚁 <b>Major Munch</b> and 🌠 <b>Halo Strike</b>), procedural SFX, floating islands, sudden death, CPU teams, replays, Grubsong ’26 with the full lore of the Grub crew.</li>
     <li><b>Official mascot:</b> Major Munch — three inches of grub, one enormous tooth, zero fear. Major Munch is the ace of the Ridge and the face of Grub Blasters.</li>
     <li>Fork it, mod it, share it — the whole game lives in <code>index.html</code>.</li>
     <li>Source &amp; changelog: <a href="https://github.com/Mark44928/GrubBlastersHTML" target="_blank" rel="noopener">github.com/Mark44928/GrubBlastersHTML</a> — MIT.</li>
@@ -499,7 +500,7 @@ body.yellen #replay{border-color:var(--acc);background:linear-gradient(180deg,rg
   <div class="card">
     <h1>📚 Weapon Codex</h1>
     <div class="codex-tools">
-      <input id="codexSearch" type="search" placeholder="Search 72 weapons…" autocomplete="off" aria-label="Search weapons">
+      <input id="codexSearch" type="search" placeholder="Search 73 weapons…" autocomplete="off" aria-label="Search weapons">
       <button type="button" class="codex-filter on" data-mode="all">All</button>
       <button type="button" class="codex-filter" data-mode="targeted">TAP MAP</button>
       <button type="button" class="codex-filter" data-mode="charge">AIM</button>
@@ -648,7 +649,7 @@ const PAL=['#ff5252','#3fa9ff','#7dff7d','#ffd54a','#d98bff','#3fe8c9','#ff9b3d'
 const SKYN=['Auto','Day','Sunset','Night','Dawn','Real Time'],GROUNDN=['Auto','Grass','Desert','Snow','Rock'],WXN=['Auto','Clear','Rain','Snow'],ISLN=['Off','1','2','3','4','5','6'];
 const NAMES=['Wiggles','Squirm','Slimer','Noodle','Inch','Gus','Wormy','Slick','Dirt','Pip','Bob','Mudge','Zig','Zag','Nibbles','Grub','Chomp','Digger','Slink','Roly','Mo','Curly','Fuzz','Spud','Tater','Critter','Squiggle','Doodle','Bugsy','Mort','Wrigley','Loopy'];
 const TAUNTS=['Take that!','Boom!','Nice one!','Ouch!','Whoops!','Eat dirt!','Lucky shot!','Ha!','Gotcha!','Watch out!','Incoming!'];
-const WEP=[{id:'bazooka',ico:'🚀',n:'Bazooka'},{id:'grenade',ico:'💣',n:'Grenade'},{id:'dynamite',ico:'🧨',n:'Dynamite'},{id:'shotgun',ico:'🔫',n:'Shotgun'},{id:'airstrike',ico:'✈️',n:'Airstrike'},{id:'halostrike',ico:'🌠',n:'Halo Strike'},{id:'munch',ico:'🚁',n:'Major Munch'},{id:'teleport',ico:'🌀',n:'Teleport'},{id:'bouncer',ico:'🪲',n:'Bouncer Bug'},{id:'uppercut',ico:'🥊',n:'Blaze Uppercut'},{id:'mine',ico:'🔴',n:'Mine'},{id:'halo',ico:'✨',n:'Halo Grenade'},{id:'cluster',ico:'💥',n:'Cluster'},{id:'uzi',ico:'⚡',n:'Uzi'},{id:'torch',ico:'🔥',n:'Torch'},{id:'homing',ico:'🚀',n:'Homing'},{id:'bunker',ico:'⛏️',n:'Bunker'},{id:'seeker',ico:'🎯',n:'Seeker Round'},{id:'mango',ico:'🥭',n:'Mango Bomb'},{id:'comet',ico:'☄️',n:'Comet Fist'},{id:'burrow',ico:'🕳️',n:'Burrow Bomb'},{id:'lightning',ico:'🌩️',n:'Lightning'},{id:'saucer',ico:'🛸',n:'Saucer'},{id:'herd',ico:'🐛',n:'Feral Grubs'},{id:'xdmg',ico:'💪',n:'1.5x Damage'},{id:'invuln',ico:'🔮',n:'Invulnerable'},{id:'kamikaze',ico:'💣',n:'Kamikaze'},{id:'minigun',ico:'🔫',n:'Minigun'},{id:'napalm',ico:'🔥',n:'Napalm'},{id:'bundle',ico:'💥',n:'Dyn. Bundle'},{id:'carpet',ico:'🛩️',n:'Carpet Bomb'},{id:'nuke',ico:'☢️',n:'Nuke'},{id:'hornet',ico:'🐝',n:'Hornet'},{id:'stinkbug',ico:'🪳',n:'Stinkbug'},{id:'parachute',ico:'🪂',n:'Parachute'},{id:'prod',ico:'👉',n:'Prod'},{id:'suicide',ico:'💀',n:'Suicide Bomber'},{id:'skip',ico:'⏭️',n:'Skip'},{id:'shield',ico:'🛡️',n:'Shield'},{id:'earthquake',ico:'🌍',n:'Earthquake'},{id:'vampire',ico:'🧛',n:'Vampire'},{id:'sticky',ico:'🟢',n:'Sticky Bomb'},{id:'rubber',ico:'🟡',n:'Rubber Nade'},{id:'girder',ico:'🪵',n:'Girder'},{id:'colossus',ico:'🪨',n:'Granite Grub'},{id:'vacuum',ico:'📦',n:'Crate Vacuum'},{id:'splitter',ico:'💫',n:'Splitter'},{id:'mortar',ico:'💣',n:'Mortar'},{id:'frost',ico:'❄️',n:'Frost Bomb'},{id:'drone',ico:'🤖',n:'Drone Strike'},{id:'grapple',ico:'🪝',n:'Grapple Hook'},{id:'freeze',ico:'🧊',n:'Freeze Ray'},{id:'meteor',ico:'☄️',n:'Meteor Swarm'},{id:'portal',ico:'🌌',n:'Portal Gun'},{id:'blackhole',ico:'⚫',n:'Black Hole'},{id:'laser',ico:'🔫',n:'Laser Cannon'},{id:'seismic',ico:'💥',n:'Seismic Charge'},{id:'phoenix',ico:'🐦',n:'Phoenix'},{id:'tesla',ico:'⚡',n:'Tesla Coil'},{id:'acid',ico:'☠️',n:'Acid Spray'},{id:'timebomb',ico:'⏰',n:'Time Bomb'},{id:'magnet',ico:'🧲',n:'Magnet Mine'},{id:'elder',ico:'🧓',n:'Grub Elder'},{id:'battleaxe',ico:'🪓',n:'Battle Axe'},{id:'sniper',ico:'🎯',n:'Sniper Rifle'},{id:'ballgun',ico:'🎳',n:'Ballgun'},{id:'flamer',ico:'🔥',n:'Flamethrower'},{id:'cake',ico:'🎂',n:'Cake'},{id:'piano',ico:'🎹',n:'Piano Strike'},{id:'melon',ico:'🍉',n:'Watermelon'},{id:'molotov',ico:'🍾',n:'Molotov'},{id:'balance',ico:'⚖️',n:'Balance Beam'}];
+const WEP=[{id:'bazooka',ico:'🚀',n:'Bazooka'},{id:'grenade',ico:'💣',n:'Grenade'},{id:'dynamite',ico:'🧨',n:'Dynamite'},{id:'shotgun',ico:'🔫',n:'Shotgun'},{id:'airstrike',ico:'✈️',n:'Airstrike'},{id:'halostrike',ico:'🌠',n:'Halo Strike'},{id:'munch',ico:'🚁',n:'Major Munch'},{id:'teleport',ico:'🌀',n:'Teleport'},{id:'bouncer',ico:'🪲',n:'Bouncer Bug'},{id:'uppercut',ico:'🥊',n:'Blaze Uppercut'},{id:'mine',ico:'🔴',n:'Mine'},{id:'halo',ico:'✨',n:'Halo Grenade'},{id:'cluster',ico:'💥',n:'Cluster'},{id:'uzi',ico:'⚡',n:'Uzi'},{id:'torch',ico:'🔥',n:'Torch'},{id:'homing',ico:'🚀',n:'Homing'},{id:'bunker',ico:'⛏️',n:'Bunker'},{id:'seeker',ico:'🎯',n:'Seeker Round'},{id:'mango',ico:'🥭',n:'Mango Bomb'},{id:'comet',ico:'☄️',n:'Comet Fist'},{id:'burrow',ico:'🕳️',n:'Burrow Bomb'},{id:'buffalo',ico:'🐃',n:'Grub of Lies'},{id:'lightning',ico:'🌩️',n:'Lightning'},{id:'saucer',ico:'🛸',n:'Saucer'},{id:'herd',ico:'🐛',n:'Feral Grubs'},{id:'xdmg',ico:'💪',n:'1.5x Damage'},{id:'invuln',ico:'🔮',n:'Invulnerable'},{id:'kamikaze',ico:'💣',n:'Kamikaze'},{id:'minigun',ico:'🔫',n:'Minigun'},{id:'napalm',ico:'🔥',n:'Napalm'},{id:'bundle',ico:'💥',n:'Dyn. Bundle'},{id:'carpet',ico:'🛩️',n:'Carpet Bomb'},{id:'nuke',ico:'☢️',n:'Nuke'},{id:'hornet',ico:'🐝',n:'Hornet'},{id:'stinkbug',ico:'🪳',n:'Stinkbug'},{id:'parachute',ico:'🪂',n:'Parachute'},{id:'prod',ico:'👉',n:'Prod'},{id:'suicide',ico:'💀',n:'Suicide Bomber'},{id:'skip',ico:'⏭️',n:'Skip'},{id:'shield',ico:'🛡️',n:'Shield'},{id:'earthquake',ico:'🌍',n:'Earthquake'},{id:'vampire',ico:'🧛',n:'Vampire'},{id:'sticky',ico:'🟢',n:'Sticky Bomb'},{id:'rubber',ico:'🟡',n:'Rubber Nade'},{id:'girder',ico:'🪵',n:'Girder'},{id:'colossus',ico:'🪨',n:'Granite Grub'},{id:'vacuum',ico:'📦',n:'Crate Vacuum'},{id:'splitter',ico:'💫',n:'Splitter'},{id:'mortar',ico:'💣',n:'Mortar'},{id:'frost',ico:'❄️',n:'Frost Bomb'},{id:'drone',ico:'🤖',n:'Drone Strike'},{id:'grapple',ico:'🪝',n:'Grapple Hook'},{id:'freeze',ico:'🧊',n:'Freeze Ray'},{id:'meteor',ico:'☄️',n:'Meteor Swarm'},{id:'portal',ico:'🌌',n:'Portal Gun'},{id:'blackhole',ico:'⚫',n:'Black Hole'},{id:'laser',ico:'🔫',n:'Laser Cannon'},{id:'seismic',ico:'💥',n:'Seismic Charge'},{id:'phoenix',ico:'🐦',n:'Phoenix'},{id:'tesla',ico:'⚡',n:'Tesla Coil'},{id:'acid',ico:'☠️',n:'Acid Spray'},{id:'timebomb',ico:'⏰',n:'Time Bomb'},{id:'magnet',ico:'🧲',n:'Magnet Mine'},{id:'elder',ico:'🧓',n:'Grub Elder'},{id:'battleaxe',ico:'🪓',n:'Battle Axe'},{id:'sniper',ico:'🎯',n:'Sniper Rifle'},{id:'ballgun',ico:'🎳',n:'Ballgun'},{id:'flamer',ico:'🔥',n:'Flamethrower'},{id:'cake',ico:'🎂',n:'Cake'},{id:'piano',ico:'🎹',n:'Piano Strike'},{id:'melon',ico:'🍉',n:'Watermelon'},{id:'molotov',ico:'🍾',n:'Molotov'},{id:'balance',ico:'⚖️',n:'Balance Beam'}];
 /* Weapon shelf icons: original inline SVG art, one per WEP id. */
 const WI_K='#0a0e17';
 const WI_I=`stroke="${WI_K}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"`;
@@ -862,6 +863,16 @@ saucer:
   wiCircle(8,17,1.2,WI_C.red)+wiCircle(13,19,1.2,WI_C.gold)+wiCircle(19,19,1.2,WI_C.green)+wiCircle(24,17,1.2,WI_C.blue)+
   `<path d="M11 22l2 7h6l2-7z" fill="${WI_C.green}" opacity=".28"/>`+
   wiCircle(16,12,2,WI_C.white,'opacity=".65"'),
+buffalo:
+  wiEllipse(11,21,8.5,5.2,'#4a3222')+
+  wiEllipse(23,20,8.5,6.2,'#5f402b')+
+  wiEllipse(18,20,7.5,6.5,'#6d4b34')+
+  wiPath('M27 14h5l3 4-3 6-6 1z','#493124')+
+  wiLine('M27 10l4 5M35 10l-4 5',WI_C.gold,3)+
+  wiLine('M28 22l-3 6M33 22l3 6','#2b1c12',1.4)+
+  wiEye(28,17,1)+wiEye(33,17,1)+
+  wiLine('M30 21l2 1M32 21l-1 2','#1a100b',1.1)+
+  wiGloss(8,18,4,1.2,0,.18),
 herd:
   wiEllipse(9,21,6,4.5,WI_C.brown)+wiEllipse(16,19,6.5,5,WI_C.brown)+wiEllipse(23,21,6,4.5,WI_C.brown)+
   wiLine('M4 24l-3 3M8 26l-2 4M13 24l-1 4M18 24l1 4M23 26l-2 4M27 24l4 3','#4a2f1b',1.3)+
@@ -1237,13 +1248,13 @@ const VALS=[-1,0,1,2,3,4,5,6,8,10];
 const TARGETED=['airstrike','halostrike','munch','teleport','homing','seeker','lightning','carpet','nuke','hornet','colossus','drone','portal','magnet','meteor','blackhole','seismic','sniper','piano'];
 const GUIDE_V={bazooka:p=>120+p*700,bunker:p=>80+p*600,grenade:p=>80+p*620,halo:p=>80+p*620,cluster:p=>80+p*620,mango:p=>80+p*620,comet:p=>80+p*620,burrow:p=>80+p*600,napalm:p=>80+p*620,bundle:p=>80+p*620,seeker:p=>140+p*560,homing:p=>90+p*430,sticky:p=>80+p*620,rubber:p=>80+p*620,mortar:p=>70+p*580,drone:p=>130+p*500,laser:p=>160+p*450,melon:p=>80+p*620,molotov:p=>80+p*620};
 const GUIDE_WIND={bazooka:1,bunker:1};
-const AIMLESS=['dynamite','mine','bouncer','herd','uppercut','stinkbug','saucer','xdmg','invuln','parachute','prod','suicide','skip','shield','earthquake','vampire','girder','vacuum','frost','tesla','timebomb','elder','battleaxe','ballgun','flamer','cake','balance'];
+const AIMLESS=['dynamite','mine','bouncer','herd','buffalo','uppercut','stinkbug','saucer','xdmg','invuln','parachute','prod','suicide','skip','shield','earthquake','vampire','girder','vacuum','frost','tesla','timebomb','elder','battleaxe','ballgun','flamer','cake','balance'];
 const CHARGE=['bazooka','grenade','halo','cluster','bunker','homing','seeker','mango','comet','burrow','napalm','bundle','sticky','rubber','splitter','mortar','drone','melon','molotov'];
 const DIFF=[{n:'Baby',an:.3,pn:.32,thr:180},{n:'Easy',an:.16,pn:.16,thr:130},{n:'Normal',an:.06,pn:.07,thr:70},{n:'Hard',an:.015,pn:.02,thr:40},{n:'Brutal',an:.005,pn:.008,thr:25}];
 const SCH=[
-  {n:'Normal',ammo:()=>({dynamite:2,airstrike:1,halostrike:1,munch:1,teleport:2,bouncer:1,herd:1,mine:1,halo:1,cluster:1,uzi:2,torch:1,homing:1,bunker:1,seeker:1,mango:1,comet:1,burrow:2,lightning:2,saucer:1,xdmg:2,kamikaze:2,minigun:1,napalm:1,bundle:1,carpet:1,nuke:1,hornet:1,stinkbug:1,invuln:2,parachute:2,prod:3,suicide:2,shield:2,earthquake:1,vampire:2,sticky:2,rubber:2,girder:2,colossus:1,vacuum:2,splitter:2,mortar:2,frost:2,drone:1,grapple:2,freeze:2,meteor:1,portal:2,blackhole:1,laser:2,seismic:1,phoenix:1,tesla:2,acid:2,timebomb:2,magnet:2,elder:1,battleaxe:2,sniper:1,ballgun:1,flamer:1,cake:1,piano:1,melon:1,molotov:2,balance:1})},
+  {n:'Normal',ammo:()=>({dynamite:2,airstrike:1,halostrike:1,munch:1,teleport:2,bouncer:1,herd:1,buffalo:1,mine:1,halo:1,cluster:1,uzi:2,torch:1,homing:1,bunker:1,seeker:1,mango:1,comet:1,burrow:2,lightning:2,saucer:1,xdmg:2,kamikaze:2,minigun:1,napalm:1,bundle:1,carpet:1,nuke:1,hornet:1,stinkbug:1,invuln:2,parachute:2,prod:3,suicide:2,shield:2,earthquake:1,vampire:2,sticky:2,rubber:2,girder:2,colossus:1,vacuum:2,splitter:2,mortar:2,frost:2,drone:1,grapple:2,freeze:2,meteor:1,portal:2,blackhole:1,laser:2,seismic:1,phoenix:1,tesla:2,acid:2,timebomb:2,magnet:2,elder:1,battleaxe:2,sniper:1,ballgun:1,flamer:1,cake:1,piano:1,melon:1,molotov:2,balance:1})},
   {n:'Greedy',ammo:()=>({})},
-  {n:'Pro Mode',ammo:()=>({dynamite:1,airstrike:0,halostrike:1,munch:0,teleport:1,bouncer:1,herd:1,mine:1,halo:1,cluster:1,uzi:1,torch:1,homing:1,bunker:1,seeker:1,mango:1,comet:1,burrow:1,lightning:1,saucer:1,xdmg:1,kamikaze:1,minigun:1,napalm:1,bundle:1,carpet:1,nuke:1,hornet:1,stinkbug:1,invuln:1,parachute:1,prod:1,suicide:1,shield:1,earthquake:1,vampire:1,sticky:1,rubber:1,girder:1,colossus:1,vacuum:1,splitter:1,mortar:1,frost:1,drone:1,grapple:1,freeze:1,meteor:1,portal:1,blackhole:1,laser:1,seismic:1,phoenix:1,tesla:1,acid:1,timebomb:1,magnet:1,elder:1,battleaxe:1,sniper:1,ballgun:1,flamer:1,cake:1,piano:1,melon:1,molotov:1,balance:1})},
+  {n:'Pro Mode',ammo:()=>({dynamite:1,airstrike:0,halostrike:1,munch:0,teleport:1,bouncer:1,herd:1,buffalo:0,mine:1,halo:1,cluster:1,uzi:1,torch:1,homing:1,bunker:1,seeker:1,mango:1,comet:1,burrow:1,lightning:1,saucer:1,xdmg:1,kamikaze:1,minigun:1,napalm:1,bundle:1,carpet:1,nuke:1,hornet:1,stinkbug:1,invuln:1,parachute:1,prod:1,suicide:1,shield:1,earthquake:1,vampire:1,sticky:1,rubber:1,girder:1,colossus:1,vacuum:1,splitter:1,mortar:1,frost:1,drone:1,grapple:1,freeze:1,meteor:1,portal:1,blackhole:1,laser:1,seismic:1,phoenix:1,tesla:1,acid:1,timebomb:1,magnet:1,elder:1,battleaxe:1,sniper:1,ballgun:1,flamer:1,cake:1,piano:1,melon:1,molotov:1,balance:1})},
   {n:'Bazooka Only',ammo:()=>({})}
 ];
 const SKY=[
@@ -2224,6 +2235,7 @@ function fire(){
   else if(wpn==='grenade'){useAmmo('grenade');const v=80+power*620;proj.push({type:'grenade',x:sx,y:sy,vx:dx*v,vy:dy*v,age:0,fuse:3,r:52,dmg:50,bn:.5,fr:.75,hr:6.5,shooter:w});SFX.shot()}
   else if(wpn==='dynamite'){useAmmo('dynamite');proj.push({type:'dynamite',x:w.x+w.dir*10,y:w.y,vx:w.dir*40,vy:-80,age:0,fuse:4,r:78,dmg:75,bn:.1,fr:.3,hr:8,shooter:w});SFX.thud()}
   else if(wpn==='bouncer'){useAmmo('bouncer');const s={type:'bouncer',x:w.x+w.dir*10,y:w.y-6,vx:0,vy:0,dir:w.dir,wob:0,age:0,fuse:8,r:60,dmg:75,shooter:w};proj.push(s);curBouncer=s;SFX.click()}
+  else if(wpn==='buffalo'){useAmmo('buffalo');proj.push({type:'buffalo',x:w.x+w.dir*12,y:w.y-8,vx:0,vy:0,dir:w.dir,wob:0,age:0,delay:.15,fuse:10,charges:6,chargeTimer:0,r:30,dmg:32,kb:.9,shooter:w});tip('🐃 Grub of Lies charges!',2);SFX.chitter()}
   else if(wpn==='herd'){useAmmo('herd');for(let k=0;k<3;k++)proj.push({type:'herd',x:w.x+w.dir*7,y:w.y-6,vx:0,vy:0,dir:w.dir,wob:k*2.1,age:0,delay:.35*k,fuse:10,r:70,dmg:75,kb:1.2,shooter:w})}
   else if(wpn==='uppercut'){
     useAmmo('uppercut');startRec();
@@ -2292,7 +2304,7 @@ function fire(){
   else if(wpn==='timebomb'){useAmmo('timebomb');proj.push({type:'timebomb',x:w.x+w.dir*18,y:w.y-8,vx:w.dir*25,vy:-50,age:0,fuse:10,r:0,dmg:80,bn:.2,fr:.3,shooter:w});tip('⏰ Time bomb placed — 10s fuse!',2.5);SFX.tick();charging=false;power=0;state='settle';startRec();retreat=aiOn[w.team]?0:RETV[retIdx];quiet=0;settleT=0;target=null;lastWpn[w.team]=wpn;updateWeps();return}
   else if(wpn==='magnet'){if(!target){tip('Tap the map to place the magnet mine',2);return}useAmmo('magnet');proj.push({type:'magnet',x:target.x,y:target.y,vx:0,vy:0,age:0,fuse:15,r:80,dmg:0,shooter:w});SFX.pick();tip('🧲 Magnet mine placed — attracts projectiles!',2);charging=false;power=0;state='settle';startRec();retreat=aiOn[w.team]?0:RETV[retIdx];quiet=0;settleT=0;target=null;lastWpn[w.team]=wpn;updateWeps();return}
   else{useAmmo('shotgun');shots=2;shotT=0;shotD={dx,dy};shotCfg={r:16,dmg:25,spread:0,delay:.5};muzzleFx(sx,sy,Math.atan2(dy,dx),wpn)}
-  charging=false;power=0;state='settle';if(!rec)startRec();retreat=(wpn==='bouncer'||wpn==='stinkbug'||wpn==='comet'||wpn==='kamikaze'||wpn==='suicide'||wpn==='elder'||wpn==='cake'||wpn==='ballgun'||wpn==='flamer'||aiOn[w.team])?0:RETV[retIdx];quiet=0;settleT=0;target=null;lastWpn[w.team]=wpn;updateWeps();
+  charging=false;power=0;state='settle';if(!rec)startRec();retreat=(wpn==='bouncer'||wpn==='stinkbug'||wpn==='comet'||wpn==='kamikaze'||wpn==='suicide'||wpn==='elder'||wpn==='cake'||wpn==='ballgun'||wpn==='flamer'||wpn==='herd'||wpn==='buffalo'||aiOn[w.team])?0:RETV[retIdx];quiet=0;settleT=0;target=null;lastWpn[w.team]=wpn;updateWeps();
 }
 function doAirstrike(){
   useAmmo('airstrike');
@@ -2437,6 +2449,41 @@ function updateProj(dt){
       if(near||p.fuse<=0){explode(p.x,p.y,p.r,p.dmg,by);dead=true}
       else if(p.y>WATER){splash(p.x,WATER);SFX.splash();dead=true}
       if(dead){if(curBouncer===p)curBouncer=null;if(curDet===p)curDet=null;proj.splice(i,1)}
+      continue;
+    }
+    if(p.type==='buffalo'){
+      if(p.age<p.delay)continue;
+      if(p.chargeTimer>0){p.chargeTimer=Math.max(0,p.chargeTimer-dt);continue}
+      p.wob+=dt*13;
+      p.vx=p.dir*82;
+      const nx=p.x+p.vx*dt;let ok=false;
+      for(let up=0;up<=6;up++)if(!hit(nx,p.y-up)){p.x=nx;p.y-=up;ok=true;break}
+      if(!ok){
+        const by=p.shooter?p.shooter.team:null;
+        p.charges--;
+        explode(nx,p.y,p.r,p.dmg,by,p.kb);
+        tunnelSeg(nx,Math.max(6,p.y-21),nx,Math.min(WATER,p.y+20),21);
+        tunnelSeg(Math.max(2,Math.min(nx,p.x)-10),p.y-3,Math.max(2,Math.max(nx,p.x)+70),p.y-3,12);
+        for(let k=0;k<18;k++)parts.push({x:nx+(Math.random()-.5)*34,y:p.y+(Math.random()-.5)*38,vx:(Math.random()-.5)*210,vy:-Math.random()*210,life:.8,max:.8,c:'#8a6a4a',g:520,s:2+Math.random()*2,d:2});
+        p.chargeTimer=.45;
+        shake=Math.max(shake,10);
+        SFX.thud();
+        if(p.charges<=0)dead=true;
+      }
+      if(!dead){
+        p.vy=Math.min(p.vy+GV*dt,700);
+        const sny=p.y+p.vy*dt;
+        if(!hit(p.x,sny))p.y=sny;else{p.vy=0;for(let k=0;k<8&&!hit(p.x,p.y+1);k++)p.y+=1}
+        const by=p.shooter?p.shooter.team:null;
+        if(!p.hit)p.hit=new Set();
+        for(const e of worms)if(e.alive&&e!==p.shooter&&wormHit(e,p.x,p.y,8)&&!p.hit.has(e)){p.hit.add(e);damageWorm(e,p.dmg,by);e.vx+=(e.x<p.x?1:-1)*170;e.vy-=170;e.air=true}
+        for(let ci=crates.length-1;ci>=0;ci--)if(Math.hypot(crates[ci].x-p.x,crates[ci].y-p.y)<17&&pickCrate(crates[ci]))crates.splice(ci,1);
+        p.fuse-=dt;
+        if(p.fuse<=0){explode(p.x,p.y,p.r,p.dmg,by,p.kb);dead=true}
+        else if(p.x<12||p.x>W-12){explode(p.x,p.y,p.r,p.dmg,by,p.kb);dead=true}
+        else if(p.y>WATER){splash(p.x,WATER);SFX.splash();dead=true}
+      }
+      if(dead)proj.splice(i,1);
       continue;
     }
     if(p.type==='herd'){
@@ -2932,6 +2979,7 @@ function aiTurn(dt){
     const has=id=>wepList().some(x=>x.id===id);
     if(has('bouncer')&&ammoOf('bouncer')>0&&dist<340&&Math.random()<[.22,.3,.5,.6,.7][diff]){dryTurns=0;wpn='bouncer';updateWeps();fire();ai.phase='done';return}
     if(has('herd')&&ammoOf('herd')>0&&dist<300&&Math.random()<[.18,.25,.45,.58,.65][diff]){dryTurns=0;wpn='herd';updateWeps();fire();ai.phase='done';return}
+    if(has('buffalo')&&ammoOf('buffalo')>0&&dist<540&&Math.abs(tg.x-w.x)>80&&Math.abs(tg.y-w.y)<170&&Math.random()<[.14,.2,.42,.55,.62][diff]){dryTurns=0;w.dir=tg.x>=w.x?1:-1;wpn='buffalo';updateWeps();fire();ai.phase='done';return}
     if(has('uppercut')&&ammoOf('uppercut')>0&&dist<46&&clearLine(w,tg)&&Math.random()<[.15,.2,.5,.55,.6][diff]){dryTurns=0;wpn='uppercut';updateWeps();fire();ai.phase='done';return}
     if(has('shotgun')&&ammoOf('shotgun')>0&&dist<280&&clearLine(w,tg)&&Math.random()<[.18,.25,.6,.65,.7][diff]){
       dryTurns=0;wpn='shotgun';updateWeps();
@@ -3207,7 +3255,7 @@ function drawWorm(w){
   ctx.fillStyle=w.hp<=25?'#ff8a80':'#fff';ctx.fillText(lab,w.x,w.y-33);
   ctx.restore();
 }
-const PGLOW={bazooka:'255,170,70',homing:'90,200,255',seeker:'255,220,110',bunker:'255,150,70',bomb:'255,170,80',comet:'255,90,60',mango:'255,225,70',grenade:'150,220,90',halo:'255,240,180',cluster:'150,225,110',mine:'255,90,90',napalm:'255,130,40',bundle:'255,100,70',rubber:'255,225,90',sticky:'130,230,130',carpet:'255,160,90',hornet:'210,230,255',burrow:'210,180,130',colossus:'210,215,220',bouncer:'120,255,150',herd:'255,105,70',stinkbug:'165,235,90',bomblet:'255,120,80',mortar:'255,140,40',frost:'153,205,255',drone:'79,172,207',freeze:'179,230,255',phoenix:'255,112,67',tesla:'156,255,44',timebomb:'101,31,255',magnet:'135,206,250',elder:'230,220,255',cake:'255,160,200',ballgun:'255,150,70',ball:'255,220,90',flamer:'255,130,40',piano:'255,230,150',melon:'120,255,120',molotov:'255,160,60'};
+const PGLOW={bazooka:'255,170,70',homing:'90,200,255',seeker:'255,220,110',bunker:'255,150,70',bomb:'255,170,80',comet:'255,90,60',mango:'255,225,70',grenade:'150,220,90',halo:'255,240,180',cluster:'150,225,110',mine:'255,90,90',napalm:'255,130,40',bundle:'255,100,70',rubber:'255,225,90',sticky:'130,230,130',carpet:'255,160,90',hornet:'210,230,255',burrow:'210,180,130',colossus:'210,215,220',bouncer:'120,255,150',herd:'255,105,70',buffalo:'190,120,72',stinkbug:'165,235,90',bomblet:'255,120,80',mortar:'255,140,40',frost:'153,205,255',drone:'79,172,207',freeze:'179,230,255',phoenix:'255,112,67',tesla:'156,255,44',timebomb:'101,31,255',magnet:'135,206,250',elder:'230,220,255',cake:'255,160,200',ballgun:'255,150,70',ball:'255,220,90',flamer:'255,130,40',piano:'255,230,150',melon:'120,255,120',molotov:'255,160,60'};
 const glowGradCache=new Map();
 const trailGradCache=new Map();
 function glowRadial(gl,rr,bright){const k=gl+'|'+rr+'|'+(bright?1:0);let g=glowGradCache.get(k);if(g)return g;if(glowGradCache.size>96)glowGradCache.delete(glowGradCache.keys().next().value);g=ctx.createRadialGradient(0,0,0,0,0,rr);g.addColorStop(0,'rgba('+gl+','+(bright?.34:.15)+')');g.addColorStop(.55,'rgba('+gl+',.10)');g.addColorStop(1,'rgba('+gl+',0)');glowGradCache.set(k,g);return g}
@@ -3281,6 +3329,18 @@ function drawProj(p){
     ctx.strokeStyle='#11291b';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(-7,-11);ctx.quadraticCurveTo(-2,-8,-8,-4);ctx.moveTo(3,-11);ctx.quadraticCurveTo(-2,-8,4,-4);ctx.stroke();
     ctx.fillStyle='#163a29';ctx.beginPath();ctx.ellipse(8.2,-8.2,4.2,3.8,0,0,6.283);ctx.fill();ctx.stroke();
     ctx.fillStyle='#ff6b3d';ctx.beginPath();ctx.arc(7.2,-8.9,1.05,0,6.283);ctx.fill();ctx.arc(10,-8.9,1.05,0,6.283);ctx.fill();
+  }else if(p.type==='buffalo'){
+    if(p.age>=p.delay){
+      const sq=Math.sin(p.wob)*.13;ctx.scale(p.dir*(1+sq),1-sq);
+      ctx.strokeStyle='#2b1a10';ctx.lineWidth=1.5;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(-15,-4);ctx.lineTo(-22,1);ctx.moveTo(-10,-2);ctx.lineTo(-14,6);ctx.moveTo(-1,-2);ctx.lineTo(-4,6);ctx.moveTo(7,-2);ctx.lineTo(10,6);ctx.moveTo(12,-4);ctx.lineTo(17,2);ctx.stroke();ctx.lineCap='butt';
+      ctx.fillStyle='#3b2619';ctx.beginPath();ctx.ellipse(0,-9,16,8.2,0,0,6.283);ctx.fill();ctx.stroke();
+      ctx.fillStyle='#503324';ctx.beginPath();ctx.ellipse(-5,-12,7,4.4,0,0,6.283);ctx.ellipse(5,-13,6.5,4.7,0,0,6.283);ctx.fill();
+      ctx.fillStyle='#2b1a10';ctx.beginPath();ctx.ellipse(14,-10,7,6.1,0,0,6.283);ctx.fill();ctx.stroke();
+      ctx.strokeStyle='#d9b15a';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(11,-15);ctx.quadraticCurveTo(7,-21,3,-15);ctx.moveTo(18,-15);ctx.quadraticCurveTo(22,-21,26,-15);ctx.stroke();
+      ctx.fillStyle='#ff3020';ctx.beginPath();ctx.arc(12.4,-11,1.08,0,6.283);ctx.arc(17.2,-11,1.08,0,6.283);ctx.fill();
+      ctx.fillStyle='#9b75a3';ctx.beginPath();ctx.arc(-19,-10,1.1+Math.sin(p.age*8)*.3,0,6.283);ctx.fill();
+    }
   }else if(p.type==='herd'){
     if(p.age>=p.delay){
       const sq=Math.sin(p.wob)*.1;ctx.scale(p.dir*(1+sq),1-sq);
