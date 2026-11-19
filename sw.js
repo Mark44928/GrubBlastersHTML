@@ -18,7 +18,7 @@ self.addEventListener("activate", (event) => {
     Promise.all([
       self.clients.claim(),
       caches.keys().then((keys) =>
-        Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
+        Promise.all(keys.filter((k) => k.startsWith("grubblasters-") && k !== CACHE_NAME).map((k) => caches.delete(k)))
       ),
     ])
   );
