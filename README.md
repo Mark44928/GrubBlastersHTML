@@ -233,7 +233,7 @@ verifies the "About N KB" line in this README matches `index.html`.
 
 ## Tech
 
-Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. Setup QR codes use the embedded MIT-licensed `qrcode-generator` 1.4.4 encoder. About 370 KB in total.
+Single file, zero dependencies, vanilla JavaScript and Canvas 2D. Terrain is generated from layered sine noise and rasterized into a pixel mask that powers collision, walking, and cratering. A pannable, zoomable, clamped camera follows the action across maps up to 2800×800, including the optional floating-islands mode. Sound effects are synthesized at runtime with Web Audio. Weather, particles, confetti, taunts, and meteors are all procedural, and the UI uses native system fonts — no downloads. Setup QR codes use the embedded MIT-licensed `qrcode-generator` 1.4.4 encoder. About 371 KB in total.
 
 ## History
 
@@ -259,6 +259,7 @@ The project grew through a series of tagged releases:
 - **v2.6.6 — Grubsong ’26** — New weapon **🚁 Major Munch**: mark a target, FIRE, and the Grubheli flies over the mark — Major Munch drops one crew Grenade on the spot and rides off; one per team per match. The main menu is rebuilt with the Grubsong ’26 hero banner and a scrolling anthem marquee; the menu theme is an original, anthemic E-minor instrumental, and a new **Story** modal (book button) tells the lore of the Grub crew and their own Major Munch. Dedicated to every grub that made it back. Also in v2.6.6: **Major Munch** — Grub Blasters’ own original mascot (three inches of grub, one tooth, rocket backpack), hand-drawn in SVG for the menu hero, and filling the marquee.
 - **v2.7.0 — Grub of Lies** — New weapon **🐃 Grub of Lies**: a riff on the classic charging-buffalo super weapon — runs in the direction your grub faces, climbs gentle bumps but digs through steep terrain, and detonates up to six cave-in bursts (32 damage each) before vanishing. It chews through walls, damages anything in its path, and collects crates it runs over. Normal scheme gives one per team; Pro Mode leaves it out.
 - **v2.6.8 — After-Action Report** — The game-over screen now shows an all-time record for the team configuration (e.g. 2 teams × 3 worms — wins per team, draws and matches played), persisted on the device under one localStorage key and shown alongside the existing Score/Kills/Damage line; the record survives corrupt or tampered storage untouched. Each match also names an **MVP** team (damage + 80×kills; higher remaining HP breaks ties), and a **Rematch** button restarts a fresh match with the same settings and mode.
+- **v2.7.1 — Match clock** — the after-action report adds turns played, shots fired and elapsed match time, so a close match can be compared by pace as well as by score.
 
 
 ## 🛠️ More from Mark44928

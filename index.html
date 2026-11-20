@@ -1489,7 +1489,7 @@ function normalAt(x,y){let nx=0,ny=0;for(let j=-4;j<=4;j++)for(let i=-4;i<=4;i++
 /* ---------- game state ---------- */
 let worms=[],proj=[],parts=[],texts=[],tracers=[],crates=[],graves=[],rings=[],leaves=[],clouds=[],pend=[],rain=[],snow=[],fireflies=[],bolts=[],barrels=[],barFx=[],fires=[],gas=[],muzzles=[],flashFx=0;
 let state='menu',cur=null,turnTeam=0,turnTime=30,wind=0,power=0,charging=false,wpn='bazooka',turnNo=0,paused=false,weather=0,gameMode='pvp',dmgBoost=false,matchSnap=null,fireT=0;
-let retreat=0,quiet=0,settleT=0,shots=0,shotT=0,shotD=null,shake=0,chargeHuman=false,chargeSrc='',aiOn=[false,false,false,false],ai=null,perTeam=3,diff=2,cursor=[-1,-1,-1,-1],lastTick=0,wins=[0,0,0,0],kdmg=[0,0,0,0],kills=[0,0,0,0],shotCfg={r:16,dmg:25,spread:0,delay:.5};
+let retreat=0,quiet=0,settleT=0,shots=0,shotT=0,shotD=null,shake=0,chargeHuman=false,chargeSrc='',aiOn=[false,false,false,false],ai=null,perTeam=3,diff=2,cursor=[-1,-1,-1,-1],lastTick=0,wins=[0,0,0,0],kdmg=[0,0,0,0],kills=[0,0,0,0],shotCfg={r:16,dmg:25,spread:0,delay:.5},matchStarted=0,shotsFired=0;
 let frameNow=performance.now();
 let target=null,tipMsg='',tipT=0,ammo=[{},{},{},{}],curBouncer=null,curDet=null,chainFx=[],dryTurns=0;
 let rec=null,lastMovie=null,rep=null,repC=null,repCtx=null,autoRep=false;
@@ -1636,7 +1636,7 @@ function newGame(mode){
   W=MAPS[mapIdx].w;resize();
   aiOn=[false,false,false,false];if(mode==='cpu'){const h=Math.ceil(teamCount/2);for(let t=h;t<teamCount;t++)aiOn[t]=true}
   pickTheme();weather=wxIdx<0?(Math.random()<.3?1:Math.random()<.44?2:0):wxIdx;genTerrain();mkBg();initScenery();
-  worms=[];proj=[];parts=[];texts=[];tracers=[];crates=[];graves=[];rings=[];pend=[];shots=0;mvpDmg0=kdmg.slice();mvpKill0=kills.slice();target=null;turnNo=0;curBouncer=null;curDet=null;bolts=[];chainFx=[];fires=[];gas=[];muzzles=[];munchHelos.length=0;flashFx=0;rec=null;rep=null;repC=null;lastMovie=null;lastWpn=['bazooka','bazooka','bazooka','bazooka'];jumpT=0;comboN=0;comboT=0;dryTurns=0;slowT=0;shake=0;tipMsg='';tipT=0;fireT=0;killFeed=[];camManual=false;charging=false;power=0;inp.left=inp.right=inp.up=inp.down=inp.jet=false;
+  worms=[];proj=[];parts=[];texts=[];tracers=[];crates=[];graves=[];rings=[];pend=[];shots=0;shotsFired=0;matchStarted=performance.now();mvpDmg0=kdmg.slice();mvpKill0=kills.slice();target=null;turnNo=0;curBouncer=null;curDet=null;bolts=[];chainFx=[];fires=[];gas=[];muzzles=[];munchHelos.length=0;flashFx=0;rec=null;rep=null;repC=null;lastMovie=null;lastWpn=['bazooka','bazooka','bazooka','bazooka'];jumpT=0;comboN=0;comboT=0;dryTurns=0;slowT=0;shake=0;tipMsg='';tipT=0;fireT=0;killFeed=[];camManual=false;charging=false;power=0;inp.left=inp.right=inp.up=inp.down=inp.jet=false;
   WATER=WATER0;waterTarget=WATER0;paused=false;$('#pause').textContent='⏸';
   ammo=[0,1,2,3].map(()=>(schAll()[schIdx]||SCH[0]).ammo());
   const n=perTeam*teamCount,slots=[];
@@ -1956,6 +1956,8 @@ function gameOver(t){
   state='over';closeWepPan();
   if(t>=0){wins[t]++;SFX.win();for(let i=0;i<(low?30:med?50:80);i++)parts.push({x:Math.random()*W,y:-20-Math.random()*300,vx:(Math.random()-.5)*60,vy:60+Math.random()*120,life:2.5+Math.random()*1.5,max:4,c:['#ff5252','#3fa9ff','#ffe14a','#7dff7d','#ff9de2'][i%5],s:2+Math.random()*2,g:40,d:.1})}
   const T=teamCount,sum='<br><span style="font-size:13px;opacity:.75;font-weight:600">Score '+wins.slice(0,T).join('–')+' · Kills '+kills.slice(0,T).join('/')+' · Damage '+kdmg.slice(0,T).map(Math.round).join(' / ')+'</span>';
+  const secs=Math.max(0,Math.round((performance.now()-matchStarted)/1000)),clock=Math.floor(secs/60)+':'+String(secs%60).padStart(2,'0');
+  const pace='<br><span style="font-size:13px;opacity:.75;font-weight:600">'+turnNo+' turns · '+shotsFired+' shots fired · '+clock+' match time</span>';
   const at=recordAllTime(t);
   const atNames=[];for(let i=0;i<T;i++)atNames.push(esc(TN[i]));
   const allTime='<br><span style="font-size:13px;opacity:.75;font-weight:600">All-time ('+T+' teams × '+perTeam+'): '+atNames.map((n,i)=>n+' '+at.wins[i]).join(' – ')+(at.draws?' · draws '+at.draws:'')+' · '+at.matches+' match'+(at.matches===1?'':'es')+'</span>';
@@ -1972,7 +1974,7 @@ function gameOver(t){
     if(leaders.length===1){const i=leaders[0];mvpHtml='<br><span style="font-size:13px;opacity:.75;font-weight:600">MVP: '+esc(TN[i])+' — '+Math.round(md[i])+' dmg + '+mk[i]+' kill'+(mk[i]===1?'':'s')+' · '+Math.round(best)+' pts</span>'}
     else mvpHtml='<br><span style="font-size:13px;opacity:.75;font-weight:600">MVP: '+leaders.map(i=>esc(TN[i])).join(' &amp; ')+' — tie · '+Math.round(best)+' pts</span>';
   }
-  $('#msg').innerHTML=(t<0?'Draw! Everybody sleeps with the fishes.':esc(TN[t])+' TEAM WINS! 🏆')+sum+allTime+mvpHtml+'<br><button class="big alt" id="shareWin" style="margin-top:8px;font-size:15px;padding:8px 16px">📣 Share result</button><button class="big alt" id="rematchBtn" style="margin-top:8px;font-size:15px;padding:8px 16px">🔁 Rematch</button>';
+  $('#msg').innerHTML=(t<0?'Draw! Everybody sleeps with the fishes.':esc(TN[t])+' TEAM WINS! 🏆')+sum+pace+allTime+mvpHtml+'<br><button class="big alt" id="shareWin" style="margin-top:8px;font-size:15px;padding:8px 16px">📣 Share result</button><button class="big alt" id="rematchBtn" style="margin-top:8px;font-size:15px;padding:8px 16px">🔁 Rematch</button>';
   $('#shareWin').onclick=()=>shareGame(t<0?'We drew in Grub Blasters!':TN[t]+' team wins! I played Grub Blasters — come blast with me:');
   $('#rematchBtn').onclick=()=>{initAudio();newGame(gameMode)};
   setTimeout(()=>{if(state==='over')$('#menu').classList.remove('hide')},1600);
@@ -2191,7 +2193,7 @@ function fire(){
   if(wpn==='saucer'&&w.sau>0){w.sau=0;w.vy=0;w.para=true;w.chute=false;w.air=true;tip('🛸 Saucer landed',1.5);return}
   if(ammoOf(wpn)===0){if(humanTurn())tip('Out of ammo',1.5);return}
   if(!wepList().some(x=>x.id===wpn))return;
-  camManual=false;closeWepPan();
+  camManual=false;closeWepPan();shotsFired++;
   const dx=w.dir*Math.cos(w.aim),dy=-Math.sin(w.aim),sx=w.x+dx*14,sy=w.y-2+dy*14;
   if(wpn==='teleport'){
     if(!target){tip('Tap the map to choose where to teleport',2);return}
