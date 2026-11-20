@@ -12,6 +12,8 @@
 
 Grub Blasters is a turn-based artillery game built entirely as a single, dependency-free HTML file. Two to four teams of worms hurl explosives across procedurally generated, fully destructible terrain while the wind shifts every turn. Last team standing wins.
 
+<p align="center"><img src="docs/screenshot-menu.png" width="720" alt="Grub Blasters menu"></p>
+
 **Play it now:** https://mark44928.github.io/GrubBlastersHTML/
 
 **Play the originals:** [v0.2](https://mark44928.github.io/GrubBlastersHTML/legacy/grub-blasters.html) · [v0.1 prototype](https://mark44928.github.io/GrubBlastersHTML/legacy/4b843022-grub-blasters.html)
