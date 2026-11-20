@@ -1,15 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" role="img" aria-labelledby="t d">
   <title id="t">Grub Blasters</title>
-  <desc id="d">Grub Blasters logo: a gold crosshair with an artillery arc on a dark panel.</desc>
-  <rect width="1200" height="300" rx="28" fill="#10121D"/>
-  <rect x="1" y="1" width="1198" height="298" rx="27" fill="none" stroke="#57451B" stroke-width="2"/>
-  <circle cx="150" cy="150" r="96" fill="#181B2A" stroke="#2C3147" stroke-width="2"/>
-  <circle cx="150" cy="150" r="56" fill="none" stroke="#FFCB3D" stroke-width="5"/>
-  <path d="M150 72v46M150 182v46M72 150h46M182 150h46" stroke="#FFCB3D" stroke-width="7" stroke-linecap="round"/>
-  <path d="M92 196 Q125 78 208 107" fill="none" stroke="#FF6159" stroke-width="7" stroke-linecap="round" stroke-dasharray="12 10"/>
-  <circle cx="208" cy="107" r="14" fill="#FF6159"/>
-  <path d="M208 84l7 16 17 3-13 11 3 18-14-8-16 8 4-18-12-11 17-3z" fill="#FFCB3D"/>
-  <text x="318" y="155" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="82" font-weight="800" letter-spacing="3" fill="#FFF3CD">GRUB BLASTERS</text>
-  <text x="322" y="204" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="18" letter-spacing="4" fill="#A49A78">ARTILLERY · SINGLE HTML FILE</text>
-  <text x="1138" y="252" text-anchor="end" font-family="ui-monospace,monospace" font-size="14" letter-spacing="3" fill="#6C644C">MARK44928</text>
+  <desc id="d">Minimal Grub Blasters logo: a gold crosshair and a dark wordmark.</desc>
+  <rect width="1200" height="300" rx="28" fill="#0B0D12"/>
+  <g fill="none" stroke="#F0BD00" stroke-width="14" stroke-linecap="round">
+    <circle cx="150" cy="150" r="48"/>
+    <path d="M150 82 V118 M150 182 V218 M82 150 H118 M182 150 H218"/>
+  </g>
+  <circle cx="150" cy="150" r="8" fill="#F0BD00"/>
+  <text x="300" y="180" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif" font-size="80" font-weight="650" letter-spacing="-2" fill="#F5F7FA">Grub Blasters</text>
 </svg>
