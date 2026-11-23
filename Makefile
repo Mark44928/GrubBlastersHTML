@@ -3,7 +3,7 @@ REPO       ?= Mark44928/GrubBlastersHTML
 URL        ?= https://mark44928.github.io/GrubBlastersHTML/
 PORT       ?= 8080
 BUILD_WAIT ?= 45
-TMPDIR     ?= /data/data/com.termux/files/usr/tmp
+TMPDIR     ?= $(shell if [ -n "$$TERMUX_VERSION" ]; then echo "/data/data/com.termux/files/usr/tmp"; else echo "/tmp"; fi)
 GBJS       := $(TMPDIR)/gb.js
 
 # Termux has no /bin/sh; use $PREFIX/bin/sh when PREFIX is present.
