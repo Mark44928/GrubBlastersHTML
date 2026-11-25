@@ -291,3 +291,7 @@ Tiny, dependency-free tools from the same family:
 MIT — free to use, modify, and share. See [LICENSE](LICENSE).
 
 If Grub Blasters brightened your day, a star on GitHub helps more players find it.
+
+---
+
+**More projects:** [Mark44928's hub](https://mark44928.github.io/Mark44928/) — a family of dependency-free tools for Termux, Linux, and the terminal.
