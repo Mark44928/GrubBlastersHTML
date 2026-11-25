@@ -1,0 +1,18 @@
+# .gitignore — GrubBlastersHTML
+
+# Node (if tooling is ever added)
+node_modules/
+npm-debug.log*
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Temp
+*.log
+.tmp/
